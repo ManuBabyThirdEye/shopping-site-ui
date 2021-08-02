@@ -1,0 +1,89 @@
+<div class="order-main">
+    <div class="selection"><span [ngClass]="showOrder?'selected':''" (click)="showOrder=true">Orders</span>
+        <span [ngClass]="!showOrder?'selected':''" (click)="showOrder=false">Return</span>
+    </div>
+    <div class="divider"></div>
+
+    <div *ngIf="showOrder">
+        <div *ngIf="orderList.length==0" class="empty-order">
+
+            <h3>You do not have any order yet!</h3>
+            <p>After placing order, you can track them from here!</p>
+            <img src="../../../assets/box.png">
+            <div><button routerLink="">COUNTINUE SHOPPING</button></div>
+
+        </div>
+        <div *ngIf="orderList.length>0" class="pt-3">
+            <div *ngFor="let order of orderList" class="order-box shadow p-3 m-md-3 rounded">
+                <div routerLink="/order-details" [queryParams]="{orderId:order.id,order:true}" class="header row col-md-12">
+                    <div class="col-md-2">
+                        <img class="img-loading" src="{{order.cartProducts[0].product.images[0]}}">
+                    </div>
+                    <div class="col-md-2 col-6 amount">
+                        <div class="heading">AMOUNT</div>
+                        <div class="details">Rs. {{order.includeConvenienceFee?order.total+order.convenienceFee:order.total}}</div>
+                    </div>
+                    <div class="col-md-2 col-6 status-box">
+                        <div class="heading">STATUS</div>
+                        <div class="details status">{{order.currentOrderStatus}}</div>
+                    </div>
+                    <div class="col-md-2 col-6">
+                        <div class="heading">ITEMS</div>
+                        <div class="details">{{order.cartProducts.length}}</div>
+                    </div>
+                    <div class="delivery-info col-md-4">
+                        <p *ngIf="order.currentOrderStatus!='CANCELLED'"> <i class="fa fa-check" aria-hidden="true"></i> {{order.currentOrderStatus!='DELIVERY'?'Delivery On':'Delivered On'}} : <span>{{ order.currentOrderStatus!='DELIVERY'?getMaxDeliveryDate(order):getDeliveryDate(order) | date: "fullDate" }}</span></p>
+                        <div *ngIf="order.address" class="address d-none d-sm-block">
+                            <h4>{{order.address.name}}</h4>
+                            <h5>{{order.address.mobileNumber}}</h5>
+                            <p>{{order.address.address}}, {{order.address.town}}</p>
+                            <p>{{order.address.district}}, {{order.address.state}} - {{order.address.pinCode}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="!showOrder">
+        <div *ngIf="returnList.length==0" class="empty-order">
+
+            <h3>You do not have any return yet!</h3>
+            <p>After return your order, you can track them from here!</p>
+            <img src="../../../assets/box.png">
+            <div><button routerLink="">COUNTINUE SHOPPING</button></div>
+
+        </div>
+        <div *ngIf="returnList.length>0" class="pt-3">
+            <div *ngFor="let order of returnList" class="order-box shadow p-3 m-md-3 rounded">
+                <div routerLink="/order-details" [queryParams]="{orderId:order.id,order:false}" class="header row col-md-12">
+                    <div class="col-md-2">
+                        <img class="img-loading" src="{{order.cartProducts[0].product.images[0]}}">
+                    </div>
+                    <div class="col-md-2 col-6 amount">
+                        <div class="heading">AMOUNT</div>
+                        <div class="details">Rs. {{order.includeConvenienceFee?order.total+order.convenienceFee:order.total}}</div>
+                    </div>
+                    <div class="col-md-2 col-6 status-box">
+                        <div class="heading">STATUS</div>
+                        <div style="color: #E4498A;" class="details">{{order.currentOrderStatus}}</div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="heading">ITEMS</div>
+                        <div class="details">{{order.cartProducts.length}}</div>
+                    </div>
+                    <div class="delivery-info col-md-4">
+                        <p *ngIf="order.currentOrderStatus!='CANCELLED'"> <i class="fa fa-check" aria-hidden="true"></i> {{order.currentOrderStatus=='PLACED'?'Pickup On':'Pickuped On'}} : <span>{{ getMaxDeliveryDate(order) | date: "fullDate" }}</span></p>
+                        <div *ngIf="order.address" class="address d-none d-sm-block">
+                            <h4>{{order.address.name}}</h4>
+                            <h5>{{order.address.mobileNumber}}</h5>
+                            <p>{{order.address.address}}, {{order.address.town}}</p>
+                            <p>{{order.address.district}}, {{order.address.state}} - {{order.address.pinCode}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>

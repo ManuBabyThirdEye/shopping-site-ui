@@ -1,0 +1,84 @@
+<div class="main-home">
+    <div class="info">
+        Click to select, double click to edit
+    </div>
+    <div class="container">
+        <div #catDiv class="row col-md-12">
+            <div *ngFor="let mainCat of mainCategoryList" class="col">
+                <div class="main-cat-item-outer">
+                    <div (click)="selectMainCat(mainCat)" (dblclick)="editMainCat(mainCat)" [ngClass]="mainCat.selected?'selected':''" class="main-cat-item shadow rounded">
+                        <div>{{mainCat.name}}</div>
+                        <p>Order : <span>{{mainCat.order}}</span></p>
+                        <p>Total Page Count : <span>{{mainCat.pageCount}}</span></p>
+                    </div>
+                    <div *ngIf="mainCat.selected" class="row align-items-center justify-content-center">
+                        <div class="col h-line"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="main-cat-item-outer">
+                    <div (click)="addNewMainCat()" class="main-cat-item shadow rounded">
+                        <img src="../../../assets/plus.png">
+                        <h5>ADD NEW</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div [style.marginLeft.px]="catLineMargin" [style.marginRight.px]="catLineMargin" *ngIf="getSelectedMainCat()" class="v-line"></div>
+        <div *ngIf="getSelectedMainCat()" class="row col-md-12">
+            <div *ngFor="let cat of getSelectedMainCat().categories" class="col">
+                <div class="main-cat-item-outer">
+                    <div class="row align-items-center justify-content-center">
+                        <div class="col h-line"></div>
+                    </div>
+                    <div (click)="selectCat(cat)" (dblclick)="editCat(cat)" [ngClass]="cat.selected?'selected':''" class="main-cat-item shadow rounded">
+                        <div>{{cat.name}}</div>
+                        <p>Order : <span>{{cat.order}}</span></p>
+                        <p>Page Number: <span>{{cat.page}}</span></p>
+                    </div>
+                    <div *ngIf="cat.selected" class="row align-items-center justify-content-center">
+                        <div [ngClass]="{'margin' : '0px {{18-cat.subCategories.length}}px'}" class="col h-line"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="main-cat-item-outer">
+                    <div class="row align-items-center justify-content-center">
+                        <div class="col h-line"></div>
+                    </div>
+                    <div (click)="addNewCat()" class="main-cat-item shadow rounded">
+                        <img src="../../../assets/plus.png">
+                        <h5>ADD NEW</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div [style.marginLeft.px]="subCatLineMargin" [style.marginRight.px]="subCatLineMargin" *ngIf="getSelectedCat()" class="v-line"></div>
+        <div *ngIf="getSelectedCat()" class="row col-md-12">
+            <div *ngFor="let subCat of getSelectedCat().subCategories" class="col">
+                <div class="main-cat-item-outer">
+                    <div class="row align-items-center justify-content-center">
+                        <div class="col h-line"></div>
+                    </div>
+                    <div (dblclick)="editSubCat(subCat)" [ngClass]="subCat.selected?'selected':''" class="main-cat-item shadow rounded">
+                        <div>{{subCat.name}}</div>
+                        <p>Order : <span>{{subCat.order}}</span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="main-cat-item-outer">
+                    <div class="row align-items-center justify-content-center">
+                        <div class="col h-line"></div>
+                    </div>
+                    <div (click)="addNewSubCat()" class="main-cat-item shadow rounded">
+                        <img src="../../../assets/plus.png">
+                        <h5>ADD NEW</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div (click)="saveChangesToDb()" *ngIf="showSubmit" class="save-to-db shadow">SAVE TO DB</div>

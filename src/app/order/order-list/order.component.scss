@@ -1,0 +1,117 @@
+.order-main {
+    padding: 120px 250px 50px;
+    .selection {
+        margin-bottom: 5px;
+        span {
+            margin: 5px;
+            cursor: pointer;
+            padding: 5px;
+            &:hover {
+                font-weight: 625;
+                border-bottom: 2px solid #E4498A;
+            }
+        }
+        .selected {
+            font-weight: 625;
+            color: #E4498A;
+            border-bottom: 2px solid #E4498A;
+        }
+    }
+    .divider {
+        background: #dadade;
+        height: 1px;
+    }
+    .order-box {
+        cursor: pointer;
+        .header {
+            img {
+                width: 100%;
+            }
+            .heading {
+                font-size: 13px;
+                color: #7a7a7a;
+                font-weight: 600;
+            }
+            .details {
+                color: black;
+                font-weight: bold;
+            }
+            .status {
+                color: #e4498a;
+            }
+            .delivery-info {
+                .address {
+                    margin-top: 15px;
+                    padding: 10px;
+                    border: 1px solid #f2b8d2;
+                }
+                p {
+                    margin-bottom: 0px;
+                    font-weight: 620;
+                    i {
+                        color: green;
+                    }
+                    span {
+                        font-weight: 400;
+                    }
+                }
+                h4 {
+                    margin-bottom: 0px;
+                }
+            }
+        }
+    }
+}
+
+.empty-order {
+    padding: 150px 200px;
+    text-align: center;
+    h3 {
+        font-size: 22px;
+        font-weight: 600;
+    }
+    p {
+        font-size: 18px!important;
+        color: #404146;
+    }
+    img {
+        height: 160px;
+        margin-top: 40px;
+    }
+    button {
+        margin-top: 30px;
+        cursor: pointer;
+        border: 1px solid #dadade;
+        font-size: 15px;
+        font-weight: 700;
+        color: #e4498a;
+        padding: 10px 20px;
+        width: fit-content;
+        border-radius: 4px;
+        background: none;
+        &:hover {
+            border: 1px solid #E4498A;
+        }
+    }
+}
+
+@media only screen and (max-width:767px) {
+    .row>* {
+        padding: 0;
+    }
+    .empty-order {
+        padding: 150px 10px;
+    }
+    .order-main {
+        padding: 80px 10px 50px;
+        .order-box {
+            margin-top: 20px;
+        }
+    }
+    .amount {
+        margin-top: 10px;
+    }
+    .status-box {
+        margin-top: 10px;
+    }
+}

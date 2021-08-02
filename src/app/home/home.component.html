@@ -1,0 +1,39 @@
+<div class="home-main">
+    <div class="main-offer">
+        <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-inner">
+                    <div *ngFor="let mainOffer of mainOfferList;let i = index;" class="carousel-item" [ngClass]="i==0?'active':''">
+                        <img routerLink="/product-list" [queryParams]="{mainCategory :'Offer',category:mainOffer.id,categoryId:mainOffer.id}" class="img-loading" src="{{mainOffer.image}}" class="d-block w-100" alt="Main Offer 1">
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <i class="fa fa-angle-left" aria-hidden="true"></i>
+            <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <i class="fa fa-angle-right" aria-hidden="true"></i>
+            <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+
+    <div *ngFor="let homeItem of homeItemList;let i = index;" class="home-item-outer">
+        <h2>{{homeItem.heading}}</h2>
+        <div *ngIf="homeItem.items">
+            <div class="row col-md-12">
+                <div *ngFor="let item of homeItem.items;" class="col-lg-2 col-md-3 col-sm-6 col-6 mt-3">
+                    <img routerLink="/product-list" [queryParams]="{mainCategory :'Offer',category:homeItem.heading,categoryId:item.id}" class="img-loading" src="{{item.image}}">
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

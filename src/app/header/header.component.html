@@ -1,0 +1,127 @@
+<div class="row col-md-12 header shadow d-none d-md-flex ">
+    <div class="logo col-md-2">
+        <a href="#"><img src="../../assets/logo.png"></a>
+    </div>
+    <div class="col-md-5 menu">
+        <div class="row col-md-12">
+            <div class="col-md-2 menu-item" *ngFor="let cat of mainCategorList">
+                {{cat.name}}
+                <div class="dropdown-box shadow">
+                    <app-category-list [categoryList]="cat"></app-category-list>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 search">
+        <input (keyup)="searchCategory($event)" placeholder="Search for categories and more" class="col-md-12 search-bar" [(ngModel)]="searchKey">
+        <div class="search-img-box">
+            <i class="fa fa-search"></i>
+        </div>
+        <div *ngIf="searchList.length>0" class="search-result shadow">
+            <div (click)="gotoProductList(searchKey)" *ngFor="let searchKey of searchList">
+                {{searchKey}}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 profile-box">
+        <div class="row col-md-12">
+            <div *ngIf="user==undefined" class="col-md-4"></div>
+            <div class="col-md-4 profile-item" [ngClass]="showProfileDropDown?'show-indicator':''">
+                <i class="fa fa-user-o"></i>
+                <div class="profile-text">
+                    Profile
+                </div>
+                <div class="profile-dropdown-box shadow">
+                    <h5>Welcome</h5>
+                    <p *ngIf="user==undefined">To access account and manage orders</p>
+                    <p *ngIf="user!=undefined">{{user.name}}({{user.mobileNumber}})</p>
+                    <div *ngIf="user==undefined" class="login" routerLink="/login">LOGIN/SIGNUP</div>
+                    <div class="divider"></div>
+                    <div class="links">
+                        <p *ngIf="user!=undefined && user.admin" routerLink="/admin">Admin</p>
+                        <p *ngIf="user!=undefined" routerLink="/order">Orders</p>
+                        <p *ngIf="user!=undefined" routerLink="/wishlist">Wishlist</p>
+                        <p>Contact Us</p>
+                        <p *ngIf="user!=undefined" (click)="logout()">Logout</p>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="user!=undefined" routerLink="/wishlist" class="col-md-4 profile-item">
+                <i class="fa fa-heart-o"></i>
+                <div r class="profile-text">Wishlist</div>
+            </div>
+            <div *ngIf="user!=undefined" routerLink="/cart" class="col-md-4 profile-item">
+                <i class="fa fa-cart-arrow-down"></i>
+                <div class="profile-text">Cart</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="header-mobile d-block d-md-none ">
+    <div class="header-item shadow">
+        <div class="menu">
+            <img *ngIf="!showBack" (click)="showMenu=true" src="../../assets/menu.png">
+            <img class="back" (click)="goBack()" *ngIf="showBack" src="../../assets/left-arrow.png">
+        </div>
+        <div class="logo">
+            <a href="#"><img src="../../assets/logo.png"></a>
+        </div>
+        <div class="more">
+            <img (click)="showMore=true" src="../../assets/more.png">
+
+        </div>
+    </div>
+    <div (click)="showMenu=false" *ngIf="showMenu" class="menu-list-back">
+        <div [ngClass]="showMenu?'show-menu':''" class="menu-list">
+            <div class="profile-details">
+                <h5>Welcome</h5>
+                <p *ngIf="user==undefined">To access account and manage orders</p>
+                <p class="name" *ngIf="user!=undefined">{{user.name}}({{user.mobileNumber}})</p>
+                <div *ngIf="user==undefined" class="login" routerLink="/login">LOGIN/SIGNUP</div>
+            </div>
+            <div class="menu-item-outer">
+                <div *ngFor="let mainCat of mainCategorList">
+                    <div class="menu-item" (click)="openMainCat(mainCat)">
+                        {{mainCat.name}}<i *ngIf="mainCat.categories && mainCat.categories.length>0" class="fa fa-angle-right pull-right"></i>
+                        <div *ngIf="mainCat.showCategories">
+                            <div class="category" *ngFor="let cat of mainCat.categories">
+                                <div (click)="openCat(cat,mainCat)">
+                                    {{cat.name}} <i *ngIf="cat.subCategories && cat.subCategories.length>0" class="fa fa-angle-right pull-right"></i>
+                                    <div *ngIf="cat.showSubCategories">
+                                        <div class="sub-categories" *ngFor="let subCat of cat.subCategories">
+                                            <div (click)="showMenu=false" routerLink="/product-list" [queryParams]="{mainCategory : mainCat.name,category:cat.name,subCategory:subCat.name,categoryId:cat.id,subCategoryId:subCat.id}">
+                                                {{subCat.name}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="divider"></div>
+            <div class="extra">
+                <p *ngIf="user!=undefined" routerLink="/order">Orders</p>
+                <p *ngIf="user!=undefined" routerLink="/wishlist">Wishlist</p>
+                <p *ngIf="user!=undefined" routerLink="/cart">Cart</p>
+                <p>Contact Us</p>
+                <p *ngIf="user!=undefined" (click)="logout()">Logout</p>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="showMore" (click)="showMore=false" class="more-main-back">
+        <div class="more-main shadow">
+            <div class="links">
+                <p *ngIf="user!=undefined" routerLink="/order">Orders</p>
+                <p *ngIf="user!=undefined" routerLink="/wishlist">Wishlist</p>
+                <p *ngIf="user!=undefined" routerLink="/cart">Cart</p>
+                <p>Contact Us</p>
+                <p *ngIf="user!=undefined" (click)="logout()">Logout</p>
+            </div>
+        </div>
+    </div>
+
+</div>

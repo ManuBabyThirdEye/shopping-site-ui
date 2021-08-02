@@ -1,0 +1,10 @@
+<div class="size-main">
+    <div class="row col-md-12">
+        <div *ngFor="let size of sizeList" class="col-md-2 col-2">
+            <div (click)="selectSize(size)">
+                <div [ngClass]="size==selectedSize?'selected':''" class="size">{{size}}</div>
+            </div>
+        </div>
+    </div>
+    <button (click)="updateSize()" type="submit" value="submit">SELECT</button>
+</div>

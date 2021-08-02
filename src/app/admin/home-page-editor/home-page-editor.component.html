@@ -1,0 +1,76 @@
+<div class="main-outer">
+    <div *ngIf="showInfo" class="info">
+        Double click to edit or add
+        <img (click)="showInfo=false" src="../../../assets/cancel.png">
+    </div>
+    <div class="main-offer">
+        <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-inner">
+                    <div *ngFor="let mainOffer of mainOfferList;let i = index;" class="carousel-item" [ngClass]="i==0?'active':''">
+                        <div class="edit-overlay">
+                            <div>
+                                <button class="hide" (click)="editMainOffer(mainOffer)">EDIT</button>
+                                <button class="delete" (click)="deleteMainOffer(mainOffer)">DELETE</button>
+                                <button class="hide" (click)="hideOrUnhideMainOffer(mainOffer)">{{mainOffer.hide?'UNHIDE':'HIDE'}}</button>
+                            </div>
+                        </div>
+                        <img routerLink="/product-list" [queryParams]="{mainCategory :'Offer',category:mainOffer.id,categoryId:mainOffer.id}" class="img-loading" src="{{mainOffer.image}}" class="d-block w-100" alt="Main Offer 1">
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <i class="fa fa-angle-left" aria-hidden="true"></i>
+            <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <i class="fa fa-angle-right" aria-hidden="true"></i>
+            <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+
+    </div>
+    <div *ngFor="let homeItem of homeItemList | sortBy:'order' ;let i = index;" class="home-item-outer">
+        <h2 *ngIf="!homeItem.edit" (dblclick)="homeItem.edit = true">{{homeItem.heading}} - {{homeItem.order}}
+            <button class="delete" (click)="deleteOffer(homeItem)">DELETE</button>
+            <button class="hide" (click)="hideOrUnhideOffer(homeItem)">{{homeItem.hide?'UNHIDE':'HIDE'}}</button>
+        </h2>
+        <div class="heading-edit" *ngIf="homeItem.edit">
+            <div class="input-box">
+                <input id="name" type="text" required [(ngModel)]="homeItem.editedHeading">
+                <label for="name">Name*</label>
+            </div>
+            <div class="input-box">
+                <input id="order" type="text" required [(ngModel)]="homeItem.editedOrder">
+                <label for="order">Order*</label>
+            </div>
+            <button class="save" (click)="saveHeading(homeItem)">SAVE</button>
+            <button class="cancel" (click)="cancelHeading(homeItem)">CANCEL</button>
+
+        </div>
+        <div *ngIf="homeItem.items">
+            <div class="row col-md-12">
+                <div *ngFor="let item of homeItem.items;" (dblclick)="editSubOffer(homeItem,item)" class="col-lg-2 col-md-3 col-sm-6 col-6 mt-3 offer-image">
+                    <img class="img-loading" src="{{item.image}}">
+                    <div class="overlay-bottom">
+                        <button class="delete" (click)="deleteSubOffer(homeItem,item)">DELETE</button>
+                        <button class="hide" (click)="hideOrUnhideSubOffer(homeItem,item)">{{item.hide?'UNHIDE':'HIDE'}}</button>
+                    </div>
+                </div>
+                <div (dblclick)="editSubOffer(homeItem)" *ngIf="!homeItem.id.startsWith('dummy_')" class="col-lg-2 col-md-3 col-sm-6 col-6 mt-3 add-new">
+                    <div class="add-content">
+                        <i class="fa fa-plus"></i>
+                        <div class="add-more">ADD MORE</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="add-offers"><button class="save" (click)="addMoreOffer()">ADD MORE</button></div>
+</div>

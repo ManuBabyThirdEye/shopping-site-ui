@@ -1,0 +1,32 @@
+.confirm-main {
+    .image {
+        img {
+            width: 100%;
+        }
+    }
+    .heading {}
+    .details {
+        color: gray;
+    }
+    .close {
+        text-align: end;
+        img {
+            width: 20px;
+            cursor: pointer;
+        }
+    }
+    .action {
+        border-top: 1px solid #eaeaea;
+        font-size: 12px;
+        font-weight: 630;
+        text-align: center;
+        color: gray;
+        div {
+            padding: 15px;
+            cursor: pointer;
+        }
+        .negative {
+            border-right: 1px solid #eaeaea;
+        }
+    }
+}

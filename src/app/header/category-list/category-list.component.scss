@@ -1,0 +1,28 @@
+.page {
+    z-index: 0;
+    padding: 10px 20px 10px 30px;
+    .category {
+        font-size: 13px;
+        color: #E4498A;
+        margin-top: 10px;
+        margin-bottom: 15px;
+        font-weight: bold;
+        cursor: pointer;
+        line-height: 20px;
+        text-align: left;
+        text-transform: none;
+        .sub-category {
+            margin-top: 5px;
+            margin-bottom: 5px;
+            color: black;
+            font-weight: normal;
+            &:hover {
+                font-weight: bold;
+            }
+        }
+    }
+}
+
+.even-background {
+    background: rgba(245, 245, 246, .4);
+}

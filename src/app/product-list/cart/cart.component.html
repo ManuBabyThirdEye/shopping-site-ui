@@ -1,0 +1,99 @@
+<div *ngIf="cart.cartProducts.length==0" class="empty-wish">
+    <img src="../../../assets/shopping.png">
+    <h3>YOUR CART IS EMPTY</h3>
+    <p>There is nothing in your cart. Lets add some items.</p>
+    <div><button routerLink="/wishlist">ADD ITEM FROM WISHLIST</button></div>
+</div>
+<div *ngIf="cart.cartProducts.length>0" class="cart-main">
+    <div class="fee">
+
+    </div>
+    <div class="row col-md-12">
+        <div class="col-md-8 cart-product">
+            <div class="box pincode">
+                <p *ngIf="pinStatus!=undefined && pinStatus.available">Deliver to : <span>{{this.pinStatus.pincode}}</span></p>
+                <div>
+                    <input *ngIf="pinStatus==undefined || !pinStatus.available" placeholder="Enter Your PIN code" [(ngModel)]="pinCode" value="">
+                    <p *ngIf="pinStatus && !pinStatus.available">Unfortunately we do not ship to your pincode</p>
+                </div>
+                <button (click)="checkPin()">{{pinStatus==undefined || !pinStatus.available?'CHECK PIN':'CHANGE PIN'}}</button>
+            </div>
+            <div *ngIf="offerList.length>0" class="box offer">
+                <div class="offer-heading"><img src="../../../assets/discount.png"> Available Offers</div>
+                <ul *ngIf="showingMore">
+                    <li *ngFor="let offer of offerList">{{offer}}</li>
+                </ul>
+                <ul *ngIf="!showingMore">
+                    <li>{{offerList[0]}}</li>
+                </ul>
+                <h5 *ngIf="offerList.length>1 && !showingMore" (click)="showingMore=true">Show More <i class="fa fa-angle-down" aria-hidden="true"></i></h5>
+                <h5 *ngIf="offerList.length>1 && showingMore" (click)="showingMore=false">Show Less <i class="fa fa-angle-up" aria-hidden="true"></i></h5>
+            </div>
+            <div class="hearder">
+                <h4>My Cart</h4>
+                <h4>Total : &#8377; {{cart.includeConvenienceFee?cart.total+cart.convenienceFee:cart.total}}</h4>
+            </div>
+            <div *ngFor="let cartItem of cart.cartProducts" class="product box">
+                <div class="row col-md-12">
+                    <div class="col-md-3">
+                        <img class="img-loading" src="{{cartItem.product.images[0]}}">
+                    </div>
+                    <div class="prod-details col-md-6 col-6">
+                        <h5><a routerLink="/product-details" [queryParams]="{productId:cartItem.product.id}">{{cartItem.product.name}}</a></h5>
+                        <p>{{cartItem.product.details}}</p>
+                        <div class="selection">
+                            <span>Size: {{cartItem.size}}</span>
+                            <span (click)="selectSize(cartItem)">Qty: {{cartItem.quantity}} <i class="fa fa-angle-down" aria-hidden="true"></i></span>
+                        </div>
+
+                        <p *ngIf="cartItem.delivertDate!=undefined"><i class="fa fa-check" aria-hidden="true"></i> Delivery by <span>{{ cartItem.delivertDate | date: "fullDate" }}</span></p>
+                        <p *ngIf="cartItem.delivertDate==undefined"><i class="fa fa-times" aria-hidden="true"></i> Update your pincode</p>
+                    </div>
+                    <div class="price col-md-3 col-6">
+                        <h5>&#8377; {{cartItem.product.discountPrice * cartItem.quantity}}</h5>
+                        <p *ngIf="cartItem.product.discount>0"><s>Rs. {{(cartItem.product.discountPrice * cartItem.quantity * 100 )/(100-cartItem.product.discount)}}</s> <span>({{cartItem.product.discount}}% OFF)</span></p>
+                    </div>
+                </div>
+                <div class="divider"></div>
+                <div class="prod-action row col-md-12">
+                    <div (click)="removeFromCart(cartItem)" class="col-md-4 col-4">
+                        <h4>REMOVE</h4>
+                    </div>
+                    <div (click)="moveToWishList(cartItem)" class="move-to-wish col-md-6 col-8">
+                        <h4>MOVE TO WISH LIST</h4>
+                    </div>
+                </div>
+            </div>
+            <div routerLink="/wishlist" class="wish-list box">
+                <div><i class="fa fa-heart-o"></i>
+                    <h5>Add more from wish list</h5>
+                </div>
+                <i class="fa fa-angle-right" aria-hidden="true"></i>
+            </div>
+        </div>
+        <div class="product-price col-md-4">
+            <h5>PRICE DETAILS</h5>
+            <div class="price-main">
+                <div class="price-details">
+                    <p>Total MRP</p>
+                    <p>&#8377; {{cart.totalMRP}}</p>
+                </div>
+                <div class="price-details">
+                    <p>Discount on MRP</p>
+                    <span>-&#8377; {{cart.totalMRP-cart.total}}</span>
+                </div>
+                <div *ngIf="pinStatus!=undefined" class="price-details">
+                    <p>Convinience Fee</p>
+                    <p *ngIf="cart.includeConvenienceFee">&#8377; {{pinStatus.convenienceFee}}</p>
+                    <p *ngIf="!cart.includeConvenienceFee"><s>&#8377; {{pinStatus.convenienceFee}}</s></p>
+                </div>
+                <div class="divider"></div>
+                <div class="total">
+                    <p>Total Amount</p>
+                    <span>&#8377; {{cart.includeConvenienceFee?cart.total+cart.convenienceFee:cart.total}}</span>
+                </div>
+            </div>
+            <button [ngClass]="pinStatus==undefined || !pinStatus.available?'inactive':''" (click)="goToAddressSelection()" class="place-order"> PLACE ORDER</button>
+        </div>
+    </div>
+</div>

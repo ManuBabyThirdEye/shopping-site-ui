@@ -1,0 +1,121 @@
+<div *ngIf="product" class="product-detail-main">
+    <div *ngIf="showInfo" class="info">
+        Double click to edit
+        <img (click)="showInfo=false" src="../../../assets/cancel.png">
+    </div>
+    <div class="row col-md-12 prod-details">
+        <div class="col-md-6 prod-images">
+            <div *ngIf="product!=undefined" class="row col-md-12  d-none d-sm-flex ">
+                <div *ngFor="let prdImage of product.images;let i = index" class="img-box col-md-6">
+                    <div class="overlay-top">Select image with 2:3 ratio</div>
+                    <input type='file' (change)="onSelectFile($event,i)">
+                    <img (click)="selectedImage=prdImage" src="{{prdImage}}">
+                    <div class="overlay-bottom">Click to browse new image</div>
+                </div>
+            </div>
+            <div class="d-block d-sm-none">
+                <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
+                    </div>
+                    <div class="carousel-inner">
+                        <div class="carousel-inner">
+                            <div *ngFor="let prdImage of product.images;let i = index;" class="carousel-item" [ngClass]="i==0?'active':''">
+                                <img src="{{prdImage}}" class="d-block w-100" alt="Main Offer 1">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="visually-hidden">Previous</span>
+                        </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                        <span class="visually-hidden">Next</span>
+                        </button>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="product!=undefined" class="col-md-6 prod-info">
+            <h3 (dblclick)="nameEdit=true;editedName=product.name" *ngIf="!nameEdit">{{product.name}}</h3>
+            <div class="heading-edit" *ngIf="nameEdit">
+                <div class="input-box">
+                    <input id="name" type="text" required [(ngModel)]="editedName">
+                    <label for="name">Name*</label>
+                </div>
+                <button class="save" (click)="saveName()">SAVE</button>
+                <button class="cancel" (click)="cancelName()">CANCEL</button>
+            </div>
+            <p (dblclick)="detailsEdit=true;editedDetails=product.details" *ngIf="!detailsEdit">{{product.details}}</p>
+            <div class="heading-edit" *ngIf="detailsEdit">
+                <div class="input-box">
+                    <textarea id="details" rows="4" cols="50" type="text" required [(ngModel)]="editedDetails"></textarea>
+                    <label for="details">Details*</label>
+                </div>
+                <button class="save" (click)="saveDetails()">SAVE</button>
+                <button class="cancel" (click)="cancelDetails()">CANCEL</button>
+            </div>
+            <h3 (dblclick)="amountEdit=true;editedDiscountedAmount=product.discountPrice;editedDiscount=product.discount" *ngIf="!amountEdit">Rs. {{product.discountPrice}} <s>Rs. {{(product.discountPrice * 100 )/(100-product.discount)}} </s> <span>({{product.discount}}% OFF)</span></h3>
+            <div class="heading-edit" *ngIf="amountEdit">
+                <div class="input-box">
+                    <input id="amount" type="text" required [(ngModel)]="editedDiscountedAmount">
+                    <label for="amount">Discount Price*</label>
+                </div>
+                <div class="input-box">
+                    <input id="discount" type="text" required [(ngModel)]="editedDiscount">
+                    <label for="discount">Discount Percentage(%)*</label>
+                </div>
+                <button class="save" (click)="saveAmount()">SAVE</button>
+                <button class="cancel" (click)="cancelAmount()">CANCEL</button>
+            </div>
+            <h4>ADD SIZE</h4>
+            <div class="row col-md-12 size-box">
+                <div (dblclick)="addMoreOnSize('S')" class="size available">S
+                    <div>{{getProdcutCountForSize('S')}} Left</div>
+                </div>
+                <div (dblclick)="addMoreOnSize('M')" class="size available">M
+                    <div>{{getProdcutCountForSize('M')}} Left</div>
+                </div>
+                <div (dblclick)="addMoreOnSize('L')" class="size available">L
+                    <div>{{getProdcutCountForSize('L')}} Left</div>
+                </div>
+                <div (dblclick)="addMoreOnSize('XL')" class="size available">XL
+                    <div>{{getProdcutCountForSize('XL')}} Left</div>
+                </div>
+                <div (dblclick)="addMoreOnSize('XXL')" class="size available">XXL
+                    <div>{{getProdcutCountForSize('XXL')}} Left</div>
+                </div>
+                <div (dblclick)="addMoreOnSize('XXXL')" class="size available">XXXL
+                    <div>{{getProdcutCountForSize('XXXL')}} Left</div>
+                </div>
+            </div>
+            <p (dblclick)="delayEdit=true" *ngIf="!delayEdit">Prduct Delivery Delay : {{product.productDeliveryDelay}} days</p>
+            <div class="heading-edit" *ngIf="delayEdit">
+                <div class="input-box">
+                    <input id="delay" type="text" required [(ngModel)]="editedDeliveryDelay">
+                    <label for="delay">Delivery Delay*</label>
+                </div>
+                <button class="save" (click)="product.productDeliveryDelay=editedDeliveryDelay;delayEdit=false;">SAVE</button>
+                <button class="cancel" (click)="delayEdit=false">CANCEL</button>
+            </div>
+            <div class="row col-md-12 action">
+                <button class="col-md-10 col-12 add-to-bag" (click)="addOrUpdateProduct()"><i class="fa fa-shopping-basket" aria-hidden="true"></i> UPLOAD TO CLOUD </button>
+            </div>
+
+            <div class="link-cat">
+                <h4>LINKED CATEGORIES</h4>
+                <div class="divider"></div>
+                <div>
+                    <div *ngFor="let cat of linkedCategoriesNameMap | keyvalue">
+                        <div class="category">
+                            {{cat.value}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

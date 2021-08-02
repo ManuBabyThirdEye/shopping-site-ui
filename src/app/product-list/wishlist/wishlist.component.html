@@ -1,0 +1,26 @@
+<div *ngIf="wishList.length>0" class="wishlist-main">
+    <h4> My Wishlist</h4>
+    <div class="wishlist-list">
+        <div class="row col-md-12">
+            <div *ngFor="let wishItem of wishList" class="col-6 col-md-4 col-lg-3 col-xl-2">
+                <div class="product-box" routerLink="/product-details" [queryParams]="{productId:wishItem.id}">
+                    <div (click)="removeFromWishList(wishItem.id)" class="cancel"><img src="../../../assets/cancel.png"></div>
+                    <img class="img-loading" src="{{wishItem.image}}">
+                    <div class="product-details">
+                        <p>Size: <span>{{wishItem.sizes}}</span></p>
+                        <h4>Rs. {{wishItem.discountPrice}} <s *ngIf="wishItem.discount>0">Rs. {{(wishItem.discountPrice * 100 )/(100-wishItem.discount)}} </s> <span *ngIf="wishItem.discount>0">({{wishItem.discount}}% OFF)</span></h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="wishList.length==0" class="empty-wish">
+
+    <h3>YOUR WISHLIST IS EMPTY</h3>
+    <p>Add items that you like to your wishlist. <br> Review them anytime and easily move them to the bag.</p>
+    <img src="../../../assets/box.png">
+    <div><button routerLink="">COUNTINUE SHOPPING</button></div>
+
+</div>

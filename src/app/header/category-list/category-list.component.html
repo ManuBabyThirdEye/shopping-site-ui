@@ -1,0 +1,16 @@
+<div class="row col-md-12" style="height: 400px;">
+    <div *ngFor="let pageItem of categoryArray;let i=index;" class="page" [ngClass]="getPageClass(i)">
+        <div class="category" *ngFor="let category of pageItem">
+            <div routerLink="/product-list" [queryParams]="{mainCategory : categoryList.name,category:category.name,categoryId:category.id}">
+                {{category.name}}
+            </div>
+            <div *ngIf="category.subCategories">
+                <div class="sub-category" *ngFor="let subCategory of category.subCategories">
+                    <div routerLink="/product-list" [queryParams]="{mainCategory : categoryList.name,category:category.name,subCategory:subCategory.name,categoryId:category.id,subCategoryId:subCategory.id}">
+                        {{subCategory.name}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

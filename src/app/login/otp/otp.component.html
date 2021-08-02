@@ -1,0 +1,23 @@
+<div class="otp-background">
+    <div class="col-md-2 otp-box">
+        <img src="../../../assets/password.png">
+
+        <h4>Verify with OTP</h4>
+        <p>Sent to {{mobileNumber}}</p>
+
+        <div class="row col-md-12">
+            <input [(ngModel)]="otp1" maxlength="1" class="col-md-2 otp">
+            <input [(ngModel)]="otp2" maxlength="1" class="col-md-2 otp">
+            <input [(ngModel)]="otp3" maxlength="1" class="col-md-2 otp">
+            <input [(ngModel)]="otp4" maxlength="1" class="col-md-2 otp">
+            <input [(ngModel)]="otp5" maxlength="1" class="col-md-2 otp">
+            <input [(ngModel)]="otp6" maxlength="1" class="col-md-2 otp">
+        </div>
+
+        <p *ngIf="!showResendOption" style="margin-top: 20px;">Resend OTP in : {{timmerString}}</p>
+        <div *ngIf="showResendOption" style="margin-top: 20px;" class="terms"><a (click)=sendOtpToMobileNumber(mobileNumber)>RESEND OTP</a></div>
+
+        <div style="margin-top: 50px;" class="terms">Have trouble logging in? <a href="#">Get help</a></div>
+
+    </div>
+</div>

@@ -1,0 +1,75 @@
+<div class="product-list-main">
+    <div class="d-none d-sm-block list-page-header">
+        <div class="navigation-box">
+            <span routerLink="">Home</span>
+            <span routerLink=""><span></span> {{mainCategory}}</span>
+            <span routerLink="/product-list" [queryParams]="{mainCategory : mainCategory,category:category,subCategory:undefined,categoryId:categoryId,subCategoryId:undefined}" [ngClass]="subCategory?'':'active'" *ngIf="category"><span></span> {{category}}</span>
+            <span class="active" *ngIf="subCategory"><span></span> {{subCategory}}</span>
+        </div>
+    </div>
+    <div class="list-Main">
+        <div *ngIf="filterList && filterList.length>0" class="d-none d-sm-block filter-main">
+            <h4>FILTER</h4>
+            <div class="filter-box" #filterBox>
+                <div class="filter" *ngFor="let filter of filterList">
+                    <h4>{{filter.name}}</h4>
+                    <ul>
+                        <li *ngFor="let item of filter.items">
+                            <label>
+                                <input type="radio" class="discount-input" name="discount-product" value="">
+                                {{filter.prefix}}{{item}}{{filter.suffice}}
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="productList && productList.length > 0" class="list-outer">
+            <div class="d-none d-sm-block sort-box">
+                <div class="sort-selected">Sort by : <span>{{selectSort.value}}</span> <i class="fa fa-angle-down" aria-hidden="true"></i>
+                </div>
+                <div class="sort-item" *ngFor="let item of sortList" (click)="updateProductWithSort(item)">{{item.value}}</div>
+            </div>
+            <div class="product-list" #productListBox>
+                <div #scrollframe class="row col-md-12">
+                    <div #item *ngFor="let product of productList" class="col-6 col-md-4 col-lg-3 col-xl-2">
+                        <div class="product-box" routerLink="/product-details" [queryParams]="{categoryId:categoryId,subCategoryId:subCategoryId,productId:product.id}">
+                            <i *ngIf="mobileNumber && !product.isWishList" (click)="addToWhichList(product,true);$event.stopPropagation()" class="fa fa-heart-o unselected-heart"></i>
+                            <i *ngIf="mobileNumber && product.isWishList" (click)="addToWhichList(product,false);$event.stopPropagation()" class="fa fa-heart selected-heart"></i>
+                            <div class="image-rating">
+                                <img class="img-loading" src="{{product.images[0]}}">
+                                <span class="rating" *ngIf="product.reviews && product.reviews.length>0">{{product.rating}}<i class="fa fa-star" aria-hidden="true"></i>({{product.reviews.length}})
+                                </span>
+                            </div>
+                            <div class="product-details">
+                                <p>Size: <span>{{product.availableSizeString}}</span></p>
+                                <h4>Rs. {{product.discountPrice}} <s *ngIf="product.discount>0">Rs. {{(product.discountPrice * 100 )/(100-product.discount)}} </s> <span *ngIf="product.discount>0">({{product.discount}}% OFF)</span></h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="productList && productList.length==0" class="empty-product">
+            <img src="../../../assets/box.png">
+            <h3>NO PRODUCT ADDED FOR THIS CATEGORY</h3>
+            <p>Please be patient, we are growing.</p>
+            <div><button routerLink="">COUNTINUE SHOPPING</button></div>
+        </div>
+    </div>
+
+    <div *ngIf="!(productList && productList.length==0)" class="d-block d-sm-none sort-mobile">
+        <div (click)="showSortListMobile=true" *ngIf="!showSortListMobile" class="sort-txt-box"><img src="../../assets/sort.png"> SORT</div>
+    </div>
+    <div *ngIf="showSortListMobile" (click)="showSortListMobile=false" class="sort-item-bk">
+        <div class="sort-list">
+            <div *ngFor="let item of sortList">
+                <div [ngClass]="selectSort.value==item.value?'selected':''" class="sort-item" (click)="updateProductWithSort(item)">
+                    {{item.value}}
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>

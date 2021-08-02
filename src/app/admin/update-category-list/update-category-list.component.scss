@@ -1,0 +1,67 @@
+.main-home {
+    padding: 80px 0px;
+    .info {
+        margin-bottom: 30px;
+        background: brown;
+        height: 35px;
+        text-align: center;
+        padding: 5px;
+        color: white;
+    }
+    .main-cat-item-outer {
+        text-align: center;
+        .main-cat-item {
+            cursor: pointer;
+            display: inline-block;
+            width: fit-content;
+            padding: 10px 20px;
+            text-align: center;
+            p {
+                margin-bottom: 0;
+                margin-top: 10px;
+            }
+            img {
+                height: 30px;
+                margin-bottom: 5px;
+            }
+        }
+    }
+}
+
+.selected {
+    background: #E4498A;
+    color: white;
+    p {
+        color: white!important;
+    }
+}
+
+.h-line {
+    max-width: 1px;
+    background: #dadade;
+    height: 50px;
+}
+
+.v-line {
+    height: 1px;
+    background: #dadade;
+}
+
+.row>* {
+    padding: 0px;
+}
+
+.save-to-db {
+    width: 100%;
+    height: 50px;
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    text-align: center;
+    color: white;
+    background: #E4498A;
+    font-weight: bold;
+    padding: 12px;
+    cursor: pointer;
+}

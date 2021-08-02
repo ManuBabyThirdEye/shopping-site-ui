@@ -1,0 +1,17 @@
+<div class="user-details-background">
+    <div class="col-md-2 user-details-box">
+        <img src="../../../assets/hacker.png">
+
+        <h4>Let's know more</h4>
+        <div class="input-box">
+            <input id="name" type="text" required [(ngModel)]="name">
+            <label for="name">Name*</label>
+        </div>
+        <div class="input-box">
+            <input id="email" type="text" required [(ngModel)]="email">
+            <label for="email">Email*</label>
+        </div>
+        <button [ngClass]="name!=undefined && email!=undefined ? 'active':''" (click)="addUserDetails()" class="countinue">COUNTINUE</button>
+
+    </div>
+</div>

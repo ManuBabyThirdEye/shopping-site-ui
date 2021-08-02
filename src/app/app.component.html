@@ -1,0 +1,9 @@
+<div ngxUiLoaderBlurred blur="5">
+    <app-header></app-header>
+    <router-outlet></router-outlet>
+    <app-footer></app-footer>
+</div>
+<ngx-ui-loader></ngx-ui-loader>
+<a *ngIf="showGoUp" (click)="scrollTop()" class="back-to-top">
+    <img src="../assets/up-arrow.png">
+</a>

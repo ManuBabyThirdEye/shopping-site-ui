@@ -1,0 +1,40 @@
+<div class="address-main">
+    <div class="row col-md-12">
+        <div class="col-md-12">
+            <div class="address-box">
+                <form [formGroup]="addressData" (ngSubmit)="onClickSubmit(addressData.value)">
+                    <h5>CONTACT DETAILS</h5>
+                    <div class="input-box">
+                        <input id="name" type="text" required formControlName="name">
+                        <label for="name">Name*</label>
+                    </div>
+                    <div class="input-box">
+                        <input id="mobileNumber" type="text" required formControlName="mobileNumber">
+                        <label for="mobileNumber">Mobile Number*</label>
+                    </div>
+                    <h5 class="mt-4">ADDRESS</h5>
+
+                    <div class="input-box">
+                        <input id="address" type="text" required formControlName="address">
+                        <label for="address">Address (House No, Building, Street, Aria)*</label>
+                    </div>
+                    <div class="input-box">
+                        <input id="town" type="text" required formControlName="town">
+                        <label for="town">Locality / Town*</label>
+                    </div>
+                    <div class="input-box">
+                        <input (keyup)="pincodeEnter()" id="pinCode" type="text" required formControlName="pinCode">
+                        <label for="pinCode">Pin Code*</label>
+                        <span *ngIf="pinNotAvailable">{{errorCode}}</span>
+                    </div>
+
+                    <div class="state row col-md-12 mt-3">
+                        <div class="col-md-5 col-4">{{district}}</div>
+                        <div class="col-md-5 col-4">{{state}}</div>
+                    </div>
+                    <button [ngClass]="this.addressData.valid && !this.pinNotAvailable?'':'inactive'" type="submit" value="submit">{{address?'UPDATE ADRRESS':'ADD ADRRESS'}}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

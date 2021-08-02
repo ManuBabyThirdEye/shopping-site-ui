@@ -1,0 +1,133 @@
+.address-main {
+    .address-box {
+        padding: 20px;
+        h5 {
+            font-size: 13px!important;
+            font-weight: 600!important;
+        }
+        .input-box {
+            position: relative;
+            width: 95%;
+            margin-top: 15px;
+            input {
+                display: inline-block;
+                margin-top: 5px;
+                font-size: 12px;
+                height: 20px;
+                line-height: 24px;
+                width: 100%;
+                color: #696e79;
+                -webkit-box-sizing: content-box;
+                box-sizing: content-box;
+                padding: 10px 10px 10px 10px;
+                margin: 0;
+                outline: 0;
+                border: 1px solid #dadada;
+                border-radius: 4px 4px 4px 4px;
+                &:focus {
+                    border: 1px solid black;
+                }
+                &:focus~label {
+                    top: -8px;
+                    transition-property: top;
+                    transition-duration: .1s;
+                    left: 9px;
+                    padding: 0 4px;
+                    background: white;
+                    color: black;
+                }
+                &:valid~label {
+                    top: -8px;
+                    transition-property: top;
+                    transition-duration: .1s;
+                    left: 9px;
+                    padding: 0 4px;
+                    background: white;
+                    color: black;
+                }
+            }
+            label {
+                font-size: 12px;
+                display: block;
+                position: absolute;
+                top: 11px;
+                left: 13px;
+                color: #94969f;
+                transition-property: top;
+                transition-duration: .1s;
+            }
+            span {
+                font-size: 14px;
+                color: red;
+            }
+        }
+        .state {
+            div {
+                background: antiquewhite;
+                padding: 10px 10px;
+                margin-right: 18px;
+                margin-left: 18px;
+            }
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #e4498a;
+            border: none;
+            border-radius: 3px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+        .inactive {
+            background: #f7d0e1!important;
+            cursor: default;
+        }
+    }
+    .product-price {
+        margin-top: 25px;
+        .price-main {
+            margin-top: 15px;
+            .price-details {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 5px;
+                p {
+                    margin-bottom: 0px;
+                    font-size: 14px!important;
+                }
+                span {
+                    color: green;
+                    font-size: 13px;
+                }
+            }
+            .divider {
+                background: #dadade;
+                height: 1px;
+                margin: 10px 0px;
+            }
+            .total {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 5px;
+                p {
+                    font-size: 16px!important;
+                    font-weight: 600;
+                }
+            }
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #e4498a;
+            border: none;
+            border-radius: 3px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+    }
+}

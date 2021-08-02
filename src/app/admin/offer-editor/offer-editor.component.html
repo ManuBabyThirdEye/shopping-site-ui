@@ -1,0 +1,80 @@
+<div class="main-page">
+    <div *ngIf="subOffer" class="offer-img row col-md-12">
+        <div [ngClass]="offerType=='sub'? 'col-lg-2 col-md-3 col-6' : 'col-7'" class="image">
+            <div class="overlay-top">Select image with {{offerType=='sub'?'2:3':'3:1'}} ratio</div>
+            <img src="{{subOffer.image}}">
+            <input type='file' (change)="onSelectFile($event)">
+            <div class="overlay-bottom">Click to browse new image</div>
+        </div>
+        <div [ngClass]="offerType=='sub'? 'col-lg-2 col-md-3 col-6' : 'col-2'" class="input-box">
+            <input id="order" type="text" required [(ngModel)]="subOffer.order">
+            <label for="order">Order*</label>
+        </div>
+        <button [ngClass]="offerType=='sub'? 'col-lg-2 col-md-3 col-6' : 'col-2'" class="save" (click)="updateSubOferOrderAndImage(subOffer)">SAVE</button>
+
+    </div>
+    <div class="hr-divider"></div>
+    <h4 class="mt-3">LINKED PRODUCTS</h4>
+    <div *ngIf="!linkedProducts || linkedProducts.length==0" class="empty-product">
+        <img src="../../../assets/box.png">
+        <h3>NO PRODUCT LINKED</h3>
+        <p>Link more product by selecting the below category.</p>
+    </div>
+    <div *ngIf="linkedProducts && linkedProducts.length>0" class="wishlist-list">
+        <div class="row col-md-12">
+            <div *ngFor="let prod of linkedProducts" class="col-6 col-md-4 col-lg-3 col-xl-2">
+                <div class="product-box" routerLink="/product-details" [queryParams]="{productId:prod.id}">
+                    <div (click)="unlinkProduct(prod.id)" class="cancel"><img src="../../../assets/cancel.png"></div>
+                    <img class="img-loading" src="{{prod.images[0]}}">
+                    <div class="product-details">
+                        <p>Size: <span>{{prod.sizes}}</span></p>
+                        <h4>Rs. {{prod.discountPrice}} <s>Rs. {{(prod.discountPrice * 100 )/(100-prod.discount)}} </s> <span>({{prod.discount}}% OFF)</span></h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hr-divider"></div>
+    <h4 class="mt-3">LINK MORE PRODUCTS</h4>
+    <div class="row col-md-12 sort-main">
+        <div class="col-md-3 sort-box">
+            <div class="sort-selected"><span>{{selectedMainCat?selectedMainCat.name:'----Select----'}}</span> <i class="fa fa-angle-down" aria-hidden="true"></i>
+            </div>
+            <div class="sort-item" *ngFor="let mainCat of mainCategoryList" (click)="selectMainCat(mainCat)">{{mainCat.name}}</div>
+        </div>
+        <div *ngIf="selectedMainCat && selectedMainCat.categories && selectedMainCat.categories.length>0" class="col-md-3 sort-box">
+            <div class="sort-selected"><span>{{selectedCat?selectedCat.name:'----Select----'}}</span> <i class="fa fa-angle-down" aria-hidden="true"></i>
+            </div>
+            <div class="sort-item" *ngFor="let cat of selectedMainCat.categories" (click)="selectedCategory(cat)">{{cat.name}}</div>
+        </div>
+        <div *ngIf="selectedCat && selectedCat.subCategories && selectedCat.subCategories.length>0" class="col-md-3 sort-box">
+            <div class="sort-selected"><span>{{selectedSubCat?selectedSubCat.name:'----Select----'}}</span> <i class="fa fa-angle-down" aria-hidden="true"></i>
+            </div>
+            <div class="sort-item" *ngFor="let subCat of selectedCat.subCategories" (click)="selectedSubCategory(subCat)">{{subCat.name}}</div>
+        </div>
+        <div class="col-md-2">
+            <button (click)="linkSelectedProducts()">LINK PRODUCTS</button>
+        </div>
+    </div>
+
+    <div *ngIf="products && products.length>0" class="prod-list">
+        <div class="row col-md-12">
+            <div *ngFor="let pro of products" class="col-6 col-md-4 col-lg-3 col-xl-2">
+                <div (click)="pro.isWishList=!pro.isWishList" class="product-box">
+                    <div [ngClass]="pro.isWishList?'selected':''" class="not-selected"><img src="../../../assets/tick.png"></div>
+                    <img class="img-loading" src="{{pro.images[0]}}">
+                    <div class="product-details">
+                        <p>Size: <span>{{pro.sizes}}</span></p>
+                        <h4>Rs. {{pro.discountPrice}} <s>Rs. {{(pro.discountPrice * 100 )/(100-pro.discount)}} </s> <span>({{pro.discount}}% OFF)</span></h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="!products || products.length==0" class="empty-product">
+        <img src="../../../assets/box.png">
+        <h3>NO PRODUCT FOR LINK</h3>
+        <p>Select defferent category to link more products.</p>
+    </div>
+
+</div>

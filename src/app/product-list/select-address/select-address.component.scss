@@ -1,0 +1,158 @@
+.select-address-main {
+    padding: 120px 250px 50px;
+    .select-address {
+        min-height: 600px;
+        border-right: 1px solid #dadade;
+        .no-address {
+            text-align: center;
+            h3 {
+                margin-top: 40px;
+                font-size: 22px;
+                font-weight: 600;
+            }
+            p {
+                font-size: 18px!important;
+                color: #404146;
+            }
+            img {
+                height: 160px;
+            }
+        }
+        .heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            h4 {
+                margin-bottom: 0px;
+            }
+            button {
+                border: 1px solid #E4498A;
+                font-size: 12px;
+                font-weight: 600;
+                color: #e4498a;
+                padding: 8px 15px;
+                width: fit-content;
+                border-radius: 4px;
+                background: none;
+            }
+        }
+        .address-box {
+            width: 95%;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            &:hover {
+                border: 1px solid #E4498A;
+            }
+            p {
+                margin-bottom: 5px;
+            }
+            button {
+                border: 1px solid #e4498a;
+                font-size: 12px;
+                font-weight: 600;
+                color: #e4498a;
+                padding: 5px 15px;
+                width: -webkit-fit-content;
+                width: -moz-fit-content;
+                width: fit-content;
+                border-radius: 4px;
+                background: none;
+                margin-left: 5px;
+                margin-right: 5px;
+            }
+            .divider {
+                background: #dadade;
+                height: 1px;
+                margin: 15px 0px;
+            }
+            .prod-action {
+                text-align: center;
+                .move-to-wish {
+                    border-left: 1px solid #dadade;
+                }
+                h4 {
+                    font-weight: 620!important;
+                    color: grey;
+                    font-size: 14px!important;
+                    cursor: pointer;
+                }
+            }
+        }
+        .selected {
+            background: #E4498A;
+            color: white!important;
+            p {
+                color: white!important;
+            }
+            h4 {
+                color: white!important;
+            }
+        }
+    }
+    .product-price {
+        margin-top: 25px;
+        .price-main {
+            margin-top: 15px;
+            .price-details {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 5px;
+                p {
+                    margin-bottom: 0px;
+                    font-size: 14px!important;
+                }
+                span {
+                    color: green;
+                    font-size: 13px;
+                }
+            }
+            .divider {
+                background: #dadade;
+                height: 1px;
+                margin: 10px 0px;
+            }
+            .total {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 5px;
+                p {
+                    font-size: 16px!important;
+                    font-weight: 600;
+                    margin-bottom: 0px;
+                }
+            }
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #e4498a;
+            border: none;
+            border-radius: 3px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .inactive {
+            cursor: default;
+            background: #f7d0e1;
+        }
+    }
+}
+
+@media only screen and (max-width:767px) {
+    .select-address-main {
+        padding: 80px 10px 50px;
+        .select-address {
+            min-height: 0;
+        }
+        .product-price {
+            margin-top: 50px;
+            button {
+                margin-top: 20px;
+            }
+        }
+    }
+}

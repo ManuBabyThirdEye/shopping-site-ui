@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "public": "dist/ritham-ui",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

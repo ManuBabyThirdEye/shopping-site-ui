@@ -1,0 +1,21 @@
+.back-to-top {
+    display: block;
+    position: fixed;
+    bottom: 18px;
+    right: 15px;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 4px;
+    background-color: #f7d0e1;
+    box-shadow: 0 8px 9px 0 rgba(96, 94, 94, .17);
+    img {
+        width: 20px;
+        margin-top: 13px;
+        -webkit-transition: all .3s ease-in-out;
+        -moz-transition: all .3s ease-in-out;
+        -o-transition: all .3s ease-in-out;
+        transition: all .3s ease-in-out
+    }
+}

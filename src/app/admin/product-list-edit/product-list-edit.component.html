@@ -1,0 +1,62 @@
+<div class="product-edit">
+    <div class="row col-md-12 sort-main">
+        <div class="col-md-3 sort-box">
+            <div class="sort-selected"><span>{{selectedMainCat?selectedMainCat.name:'----Select----'}}</span>
+            </div>
+            <div class="sort-item" *ngFor="let mainCat of mainCategoryList" (click)="selectMainCat(mainCat)">{{mainCat.name}}</div>
+        </div>
+        <div *ngIf="selectedMainCat && selectedMainCat.categories && selectedMainCat.categories.length>0" class="col-md-3 sort-box">
+            <div class="sort-selected"><span>{{selectedCat?selectedCat.name:'----Select----'}}</span>
+            </div>
+            <div class="sort-item" *ngFor="let cat of selectedMainCat.categories" (click)="selectedCategory(cat)">{{cat.name}}</div>
+        </div>
+        <div *ngIf="selectedCat && selectedCat.subCategories && selectedCat.subCategories.length>0" class="col-md-3 sort-box">
+            <div class="sort-selected"><span>{{selectedSubCat?selectedSubCat.name:'----Select----'}}</span>
+            </div>
+            <div class="sort-item" *ngFor="let subCat of selectedCat.subCategories" (click)="selectedSubCategory(subCat)">{{subCat.name}}</div>
+        </div>
+        <div *ngIf="selectedMainCat && selectedCat" class="col-md-2">
+            <button (click)="addNewProducts()">ADD NEW PRODUCTS</button>
+        </div>
+    </div>
+    <div *ngIf="products && products.length>0" class="prod-list">
+        <div class="row col-md-12">
+            <div *ngFor="let pro of products" class="col-6 col-md-4 col-lg-3 col-xl-2">
+                <div (click)="pro.isWishList=!pro.isWishList" class="product-box">
+                    <img class="img-loading" src="{{pro.images[0]}}">
+                    <div class="product-details">
+                        <p>Size: <span>{{pro.sizes}}</span></p>
+                        <h4>Rs. {{pro.discountPrice}} <s *ngIf="pro.discount>0">Rs. {{(pro.discountPrice * 100 )/(100-pro.discount)}} </s> <span *ngIf="pro.discount>0">({{pro.discount}}% OFF)</span></h4>
+                    </div>
+                    <div class="overlay-bottom row col-12">
+                        <div class="col-4">
+                            <div (click)="editProduct(pro)" class="circle">
+                                <img src="../../../assets/edit_1.png">
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div (click)="deleteProduct(pro)" class="circle">
+                                <img src="../../../assets/delete _1.png">
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div (click)="hideProduct(pro)" class="circle">
+                                <img src="../../../assets/hide.png">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="selectedMainCat && selectedCat && (!products || products.length==0)" class="empty-product">
+        <img src="../../../assets/box.png">
+        <h3>NO PRODUCT FOR THIS CATEGORY</h3>
+        <p>Add new product to selected category</p>
+    </div>
+    <div *ngIf="(!selectedMainCat || !selectedCat) && (!products || products.length==0)" class="empty-product">
+        <img src="../../../assets/box.png">
+        <h3>SELECT CATEGORY</h3>
+        <p>Select Main category and sub category to view products</p>
+    </div>
+</div>

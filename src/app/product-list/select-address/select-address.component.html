@@ -1,0 +1,60 @@
+<div class="select-address-main">
+    <div class="row col-md-12">
+        <div class="select-address col-md-8">
+            <div class="heading mb-3">
+                <h4 *ngIf="addressList.length>0">Select Delivery Address</h4>
+                <button (click)="addAddress()">ADD NEW ADDRESS</button>
+            </div>
+            <div *ngIf="addressList.length==0" class="no-address">
+                <img src="../../../assets/placeholder.png">
+                <h3>NO ADDRESS ADDED</h3>
+                <p>Add your address to countinue shopping</p>
+            </div>
+            <div [ngClass]="address.selected?'selected':''" *ngFor="let address of addressList" class="address-box shadow mt-3">
+                <div (click)="selectAddress(address.id)">
+                    <h5>{{address.name}}</h5>
+                    <p>{{address.address}}, {{address.town}}</p>
+                    <p>{{address.district}}, {{address.state}} - {{address.pinCode}}</p>
+                    <p class="mt-3">Mobile : <span>{{address.mobileNumber}}</span></p>
+                    <div class="divider"></div>
+                    <div class="prod-action row col-md-12">
+                        <div (click)="deleteAddress(address.id)" class="col-md-4 col-8">
+                            <h4>REMOVE</h4>
+                        </div>
+                        <div (click)="editAddress(address)" class="move-to-wish col-md-6 col-4">
+                            <h4>EDIT</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="product-price">
+                <h5>PRICE DETAILS</h5>
+                <div class="price-main">
+                    <div class="price-details">
+                        <p>Total MRP</p>
+                        <p>&#8377; {{cart.totalMRP}}</p>
+                    </div>
+                    <div class="price-details">
+                        <p>Discount on MRP</p>
+                        <span>-&#8377; {{cart.totalMRP-cart.total}}</span>
+                    </div>
+                    <div class="price-details">
+                        <p>Convinience Fee</p>
+                        <p *ngIf="cart.includeConvenienceFee">&#8377; {{cart.convenienceFee}}</p>
+                        <p *ngIf="!cart.includeConvenienceFee"><s>&#8377; {{cart.convenienceFee}}</s></p>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="total">
+                        <p>Total Amount</p>
+                        <span>&#8377; {{cart.total}}</span>
+                    </div>
+
+                </div>
+                <button [ngClass]="selectedAddress==undefined?'inactive':''" (click)="confirmOrder()" class="place-order">CONFIRM</button>
+            </div>
+        </div>
+    </div>
+
+</div>

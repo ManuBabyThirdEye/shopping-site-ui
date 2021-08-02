@@ -1,0 +1,19 @@
+<div class="login-background">
+    <div class="col-md-2 col-12 login-box">
+        <div class="login-header">Login<span>or</span>Signup</div>
+        <div>
+            <div class="col-md-5 phone-number-box">
+                <input placeholder="Mobile Number" type="text" class="col-md -12 phone-number" [(ngModel)]="mobileNumber">
+                <span class="phone-number-code">
+                    +91
+                </span>
+            </div>
+        </div>
+        <div class="terms">By continuing, I agree to the <a href="#">Terms of Use</a> & <a href="#">Privacy Policy</a></div>
+        <div id="recaptcha-container"></div>
+        <button (click)="login()" class="countinue">COUNTINUE</button>
+
+        <div style="margin-top: 30px;" class="terms">Have trouble logging in? <a href="#">Get help</a></div>
+
+    </div>
+</div>

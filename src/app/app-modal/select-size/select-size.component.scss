@@ -1,0 +1,31 @@
+.size-main {
+    padding: 10px;
+    .size {
+        height: 50px;
+        width: 50px;
+        border: 1px solid gray;
+        border-radius: 25px;
+        margin: 10px 0px;
+        padding-top: 12px;
+        text-align: center;
+        cursor: pointer;
+        &:hover {
+            border: 1px solid #e4498a;
+        }
+    }
+    .selected {
+        background: #e4498a;
+        color: white;
+    }
+    button {
+        width: 100%;
+        padding: 10px;
+        background: #e4498a;
+        border: none;
+        border-radius: 3px;
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+        margin-top: 20px;
+    }
+}

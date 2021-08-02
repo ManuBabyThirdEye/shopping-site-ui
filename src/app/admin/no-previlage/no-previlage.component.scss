@@ -1,0 +1,39 @@
+.no-access {
+    padding: 100px 200px;
+    width: 100%;
+    text-align: center;
+    h3 {
+        font-size: 22px;
+        font-weight: 600;
+    }
+    p {
+        font-size: 18px!important;
+        color: #404146;
+    }
+    img {
+        height: 160px;
+        margin-top: 40px;
+        margin-bottom: 50px;
+    }
+    button {
+        margin-top: 30px;
+        cursor: pointer;
+        border: 1px solid #f5f5f6;
+        font-size: 15px;
+        font-weight: 700;
+        color: #e4498a;
+        padding: 10px 20px;
+        width: fit-content;
+        border-radius: 4px;
+        background: none;
+        &:hover {
+            border: 1px solid #E4498A;
+        }
+    }
+}
+
+@media only screen and (max-width:767px) {
+    .empty-product {
+        padding: 100px 0px;
+    }
+}

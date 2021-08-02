@@ -1,0 +1,130 @@
+<div *ngIf="product" class="product-detail-main">
+    <div class="row col-md-12 prod-details">
+        <div class="col-md-6 prod-images">
+            <div *ngIf="product!=undefined" class="row col-md-12  d-none d-sm-flex ">
+                <div *ngFor="let prdImage of product.images" class="col-md-6">
+                    <img class="img-loading" (click)="selectedImage=prdImage" src="{{prdImage}}">
+                </div>
+            </div>
+            <div class="d-block d-sm-none">
+                <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
+                    </div>
+                    <div class="carousel-inner">
+                        <div class="carousel-inner">
+                            <div *ngFor="let prdImage of product.images;let i = index;" class="carousel-item" [ngClass]="i==0?'active':''">
+                                <img class="img-loading" src="{{prdImage}}" class="d-block w-100" alt="Main Offer 1">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="visually-hidden">Previous</span>
+                        </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                        <span class="visually-hidden">Next</span>
+                        </button>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="product!=undefined" class="col-md-6 prod-info">
+            <h3>{{product.name}}</h3>
+            <p>{{product.details}}</p>
+            <h3>Rs. {{product.discountPrice}} <s *ngIf="product.discount>0">Rs. {{(product.discountPrice * 100 )/(100-product.discount)}} </s> <span *ngIf="product.discount>0">({{product.discount}}% OFF)</span></h3>
+            <h4 *ngIf="product.availableSizeString">SELECT SIZE</h4>
+            <div *ngIf="product.availableSizeString" class="row col-md-12 size-box">
+                <div [ngClass]="getClassForSize('S')" (click)="selectSize('S')" class="size">S
+                    <div *ngIf="getProdcutCountForSize('S')">{{getProdcutCountForSize('S')}} Left</div>
+                </div>
+                <div [ngClass]="getClassForSize('M')" (click)="selectSize('M')" class="size">M
+                    <div *ngIf="getProdcutCountForSize('M')">{{getProdcutCountForSize('M')}} Left</div>
+                </div>
+                <div [ngClass]="getClassForSize('L')" (click)="selectSize('L')" class="size">L
+                    <div *ngIf="getProdcutCountForSize('L')">{{getProdcutCountForSize('L')}} Left</div>
+                </div>
+                <div [ngClass]="getClassForSize('XL')" (click)="selectSize('XL')" class="size">XL
+                    <div *ngIf="getProdcutCountForSize('XL')">{{getProdcutCountForSize('XL')}} Left</div>
+                </div>
+                <div [ngClass]="getClassForSize('XXL')" (click)="selectSize('XXL')" class="size">XXL
+                    <div *ngIf="getProdcutCountForSize('XXL')">{{getProdcutCountForSize('XXL')}} Left</div>
+                </div>
+                <div [ngClass]="getClassForSize('XXXL')" (click)="selectSize('XXXL')" class="size">XXXL
+                    <div *ngIf="getProdcutCountForSize('XXXL')">{{getProdcutCountForSize('XXXL')}} Left</div>
+                </div>
+            </div>
+            <div *ngIf="!product.availableSizeString" class="delivery-status">
+                <p>Sorry, No stoke wvailable, please check later</p>
+            </div>
+            <div class="row col-md-12 action">
+                <button *ngIf="!productAddedToCart && product.availableSizeString" class="col-md-6 col-12 add-to-bag" (click)="addToCart()"><i class="fa fa-shopping-basket" aria-hidden="true"></i> ADD TO CART</button>
+                <button *ngIf="productAddedToCart && product.availableSizeString" class="col-md-6 col-12 add-to-bag" routerLink="/cart">GO TO CART <i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                <button *ngIf="!product.availableSizeString" class="col-md-6 col-12 add-to-bag" (click)="informUs()">INFORM US<i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+                <button [ngClass]="product.isWishList?'addedTowish':''" class="col-md-4 col-12 add-to-wishlist" (click)="addToWishList()"><i class="fa fa-heart" aria-hidden="true"></i> {{product.isWishList?'WISHLISTED':'WISHLIST'}}</button>
+            </div>
+            <div class="divider"></div>
+
+            <h4>DELIVERY OPTIONS <i class="fa fa-truck" aria-hidden="true"></i> </h4>
+            <div class="pincode row col-md-12 col-12">
+                <input placeholder="Enter Your PIN code" class="col-md-5 col-5" [(ngModel)]="pinCode" (focus)="deliveryStatus=undefined" value="">
+                <button *ngIf="!deliveryStatus" class="col-md-2 col-4 check" (click)="checkPinCode()">CHECK</button>
+                <p *ngIf="!deliveryStatus">Please enter PIN code to check delivery availability</p>
+            </div>
+            <div *ngIf="deliveryStatus" class="delivery-status">
+                <p *ngIf="!deliveryStatus.available">Unfortunately we do not ship to your pincode</p>
+                <div *ngIf="deliveryStatus.available" class="delivery-options">
+                    <div *ngIf="deliveryStatus.available">
+                        <i class="fa fa-truck" style="transform: rotateY(180deg);" aria-hidden="true"></i>
+                        <h5>Get it by {{ delivertDate | date: "fullDate" }}</h5>
+                    </div>
+                    <div *ngIf="deliveryStatus.codAvailable">
+                        <i class="fa fa-money" aria-hidden="true"></i>
+                        <h5>Pay on delivery available</h5>
+                    </div>
+                    <div *ngIf="deliveryStatus.returnAvailable">
+                        <i class="fa fa-retweet" aria-hidden="true"></i>
+                        <h5>Easy 30 days return & exchange available</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="similarProductList && similarProductList.length>0" class="similar-product">
+        <h4>SIMILAR PRODUCTS</h4>
+        <div class="product-list">
+            <div class="row col-md-12">
+                <div *ngFor="let product of similarProductList" class="col-6 col-md-4 col-lg-3 col-xl-2">
+                    <div class="product-box" routerLink="/product-details" [queryParams]="{mainCategory : mainCategory,category:category,subCategory:subCategory,categoryId:categoryId,subCategoryId:subCategoryId,productName:product.name,productId:product.id}">
+                        <i *ngIf="mobileNumber && !product.isWishList" (click)="addToWhichList(product,true);$event.stopPropagation()" class="fa fa-heart-o unselected-heart"></i>
+                        <i *ngIf="mobileNumber && product.isWishList" (click)="addToWhichList(product,false);$event.stopPropagation()" class="fa fa-heart selected-heart"></i>
+                        <img class="img-loading" src="{{product.images[0]}}">
+                        <div class="product-details">
+                            <p>Size: <span>{{product.availableSizeString}}</span></p>
+                            <h4>Rs. {{product.discountPrice}} <s>Rs. {{(product.discountPrice * 100 )/(100-product.discount)}} </s> <span>({{product.discount}}% OFF)</span></h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="selectedImage" class="img-loading image-view-overlay">
+    <div class="image-div">
+        <div (click)="selectedImage=undefined" class="close">
+            <img src="../../../assets/cancel.png">
+        </div>
+        <div class="all-image-list">
+            <div class="image-item" *ngFor="let prdImage of product.images">
+                <img class="img-loading" (click)="selectedImage=prdImage" [ngClass]="selectedImage==prdImage?'selected':''" src="{{prdImage}}">
+            </div>
+        </div>
+        <div class="image">
+            <img class="img-loading" src="{{selectedImage}}">
+        </div>
+    </div>
+</div>

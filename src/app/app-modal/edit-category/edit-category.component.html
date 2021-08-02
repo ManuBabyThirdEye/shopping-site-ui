@@ -1,0 +1,26 @@
+<div class="address-main">
+    <div class="row col-md-12">
+        <div class="col-md-12">
+            <div class="address-box">
+                <div class="heading">
+                    <h5>{{heading}}</h5> <button (click)="deleteCategory()">DELETE</button>
+                </div>
+                <form [formGroup]="catData" (ngSubmit)="onClickSubmit(catData.value)">
+                    <div class="input-box">
+                        <input id="name" type="text" required formControlName="name">
+                        <label for="name">Name*</label>
+                    </div>
+                    <div class="input-box">
+                        <input id="order" type="text" required formControlName="order">
+                        <label for="order">Order*</label>
+                    </div>
+                    <div *ngIf="showPage" class="input-box">
+                        <input id="page" type="text" required formControlName="page">
+                        <label for="page">{{pageLabel}}*</label>
+                    </div>
+                    <button [ngClass]="this.catData.valid?'':'inactive'" type="submit" value="submit">{{category?'UPDATE':'ADD'}}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

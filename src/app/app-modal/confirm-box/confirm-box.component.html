@@ -1,0 +1,16 @@
+<div class="confirm-main">
+    <div class="p-2 row col-md-12">
+        <div class="image col-md-2 col-2">
+            <img src="{{image}}">
+        </div>
+        <div class="col-md-8 col-8">
+            <div class="heading">{{heading}}</div>
+            <div class="details">{{details}}</div>
+        </div>
+        <div *ngIf="showClose" class="close col-md-2 col-2"><img (click)="close()" src="../../../assets/close.png"></div>
+    </div>
+    <div class="action row col-md-12">
+        <div (click)="negativeResponce()" class="col-md-8 col-8 negative">{{negativeText}}</div>
+        <div (click)="positiveResponce()" class="col-md-4 col-4">{{positiveText}}</div>
+    </div>
+</div>

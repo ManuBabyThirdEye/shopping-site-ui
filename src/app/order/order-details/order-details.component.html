@@ -1,0 +1,88 @@
+<div *ngIf="orderDetsails" class="order-main">
+    <div class="row col-md-12">
+        <div *ngFor="let OorR of orderOrReturnStatusList;let i=index" class="col-md-3 col-3">
+            <div class="status row col-md-12 c-12">
+                <div class="status-text col-md-8 col-8">
+                    {{OorR.orderStatus}}
+                    <p>{{OorR.date | date: "MMM dd"}}</p>
+                    <div class="circle">
+                        <img *ngIf="OorR.date && OorR.orderStatus!='CANCELLED'" src="../../../assets/success.png">
+                        <img *ngIf="OorR.date && OorR.orderStatus=='CANCELLED'" src="../../../assets/remove.png">
+                    </div>
+                </div>
+                <div *ngIf="i!=orderOrReturnStatusList.length-1" class="line col-md-4 col-4"></div>
+            </div>
+        </div>
+    </div>
+    <div class="row col-md-12">
+        <div class="col-md-8 cart-product">
+            <div class="hearder">
+                <h4>Ordered Products</h4>
+                <h4>Total : &#8377; {{orderDetsails.includeConvenienceFee?orderDetsails.total+orderDetsails.convenienceFee:orderDetsails.total}}</h4>
+            </div>
+            <div *ngFor="let cartItem of orderDetsails.cartProducts" class="product box">
+                <div class="row col-md-12">
+                    <div class="col-md-3">
+                        <img class="img-loading" src="{{cartItem.product.images[0]}}">
+                    </div>
+                    <div class="prod-details col-md-6 col-6">
+                        <h5><a routerLink="/product-details" [queryParams]="{productId:cartItem.product.id}">{{cartItem.product.name}}</a></h5>
+                        <p>{{cartItem.product.details}}</p>
+                        <div class="selection">
+                            <span>Size: {{cartItem.size}}</span>
+                            <span>Qty: {{cartItem.quantity}}</span>
+                        </div>
+
+                        <p *ngIf="cartItem.delivertDate!=undefined"><i class="fa fa-check" aria-hidden="true"></i> {{order?'Delivery':'Pick up'}} by <span>{{ cartItem.delivertDate | date: "fullDate" }}</span></p>
+                        <p *ngIf="cartItem.delivertDate==undefined"><i class="fa fa-times" aria-hidden="true"></i> Update your pincode</p>
+                    </div>
+                    <div class="price col-md-3 col-6">
+                        <h5>&#8377; {{cartItem.product.discountPrice}}</h5>
+                        <p><s>Rs. {{(cartItem.product.discountPrice * 100 )/(100-cartItem.product.discount)}}</s> <span>({{cartItem.product.discount}}% OFF)</span></p>
+                    </div>
+                </div>
+                <div *ngIf="orderOrReturnStatusList[orderOrReturnStatusList.length-1].orderStatus=='DELIVERY' && orderOrReturnStatusList[orderOrReturnStatusList.length-1].date" class="divider">
+
+                </div>
+                <div *ngIf="orderOrReturnStatusList[orderOrReturnStatusList.length-1].orderStatus=='DELIVERY' && orderOrReturnStatusList[orderOrReturnStatusList.length-1].date" class="prod-action row col-md-12">
+                    <div (click)="returnOrder(cartItem)" class="col-md-4">
+                        <h4>RETURN</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="product-price col-md-4">
+            <h5>PRICE DETAILS</h5>
+            <div class="price-main">
+                <div class="price-details">
+                    <p>Total MRP</p>
+                    <p>&#8377; {{orderDetsails.totalMRP}}</p>
+                </div>
+                <div class="price-details">
+                    <p>Discount on MRP</p>
+                    <span>-&#8377; {{orderDetsails.totalMRP-orderDetsails.total}}</span>
+                </div>
+                <div class="price-details">
+                    <p>Convinience Fee</p>
+                    <p *ngIf="orderDetsails.includeConvenienceFee">&#8377; {{orderDetsails.convenienceFee}}</p>
+                    <p *ngIf="!orderDetsails.includeConvenienceFee"><s>&#8377; {{orderDetsails.convenienceFee}}</s></p>
+                </div>
+                <div class="divider"></div>
+                <div class="total">
+                    <p>Total Amount</p>
+                    <span>&#8377; {{orderDetsails.includeConvenienceFee?orderDetsails.total+orderDetsails.convenienceFee:orderDetsails.total}}</span>
+                </div>
+            </div>
+            <h5 style="margin-top: 30px!important;">{{order?'DELIVERY':'PICK UP'}} ADDRESS</h5>
+            <div *ngIf="orderDetsails.address" class="address">
+                <h4>{{orderDetsails.address.name}}</h4>
+                <h5>{{orderDetsails.address.mobileNumber}}</h5>
+                <p>{{orderDetsails.address.address}}, {{orderDetsails.address.town}}</p>
+                <p>{{orderDetsails.address.district}}, {{orderDetsails.address.state}} - {{orderDetsails.address.pinCode}}</p>
+            </div>
+
+            <button *ngIf="!(cancelled || orderOrReturnStatusList[orderOrReturnStatusList.length-1].date)" (click)="cancelOrder()" class="place-order">CANCEL</button>
+
+        </div>
+    </div>
+</div>
