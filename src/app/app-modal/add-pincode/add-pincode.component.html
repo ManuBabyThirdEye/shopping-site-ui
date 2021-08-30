@@ -1,0 +1,54 @@
+<div class="address-main">
+    <div class="row col-md-12">
+        <div class="col-md-12">
+            <div class="address-box">
+                <form [formGroup]="pinData" (ngSubmit)="onClickSubmit(pinData.value)">
+                    <h5>ADD PINNCODE DETAILS</h5>
+                    <div class="input-box">
+                        <input id="pincode" type="text" required formControlName="pincode">
+                        <label for="pincode">Pincode*</label>
+                    </div>
+                    <div class="input-box">
+                        <input id="district" type="text" required formControlName="district">
+                        <label for="district">District*</label>
+                    </div>
+                    <div class="input-box">
+                        <input id="state" type="text" required formControlName="state">
+                        <label for="state">State*</label>
+                    </div>
+                    <h5 class="mt-4">CONFIGURATION</h5>
+
+                    <div class="input-box">
+                        <input id="pinCodeDeliveryDelay" type="number" required formControlName="pinCodeDeliveryDelay">
+                        <label for="pinCodeDeliveryDelay">Delivery Delay(Days)</label>
+                    </div>
+                    <div class="input-box">
+                        <input id="convenienceFee" type="number" required formControlName="convenienceFee">
+                        <label for="convenienceFee">Convenience Fee</label>
+                    </div>
+                    <div class="input-box">
+                        <input id="minOrderAmount" type="number" required formControlName="minOrderAmount">
+                        <label for="minOrderAmount">Min Order Amount</label>
+                    </div>
+                    <div class="row col-md-12 mt-3">
+                        <div class="col-md-5 col-4">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked1" formControlName="codAvailable">
+                                <label class="form-check-label" for="flexSwitchCheckChecked1">COD Available</label>
+                            </div>
+                        </div>
+                        <div class="col-md-5 col-4">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked2" formControlName="returnAvailable">
+                                <label class="form-check-label" for="flexSwitchCheckChecked2">Return Available</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                    <button [ngClass]="this.pinData.valid ?'':'inactive'" type="submit" value="submit">{{pinDetails?'UPDATE':'ADD'}}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

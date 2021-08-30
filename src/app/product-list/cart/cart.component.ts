@@ -7,6 +7,7 @@ import { ConfirmBoxComponent } from 'src/app/app-modal/confirm-box/confirm-box.c
 import { SelectSizeComponent } from 'src/app/app-modal/select-size/select-size.component';
 import { CategoryService } from 'src/app/services/category.service';
 import { LocalStoreObjectService } from 'src/app/services/local-store-object.service';
+import { ProductService } from 'src/app/services/product.service';
 import { Order, CartProduct, PinCode, Product, User } from 'src/bean/category';
 
 @Component({
@@ -40,7 +41,9 @@ export class CartComponent implements OnInit {
       orderStatusList : [],
       mobileNumber : "",
       includeConvenienceFee : true,
-      placedDate:undefined
+      placedDate:undefined,
+      paymentMode : undefined,
+      paymentDetails : undefined
     }
 
     this.pinStatus = this.localStoreObject.getObject("pincode");

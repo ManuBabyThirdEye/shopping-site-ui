@@ -1,0 +1,60 @@
+<div class="main-div">
+    <div class="d-none d-sm-block list-page-header">
+        <div class="navigation-box">
+            <span routerLink="/admin">Admin</span>
+            <span class="active"><span></span> Pincode</span>
+        </div>
+    </div>
+    <div class="main-table rounded shadow">
+
+    <div class="heading rounded">
+        <div class="heading-text">
+            AVAILABLE PINCODES
+        </div>
+        
+        <div class="add-pincode">
+            <button (click)="addNewPincode()">ADD NEW PINCODE</button>
+        </div>
+    </div>
+        <table>
+            <tr>
+                <th>Active</th>
+                <th>Pincode</th>
+                <th>State</th>
+                <th>District</th>
+                <th>COD Available</th>
+                <th>Return Available</th>
+                <th>Delivery Delay(Days)</th>
+                <th>Convenience Fee</th>
+                <th>Min Order Amount</th>
+                <th>Actions</th>
+            </tr>
+            <tr *ngFor="let pincode of pincodeList">
+                <td>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" (change)="checkActive(pincode)"
+                        id="flexSwitchCheckChecked2" [(ngModel)]="pincode.available">
+                    </div>
+                </td>
+                <td>{{pincode.pincode}}</td>
+                <td>{{pincode.state}}</td>
+                <td>{{pincode.district}}</td>
+                <td>
+                    <img *ngIf="pincode.codAvailable" src="../../../assets/success.png">
+                    <img *ngIf="!pincode.codAvailable" src="../../../assets/remove.png">
+                </td>
+                <td>
+                    <img *ngIf="pincode.returnAvailable" src="../../../assets/success.png">
+                    <img *ngIf="!pincode.returnAvailable" src="../../../assets/remove.png">
+                </td>
+                <td>{{pincode.pinCodeDeliveryDelay}}</td>
+                <td>Rs. {{pincode.convenienceFee}}</td>
+                <td>Rs. {{pincode.minOrderAmount}}</td>
+                <td>
+                    <img (click)="editPincode(pincode)" src="../../../assets/edit_1.png">
+                    <img (click)="deletePincode(pincode)" src="../../../assets/delete _1.png">
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

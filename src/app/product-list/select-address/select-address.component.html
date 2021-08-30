@@ -11,7 +11,8 @@
                 <p>Add your address to countinue shopping</p>
             </div>
             <div [ngClass]="address.selected?'selected':''" *ngFor="let address of addressList" class="address-box shadow mt-3">
-                <div (click)="selectAddress(address.id)">
+                <div (click)="selectAddress(address.id)" class="address-inner">
+                    <img *ngIf="address.selected" src="../../../assets/success.png">
                     <h5>{{address.name}}</h5>
                     <p>{{address.address}}, {{address.town}}</p>
                     <p>{{address.district}}, {{address.state}} - {{address.pinCode}}</p>
@@ -52,7 +53,18 @@
                     </div>
 
                 </div>
-                <button [ngClass]="selectedAddress==undefined?'inactive':''" (click)="confirmOrder()" class="place-order">CONFIRM</button>
+                <google-pay-button class="google-pay"
+                [environment]="env"
+                buttonType="buy"
+                buttonColor="black"
+                [paymentRequest]="gogolePaymentRequest"
+                (loadpaymentdata)="onLoadPaymentData($event)"
+                (error)="errorHandler($event)"
+                [paymentAuthorizedCallback]="onPaymentAuthorized"
+                ></google-pay-button>
+
+                <button [ngClass]="selectedAddress==undefined?'inactive':''" (click)="confirmOrder()" class="place-order"><img src="../../../assets/cash-on-delivery.png"> Cash on delivery</button>
+
             </div>
         </div>
     </div>

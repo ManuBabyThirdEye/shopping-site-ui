@@ -145,12 +145,93 @@ export interface Order{
     orderStatusList : Array<OrderStatus>
     includeConvenienceFee : boolean;
     placedDate : string;
+    paymentMode :PaymentMode;
+    paymentDetails : PaymentDetails;
+}
+
+export interface PaymentDetails{
+    apiVersion : number;
+    apiVersionMinor : number;
+    paymentMethodData : PaymentMethodData;
+}
+
+export interface PaymentMethodData{
+    description : string;
+    info : CardInfo;
+    tokenizationData : TokenizationData;
+}
+
+export interface TokenizationData{
+    token : string;
+    type : string;
+}
+
+export interface CardInfo{
+    cardDetails : string;
+    cardNetwork : string;
 }
 
 export enum OrderClasification{
     RETURN,CANCELLED,PLACED
 }
+export enum PaymentMode{
+    GOOGLE_PAY,COD,CARD,SHOP_CASH
+}
 
 export enum AllSize{
     S,M,L,XL,XXL,XXXL
+}
+
+export interface GogolePaymentRequest{
+    apiVersion : number;
+    apiVersionMinor : number;
+    allowedPaymentMethods : Array<AllowedPaymentMethod>;
+    merchantInfo : MerchantInfo;
+    transactionInfo : TransactionInfo;
+    callbackIntents: Array<string>;
+
+}
+
+export interface TransactionInfo{
+    totalPriceStatus : string;
+    totalPriceLabel : string;
+    totalPrice : string;
+    currencyCode : string;
+    countryCode : string;
+}
+
+export interface MerchantInfo{
+    merchantId : string;
+    merchantName : string;
+}
+
+export interface AllowedPaymentMethod{
+    type : string;
+    parameters : Parameters;
+    tokenizationSpecification : TokenizationSpecification;
+}
+
+export interface TokenizationSpecification{
+    type : string;
+    parameters : TokenizationParameters;
+}
+
+export interface TokenizationParameters{
+    gateway : string;
+    gatewayMerchantId : string;
+}
+
+export interface Parameters{
+    allowedAuthMethods : Array<string>;
+    allowedCardNetworks : Array<string>;
+}
+
+export enum KEY_CODE {
+    ENTER = 13,
+    ZERO = 48,
+    NINE = 57,
+    A = 65,
+    Z = 90,
+    _ = 189,
+    BACK = 8
 }

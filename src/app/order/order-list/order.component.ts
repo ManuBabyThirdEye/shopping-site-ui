@@ -18,7 +18,7 @@ export class OrderComponent implements OnInit {
 
   showOrder : boolean = true;
 
-  constructor( private categoryService : CategoryService,
+  constructor( public categoryService : CategoryService,
     private ngxService: NgxUiLoaderService) { 
       window.scroll(0,0);
     }
@@ -34,13 +34,14 @@ export class OrderComponent implements OnInit {
       this.ngxService.stop();
     })
     this.categoryService.getOrdersOrReturn(false).then(docs=>{
-      docs.forEach(doc=>{
+      this.returnList = docs.docs.map(doc=>{
         let order = doc.data() as Order;
         order.id = doc.id;
-         this.returnList.push(order);
-      })
+        return order;
+      });
+      console.log(this.returnList);
     }).catch(e=>{
-      
+      console.log(e);
     })
   }
 

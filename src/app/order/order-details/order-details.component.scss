@@ -240,6 +240,46 @@
                 margin-bottom: 5px;
             }
         }
+        .payment-mode{
+            div{
+                margin-top: 10px;
+                img{
+                    width: 30px;
+                }
+            }
+        }
+        .payment-details{
+            margin-top: 10px;
+            margin-left: 20px;
+            margin-right: 20px;
+            height: 150px;
+            border-radius: 15px;
+            border: 1px solid white;
+            font-family:ocr_a_std,sans-serif;
+            img{
+                width: 30px;
+                margin-left: 10px;
+                margin-top: 10px;
+            }
+            span{
+                top: 6px;
+                position: relative;
+                font-weight: bold;
+                font-size: 18px;
+            }
+            .card-network{
+                font-weight: 700;
+                margin-top: 20px;
+                text-align: right;
+                margin-right: 20px;
+            }
+            .card-number{
+                text-align: center;
+                font-size: 16px;
+                margin-top: 35px;
+            }
+            
+        }
         button {
             margin-top: 20px;
             width: 100%;

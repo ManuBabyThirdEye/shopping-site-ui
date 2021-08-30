@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CANCELLED } from 'dns';
 import { ToastrService } from 'ngx-toastr';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { ConfirmBoxComponent } from 'src/app/app-modal/confirm-box/confirm-box.component';
 import { CategoryService } from 'src/app/services/category.service';
+import { ProductService } from 'src/app/services/product.service';
 import { CartProduct, Order, OrderClasification, OrderStatus, PinCode } from 'src/bean/category';
 
 @Component({
@@ -20,13 +20,14 @@ export class OrderDetailsComponent implements OnInit {
 
   orderDetsails : Order;
   orderId : string;
-  order : boolean;
+  tableName : string;
   cancelled : boolean;
   orderClasification: OrderClasification;
 
   orderOrReturnStatusList : Array<OrderStatus> =[];
 
   constructor(private categoryService : CategoryService,
+    private productService : ProductService,
     private route: ActivatedRoute,
     private ngxService: NgxUiLoaderService,
     private toastr: ToastrService,
@@ -35,19 +36,17 @@ export class OrderDetailsComponent implements OnInit {
       window.scroll(0,0);
       this.route.queryParams.subscribe(params => {
         this.orderId = params.orderId;
-        this.order = params.order=="true";
+        this.tableName = params.tableName;
       });
     }
 
   ngOnInit(): void {
     this.ngxService.start();
-    this.categoryService.getOrderDetails(this.order,this.orderId).then(order => {
-      console.log(order.exists);
+    this.categoryService.getOrderDetails(this.tableName,this.orderId).then(order => {
       this.orderDetsails = order.data() as Order;
-      console.log(this.orderDetsails);
       this.orderDetsails.id = order.id;
       this.updateOrderStatusList(this.orderDetsails.orderStatusList);
-      if(!this.order){
+      if(this.tableName==this.categoryService.RETURN_TABLE){
         this.orderClasification = OrderClasification.RETURN;
       }else{
         if(this.orderDetsails.orderStatusList.find(s => s.orderStatus == 'CANCELLED')){
@@ -56,14 +55,13 @@ export class OrderDetailsComponent implements OnInit {
           this.orderClasification = OrderClasification.PLACED;
         }
       }
-      console.log(this.orderDetsails);
       this.ngxService.stop();
     });
   }
   updateOrderStatusList(orderStatusList: OrderStatus[]) {
     this.orderOrReturnStatusList = [];
       this.cancelled = orderStatusList.find(s => s.orderStatus == 'CANCELLED') ? true:false;      
-      let statusList = this.order?this.orderStatusList:this.returnStatusList;
+      let statusList = this.tableName==this.categoryService.ORDER_TABLE?this.orderStatusList:this.returnStatusList;
       for(let i=0;i<statusList.length;i++){
         let statusTxt = statusList[i];
         let orderFromDB = orderStatusList.find(s=>s.orderStatus == statusTxt);
@@ -81,7 +79,6 @@ export class OrderDetailsComponent implements OnInit {
           }
         }
       }
-      console.log(this.orderOrReturnStatusList);
   }
 
   cancelOrder(){
@@ -96,7 +93,7 @@ export class OrderDetailsComponent implements OnInit {
     confirmCancel.result.then(result=>{
       if(result){
         this.ngxService.start();
-        this.categoryService.cancelOrderOrRefund(this.order,this.orderDetsails.id).then(()=>{
+        this.categoryService.cancelOrderOrRefund(this.tableName,this.orderDetsails.id).then(()=>{
           this.orderDetsails.currentOrderStatus = 'CANCELLED';
           this.orderDetsails.orderStatusList.push({
             orderStatus : 'CANCELLED',
@@ -104,7 +101,7 @@ export class OrderDetailsComponent implements OnInit {
           })
           this.orderClasification = OrderClasification.CANCELLED;
           this.updateOrderStatusList(this.orderDetsails.orderStatusList);
-          this.categoryService.updateProductCountAfterCancel(this.orderDetsails);
+          this.productService.updateProductCountAfterCancel(this.orderDetsails);
           this.ngxService.stop();
         });
       }
@@ -147,7 +144,9 @@ export class OrderDetailsComponent implements OnInit {
             }],
             total : cartItem.product.discountPrice,
             totalMRP : cartItem.product.discountPrice,
-            placedDate : new Date().toISOString()
+            placedDate : new Date().toISOString(),
+            paymentMode : this.orderDetsails.paymentMode,
+            paymentDetails : this.orderDetsails.paymentDetails
           }
           this.categoryService.placeReturn(returnOrder).then((doc)=>{
             this.toastr.success("Your return initiated");

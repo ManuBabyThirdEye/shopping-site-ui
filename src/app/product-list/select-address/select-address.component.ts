@@ -6,7 +6,9 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { ConfirmBoxComponent } from 'src/app/app-modal/confirm-box/confirm-box.component';
 import { CategoryService } from 'src/app/services/category.service';
 import { LocalStoreObjectService } from 'src/app/services/local-store-object.service';
-import { Address, Order, PinCode } from 'src/bean/category';
+import { ProductService } from 'src/app/services/product.service';
+import { Address, GogolePaymentRequest, Order, PaymentDetails, PaymentMode, PinCode } from 'src/bean/category';
+import { environment } from 'src/environments/environment';
 import { AddAddressComponent } from '../../app-modal/add-address/add-address.component';
 
 @Component({
@@ -20,8 +22,11 @@ export class SelectAddressComponent implements OnInit {
   selectedAddress : Address;
   cart: Order;
   pinStatus : PinCode;
+  gogolePaymentRequest : GogolePaymentRequest;
+  env : string;
 
   constructor(private categoryService : CategoryService,
+    private productService : ProductService,
     private ngxService: NgxUiLoaderService,
     private toastr: ToastrService,
     private modalService: NgbModal,
@@ -30,6 +35,9 @@ export class SelectAddressComponent implements OnInit {
       window.scroll(0,0);
       this.cart = localStoreObjectService.getObject("order");
       this.pinStatus = this.localStoreObjectService.getObject("pincode");
+      this.gogolePaymentRequest = environment.googlePayPaymentRequest;
+      this.env = environment.production?'PRODUCTION':'TEST';
+      this.gogolePaymentRequest.transactionInfo.totalPrice = this.cart.total+"";
     }
 
   ngOnInit(): void {
@@ -64,37 +72,43 @@ export class SelectAddressComponent implements OnInit {
 
   confirmOrder(){
     if(this.selectedAddress){
-      if(this.pinStatus.pinCodeDeliveryDelay && this.cart.cartProducts){
-        this.cart.cartProducts.forEach(prod => {
-          let totalDelay : number = prod.product.productDeliveryDelay + this.pinStatus.pinCodeDeliveryDelay;
-          let today = new Date();
-          today.setDate(today.getDate()+totalDelay);
-          prod.delivertDate = today.toISOString();
-        })
-      }
-      this.cart.address = this.selectedAddress;
-      this.cart.currentOrderStatus="PLACED";
-      this.cart.orderStatusList = [
-        {
-          orderStatus : "PLACED",
-          date : new Date().toISOString()
-        }
-      ]
-      this.cart.placedDate = new Date().toISOString();
-      this.localStoreObjectService.setObject("order",this.cart);
+      this.updateCartDetails();
+      this.cart.paymentMode = PaymentMode.COD;
       this.ngxService.start();
-      this.categoryService.reduceProductCountAndPlaceOrder(this.cart).then(resp=>{
+      this.productService.reduceProductCountAndPlaceOrder(this.cart,true).then(resp=>{
         this.toastr.success("Your order placed");
         this.localStoreObjectService.removeObject("order");
         this.categoryService.evictCartList();
-        this.router.navigate(['/order-details'],{queryParams : {orderId:resp.id,order:true}});
+        this.router.navigate(['/order-details'],{queryParams : {orderId:resp,order:true}});
         this.ngxService.stop();
       }).catch(e=>{
+        console.log(e);
         this.router.navigate(['/cart']);
       })
     }else{
-      this.toastr.warning("Select your address first");
+      this.toastr.warning("Select your address");
     }
+  }
+
+  private updateCartDetails() {
+    if (this.pinStatus.pinCodeDeliveryDelay && this.cart.cartProducts) {
+      this.cart.cartProducts.forEach(prod => {
+        let totalDelay: number = prod.product.productDeliveryDelay + this.pinStatus.pinCodeDeliveryDelay;
+        let today = new Date();
+        today.setDate(today.getDate() + totalDelay);
+        prod.delivertDate = today.toISOString();
+      });
+    }
+    this.cart.address = this.selectedAddress;
+    this.cart.currentOrderStatus = "PLACED";
+    this.cart.orderStatusList = [
+      {
+        orderStatus: "PLACED",
+        date: new Date().toISOString()
+      }
+    ];
+    this.cart.placedDate = new Date().toISOString();
+    this.localStoreObjectService.setObject("order", this.cart);
   }
 
   addAddress(){
@@ -182,6 +196,43 @@ export class SelectAddressComponent implements OnInit {
       }
       return a;
     } );
+  }
+
+  onLoadPaymentData(event : Event){
+    const eventDetails = event as CustomEvent<google.payments.api.PaymentData>
+    console.log(eventDetails);
+  }
+
+  onPaymentAuthorized : google.payments.api.PaymentAuthorizedHandler = (paymentData)=>{
+    if(this.selectedAddress){
+      console.log(paymentData);
+      this.updateCartDetails();
+      this.cart.paymentMode = PaymentMode.GOOGLE_PAY;
+      this.cart.paymentDetails = paymentData as PaymentDetails; 
+      console.log(this.cart)
+      this.ngxService.start();
+      this.productService.reduceProductCountAndPlaceOrder(this.cart,true).then(resp=>{
+        this.toastr.success("Your order placed");
+        this.localStoreObjectService.removeObject("order");
+        this.categoryService.evictCartList();
+        this.router.navigate(['/order-details'],{queryParams : {orderId:resp,order:true}});
+        this.ngxService.stop();
+      }).catch(e=>{
+        console.log(e);
+        this.router.navigate(['/cart']);
+      })
+      return {
+        transactionState : 'SUCCESS'
+      }
+    }else{
+      this.toastr.warning("Select your address");
+    }
+    
+  }
+
+  errorHandler(event){
+    console.log("errorHandler");
+    console.log(event)
   }
 
 }

@@ -1,0 +1,100 @@
+<div class="main-div">
+    <div class="d-none d-sm-block list-page-header">
+        <div class="navigation-box">
+            <span routerLink="/admin">Admin</span>
+            <span class="active"><span></span> Orders & Returns</span>
+        </div>
+    </div>
+    <div class="selection">
+        <span [ngClass]="tableName==categoryService.ORDER_TABLE?'selected':''" (click)="getAllOrderList(categoryService.ORDER_TABLE,undefined,undefined,pageLimit,true,false)">Orders</span>
+        <span [ngClass]="tableName==categoryService.RETURN_TABLE?'selected':''" (click)="getAllOrderList(categoryService.RETURN_TABLE,undefined,undefined,pageLimit,true,false)">Return</span>
+        <span [ngClass]="tableName==productService.BILLING_TABLE?'selected':''" (click)="getAllOrderList(productService.BILLING_TABLE,undefined,undefined,pageLimit,true,false)">Billing</span>
+    </div>
+    <div class="divider"></div>
+
+    <div class="main-table rounded shadow">
+
+        <div class="heading rounded">
+            <div class="heading-text">
+                {{tableName.toUpperCase()}}
+            </div>
+            <div *ngIf="tableName==categoryService.ORDER_TABLE" class="status-list">
+                <div  *ngFor="let status of orderStatusList">
+                    <div (click)="getAllOrderList(tableName,status,undefined,pageLimit,true,false);" [ngClass]="status==selectedStatus?'selected':''" class="status">
+                        {{status}}
+                    </div>
+                </div>
+                <div (click)="getAllOrderList(tableName,undefined,undefined,pageLimit,true,false);" class="status">
+                    CLEAR
+                </div>
+            </div>
+            <div *ngIf="tableName==categoryService.RETURN_TABLE" class="status-list">
+                <div  *ngFor="let status of returnStatusList">
+                    <div (click)="getAllOrderList(tableName,status,undefined,pageLimit,true,false);" [ngClass]="status==selectedStatus?'selected':''" class="status">
+                        {{status}}
+                    </div>
+                </div>
+                <div (click)="getAllOrderList(tableName,undefined,undefined,pageLimit,true,false);" class="status">
+                    CLEAR
+                </div>
+            </div>
+        </div>
+        <div *ngIf="orderList.length==0" class="empty-order">
+            <img src="../../../assets/box.png">
+            <h3>No order for the selected status!</h3>
+        </div>
+        <table *ngIf="orderList.length>0">
+            <tr>
+                <th></th>
+                <th>Order Id</th>
+                <th>Product Count</th>
+                <th>Customer Name</th>
+                <th>Customer Number</th>
+                <th>Amount</th>
+                <th>Current Status</th>
+                <th>Placed Date</th>
+                <th>Convenience Fee</th>
+                <th>Payment Mode</th>
+                <th>Actions</th>
+            </tr>
+            <tr *ngFor="let order of orderList">
+                <td>
+                    <div class="prod-img">
+                        <img *ngIf="order.cartProducts && order.cartProducts.length>0" class="img-loading prod-img" src="{{order.cartProducts[0].product.images[0]}}">
+                        <img *ngIf="!(order.cartProducts && order.cartProducts.length>0)" class="img-loading prod-img" src="../../../assets/logo.png">
+                    </div>
+                </td>
+                <td>
+                    <div routerLink="/order-details" [queryParams]="{orderId:order.id,tableName:tableName}" class="order-id">
+                        {{order.id}}
+                    </div>
+                </td>
+                <td>{{getProductCount(order.cartProducts)}}</td>
+                <td>{{order.address.name}}</td>
+                <td>{{order.mobileNumber}}</td>
+                <td>Rs. {{order.total}}</td>
+                <td class="status">{{order.currentOrderStatus}}</td>
+                <td>{{order.placedDate | date: "dd-MMM-YYYY HH:mm"}}</td>
+                <td>Rs. {{order.includeConvenienceFee?order.convenienceFee:0}}</td>
+                <td>
+                    <img class="icon" *ngIf="order.paymentMode==0" src="../../../assets/gpay.svg">
+                    <img class="icon" *ngIf="order.paymentMode==1" src="../../../assets/cash-on-delivery.png">
+                </td>
+                <td>
+                    <img class="action" *ngIf="getActionList(order).length>0" src="../../../assets/more.png">
+                    <div *ngIf="getActionList(order).length>0" class="more-option rounded shadow">
+                        <div *ngFor="let more of getActionList(order)" class="more-item">
+                            <div (click)="updateStatus(order,more)">
+                                {{more}}
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div *ngIf="orderList.length>0" class="pagination">
+            <button [ngClass]="prevInactive?'inactive':'active'" (click)="getAllOrderList(tableName,selectedStatus,firstDocument,pageLimit,false)">Prev</button>
+            <button [ngClass]="nextInactive?'inactive':'active'" (click)="getAllOrderList(tableName,selectedStatus,lastDocument,pageLimit,true)">Next</button>
+        </div>
+    </div>
+</div>

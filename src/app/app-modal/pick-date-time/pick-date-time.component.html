@@ -1,0 +1,17 @@
+<div class="main-box">
+    <button (click)="selectNow()" class="today">NOW</button>
+    <div class="or-box">
+        <div class="devider">
+            <span class="or">
+                OR
+            </span>
+        </div>
+        
+    </div>
+    <div class="date-time-picker">
+        <input type="date" [(ngModel)]="date">
+        <input type="time" [(ngModel)]="time">
+    </div>
+    <button (click)="selectDateTimePicker()" class="today">SUBMIT</button>
+
+</div>

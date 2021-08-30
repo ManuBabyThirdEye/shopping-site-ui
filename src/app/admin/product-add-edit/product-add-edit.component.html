@@ -61,11 +61,11 @@
             <h3 (dblclick)="amountEdit=true;editedDiscountedAmount=product.discountPrice;editedDiscount=product.discount" *ngIf="!amountEdit">Rs. {{product.discountPrice}} <s>Rs. {{(product.discountPrice * 100 )/(100-product.discount)}} </s> <span>({{product.discount}}% OFF)</span></h3>
             <div class="heading-edit" *ngIf="amountEdit">
                 <div class="input-box">
-                    <input id="amount" type="text" required [(ngModel)]="editedDiscountedAmount">
+                    <input id="amount" type="number" required [(ngModel)]="editedDiscountedAmount">
                     <label for="amount">Discount Price*</label>
                 </div>
                 <div class="input-box">
-                    <input id="discount" type="text" required [(ngModel)]="editedDiscount">
+                    <input id="discount" type="number" required [(ngModel)]="editedDiscount">
                     <label for="discount">Discount Percentage(%)*</label>
                 </div>
                 <button class="save" (click)="saveAmount()">SAVE</button>
@@ -95,7 +95,7 @@
             <p (dblclick)="delayEdit=true" *ngIf="!delayEdit">Prduct Delivery Delay : {{product.productDeliveryDelay}} days</p>
             <div class="heading-edit" *ngIf="delayEdit">
                 <div class="input-box">
-                    <input id="delay" type="text" required [(ngModel)]="editedDeliveryDelay">
+                    <input id="delay" type="number" required [(ngModel)]="editedDeliveryDelay">
                     <label for="delay">Delivery Delay*</label>
                 </div>
                 <button class="save" (click)="product.productDeliveryDelay=editedDeliveryDelay;delayEdit=false;">SAVE</button>
@@ -106,13 +106,34 @@
             </div>
 
             <div class="link-cat">
-                <h4>LINKED CATEGORIES</h4>
-                <div class="divider"></div>
-                <div>
+                <h4>LINKED CATEGORIES</h4>                     
+                <div class="cat-items">
                     <div *ngFor="let cat of linkedCategoriesNameMap | keyvalue">
-                        <div class="category">
+                        <div class="category rounded">
                             {{cat.value}}
+                            <img (click)="removeCategory(cat.key)" src="../../../assets/cancel.png">
                         </div>
+                    </div>
+                </div>
+
+                <div class="row col-md-6 sort-main">
+                    <div class="col-md-2 sort-box">
+                        <div class="sort-selected"><span>{{selectedMainCat?selectedMainCat.name:'Select'}}</span>
+                        </div>
+                        <div class="sort-item" *ngFor="let mainCat of mainCategoryList" (click)="selectMainCat(mainCat)">{{mainCat.name}}</div>
+                    </div>
+                    <div *ngIf="selectedMainCat && selectedMainCat.categories && selectedMainCat.categories.length>0" class="col-md-3 sort-box">
+                        <div class="sort-selected"><span>{{selectedCat?selectedCat.name:'Select'}}</span>
+                        </div>
+                        <div class="sort-item" *ngFor="let cat of selectedMainCat.categories" (click)="selectedCategory(cat)">{{cat.name}}</div>
+                    </div>
+                    <div *ngIf="selectedCat && selectedCat.subCategories && selectedCat.subCategories.length>0" class="col-md-3 sort-box">
+                        <div class="sort-selected"><span>{{selectedSubCat?selectedSubCat.name:'Select'}}</span>
+                        </div>
+                        <div class="sort-item" *ngFor="let subCat of selectedCat.subCategories" (click)="selectedSubCategory(subCat)">{{subCat.name}}</div>
+                    </div>
+                    <div *ngIf="selectedMainCat && selectedCat" class="col-md-2">
+                        <button class="save" (click)="addNewCategoryToProduct()">LINK</button>
                     </div>
                 </div>
             </div>

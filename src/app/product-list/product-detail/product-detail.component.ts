@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { CategoryService } from 'src/app/services/category.service';
 import { LocalStoreObjectService } from 'src/app/services/local-store-object.service';
+import { ProductService } from 'src/app/services/product.service';
 import { PinCode, Product, User, WishItem } from 'src/bean/category';
 
 @Component({
@@ -30,6 +31,7 @@ export class ProductDetailComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
     private categoryService : CategoryService,
+    private productService : ProductService,
     private ngxService: NgxUiLoaderService,
     private toastr: ToastrService,
     private localStoreObjectService: LocalStoreObjectService,
@@ -55,7 +57,7 @@ export class ProductDetailComponent implements OnInit {
   ngOnInit(): void {
     this.user = this.localStoreObjectService.getObject(LocalStoreObjectService.USER_KEY);
     this.ngxService.start();
-    this.categoryService.getProduct(this.productId).then(product=>{
+    this.productService.getProduct(this.productId).then(product=>{
       console.log(product);
       this.product = product;
       if(product){
@@ -72,8 +74,9 @@ export class ProductDetailComponent implements OnInit {
           })
         }
       }
-      if(this.deliveryStatus && this.deliveryStatus.pinCodeDeliveryDelay){
+      if(this.deliveryStatus){
         let totalDelay : number = this.product.productDeliveryDelay + this.deliveryStatus.pinCodeDeliveryDelay;
+        console.log(totalDelay);
         this.delivertDate = new Date();
         this.delivertDate.setDate(this.delivertDate.getDate()+totalDelay);
       }
@@ -81,7 +84,7 @@ export class ProductDetailComponent implements OnInit {
 
     })
     if(this.subCategoryId || this.categoryId){
-      this.categoryService.getProductList(this.subCategoryId?this.subCategoryId:this.categoryId,"rating",'desc').then(p=>{
+      this.productService.getProductList(this.subCategoryId?this.subCategoryId:this.categoryId,"rating",'desc').then(p=>{
         this.similarProductList = [];
         p.docs.map(pro =>{
           this.similarProductList.push(pro.data() as Product);
@@ -123,7 +126,9 @@ export class ProductDetailComponent implements OnInit {
         this.deliveryStatus.pincode = doc.id;
         if(this.deliveryStatus.pinCodeDeliveryDelay){
           let totalDelay : number = this.product.productDeliveryDelay + this.deliveryStatus.pinCodeDeliveryDelay;
+          console.log(totalDelay);
           this.delivertDate = new Date();
+          
           this.delivertDate.setDate(this.delivertDate.getDate()+totalDelay);
         }
         this.localStoreObjectService.setObject("pincode",this.deliveryStatus);

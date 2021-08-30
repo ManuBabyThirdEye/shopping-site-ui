@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { CategoryService } from 'src/app/services/category.service';
 import { OfferService } from 'src/app/services/offer.service';
+import { ProductService } from 'src/app/services/product.service';
 import { Category, MainCategory, Product, SubCategory } from 'src/bean/category';
 import { HomeSubItem, MainOffer } from 'src/bean/offer';
 
@@ -29,6 +30,7 @@ export class OfferEditorComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
     private categoryService : CategoryService,
+    private productService : ProductService,
     private ngxService: NgxUiLoaderService,
     private toastr: ToastrService,
     private offerService: OfferService) { 
@@ -82,7 +84,7 @@ export class OfferEditorComponent implements OnInit {
   }
 
   getLinkedProductList(id:string){
-    this.categoryService.getProductList(id,"discount",'desc').then(res => {
+    this.productService.getProductList(id,"discount",'desc').then(res => {
       this.linkedProducts = res.docs.map(d=>{
         let p = d.data() as Product;
         p.id = d.id;
@@ -109,7 +111,7 @@ export class OfferEditorComponent implements OnInit {
   }
 
   unlinkProduct(productId : string){
-    this.categoryService.unlinkProduct(productId,this.subOfferId).then(res=>{
+    this.productService.unlinkProduct(productId,this.subOfferId).then(res=>{
       this.getLinkedProductList(this.offerType=='sub'?this.subOfferId:this.offerId);
       this.toastr.success("Product unlinked successfully")
     })
@@ -128,7 +130,7 @@ export class OfferEditorComponent implements OnInit {
   }
   getProducts(id: string) {
     this.ngxService.start()
-    this.categoryService.getProductList(id,"discount",'desc').then(res => {
+    this.productService.getProductList(id,"discount",'desc').then(res => {
       this.products = res.docs.map(d=>{
         let p = d.data() as Product;
         p.id = d.id;
@@ -150,7 +152,7 @@ export class OfferEditorComponent implements OnInit {
   linkSelectedProducts(){
     let pList : Array<Promise<any>> = [];
     this.products.filter(p=>p.isWishList).forEach(p=>{
-      pList.push(this.categoryService.linkProduct(p.id,this.offerType=='sub'?this.subOfferId:this.offerId));
+      pList.push(this.productService.linkProduct(p.id,this.offerType=='sub'?this.subOfferId:this.offerId));
     });
     this.ngxService.start()
     Promise.all(pList).then(()=>{

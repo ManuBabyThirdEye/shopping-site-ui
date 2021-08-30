@@ -7,6 +7,7 @@ import { Filter, Product, WishItem } from 'src/bean/category';
 import { KeyValue } from '../../bean/common';
 import { CategoryService } from '../services/category.service';
 import { LocalStoreObjectService } from '../services/local-store-object.service';
+import { ProductService } from '../services/product.service';
 
 @Component({
   selector: 'app-product-list',
@@ -36,6 +37,7 @@ export class ProductListComponent implements OnInit,AfterViewInit {
   constructor(
     private route: ActivatedRoute,
     private categoryService : CategoryService,
+    private productService : ProductService,
     private ngxService: NgxUiLoaderService,
     private toastr: ToastrService,
     private local : LocalStoreObjectService) { 
@@ -84,7 +86,7 @@ export class ProductListComponent implements OnInit,AfterViewInit {
   }
   updateProductList(field: string, sortOption: string) {
     this.ngxService.start();
-      this.categoryService.getProductList(this.subCategoryId?this.subCategoryId:this.categoryId,field,sortOption).then(p=>{
+      this.productService.getProductList(this.subCategoryId?this.subCategoryId:this.categoryId,field,sortOption).then(p=>{
         this.productList = [];
         p.docs.map(pro =>{
           let p = pro.data() as Product;

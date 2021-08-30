@@ -21,7 +21,7 @@ export class HomePageEditorComponent implements OnInit {
   constructor(private offerService : OfferService,
     private ngxService: NgxUiLoaderService,
     private router: Router,
-    private modalService: NgbModal) { 
+    private modalService: NgbModal) {
     window.scroll(0,0);
     this.getOffers();
     offerService.getMainOfferList().then(mainOffers =>{
@@ -37,7 +37,7 @@ export class HomePageEditorComponent implements OnInit {
     this.ngxService.start();
     this.offerService.getHomePageItems().then(homeItems => {
       this.homeItemList = homeItems;
-      this.homeItemList.map(homeItem=>{
+      this.homeItemList.map(homeItem => {
         homeItem.editedHeading = homeItem.heading;
         homeItem.editedOrder = homeItem.order;
         return homeItem;
@@ -50,7 +50,7 @@ export class HomePageEditorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+
   }
 
   saveHeading(homeItem : HomeItems){
@@ -71,7 +71,7 @@ export class HomePageEditorComponent implements OnInit {
         })
       });
     }
-    
+
   }
 
   cancelHeading(homeItem : HomeItems){
@@ -116,9 +116,9 @@ export class HomePageEditorComponent implements OnInit {
         })
       }
     }).catch(e=>{
-      
+
     })
-    
+
   }
 
   deleteSubOffer(homeItem : HomeItems,item:HomeSubItem){
@@ -142,9 +142,9 @@ export class HomePageEditorComponent implements OnInit {
         })
       }
     }).catch(e=>{
-      
+
     })
-    
+
   }
 
   hideOrUnhideOffer(homeItem : HomeItems){
@@ -197,7 +197,7 @@ export class HomePageEditorComponent implements OnInit {
         })
       }
     }).catch(e=>{
-      
+
     })
 
   }

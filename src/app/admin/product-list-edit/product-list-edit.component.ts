@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { CategoryService } from 'src/app/services/category.service';
+import { ProductService } from 'src/app/services/product.service';
 import { Category, MainCategory, Product, SubCategory } from 'src/bean/category';
 
 @Component({
@@ -21,6 +22,7 @@ export class ProductListEditComponent implements OnInit {
   constructor(private route: ActivatedRoute,
     private router : Router,
     private categoryService : CategoryService,
+    private productService : ProductService,
     private ngxService: NgxUiLoaderService,
     private toastr: ToastrService) { 
     this.categoryService.getAllCategoryList().then(catDoc=>{
@@ -48,7 +50,7 @@ export class ProductListEditComponent implements OnInit {
   }
   getProducts(id: string) {
     this.ngxService.start()
-    this.categoryService.getProductList(id,"discount",'desc').then(res => {
+    this.productService.getProductList(id,"discount",'desc').then(res => {
       this.products = res.docs.map(d=>{
         let p = d.data() as Product;
         p.id = d.id;

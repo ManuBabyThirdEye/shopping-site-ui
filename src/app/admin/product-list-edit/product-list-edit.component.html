@@ -1,4 +1,10 @@
 <div class="product-edit">
+    <div class="d-none d-sm-block list-page-header">
+        <div class="navigation-box">
+            <span routerLink="/admin">Admin</span>
+            <span class="active"><span></span> Products</span>
+        </div>
+    </div>
     <div class="row col-md-12 sort-main">
         <div class="col-md-3 sort-box">
             <div class="sort-selected"><span>{{selectedMainCat?selectedMainCat.name:'----Select----'}}</span>
@@ -25,23 +31,18 @@
                 <div (click)="pro.isWishList=!pro.isWishList" class="product-box">
                     <img class="img-loading" src="{{pro.images[0]}}">
                     <div class="product-details">
-                        <p>Size: <span>{{pro.sizes}}</span></p>
+                        <p>Size: <span>{{pro.availableSizeString}}</span></p>
                         <h4>Rs. {{pro.discountPrice}} <s *ngIf="pro.discount>0">Rs. {{(pro.discountPrice * 100 )/(100-pro.discount)}} </s> <span *ngIf="pro.discount>0">({{pro.discount}}% OFF)</span></h4>
                     </div>
                     <div class="overlay-bottom row col-12">
-                        <div class="col-4">
+                        <div class="action col-6">
                             <div (click)="editProduct(pro)" class="circle">
                                 <img src="../../../assets/edit_1.png">
                             </div>
                         </div>
-                        <div class="col-4">
+                        <div class="action col-6">
                             <div (click)="deleteProduct(pro)" class="circle">
                                 <img src="../../../assets/delete _1.png">
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div (click)="hideProduct(pro)" class="circle">
-                                <img src="../../../assets/hide.png">
                             </div>
                         </div>
                     </div>

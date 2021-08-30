@@ -20,6 +20,11 @@ import { HomePageEditorComponent } from './admin/home-page-editor/home-page-edit
 import { OfferEditorComponent } from './admin/offer-editor/offer-editor.component';
 import { ProductListEditComponent } from './admin/product-list-edit/product-list-edit.component';
 import { ProductAddEditComponent } from './admin/product-add-edit/product-add-edit.component';
+import { PincodeListComponent } from './admin/pincode-list/pincode-list.component';
+import { AdminOrderListComponent } from './admin/admin-order-list/admin-order-list.component';
+import { ManageAdminComponent } from './admin/manage-admin/manage-admin.component';
+import { BillingComponent } from './admin/billing/billing.component';
+import { PrintComponent } from './app-modal/print/print.component';
 
 const routes: Routes = [
   { path: '', component:  HomeComponent },
@@ -39,8 +44,14 @@ const routes: Routes = [
   { path: 'admin/offer-editor', component:  OfferEditorComponent, canActivate : [AdminGuardService]},
   { path: 'admin/product-list-edit', component:  ProductListEditComponent, canActivate : [AdminGuardService]},
   { path: 'admin/product-add-edit', component:  ProductAddEditComponent, canActivate : [AdminGuardService]},
+  { path: 'admin/pincode-list', component:  PincodeListComponent, canActivate : [AdminGuardService]},
+  { path: 'admin/order-list', component:  AdminOrderListComponent, canActivate : [AdminGuardService]},
+  { path: 'admin/manage-admin', component:  ManageAdminComponent, canActivate : [AdminGuardService]},
+  { path: 'admin/billing', component:  BillingComponent, canActivate : [AdminGuardService]},
+  { path: 'admin/billing/print', component:  PrintComponent, canActivate : [AdminGuardService]},
   { path: 'notauthorized', component:  NoPrevilageComponent }
 ];
+
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],

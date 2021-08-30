@@ -41,6 +41,15 @@
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
+            .address-inner{
+                position: relative;
+                img{
+                    width: 30px;
+                    position: absolute;
+                    right: 0px;
+                }
+            }
+            
             &:hover {
                 border: 1px solid #E4498A;
             }
@@ -80,14 +89,7 @@
             }
         }
         .selected {
-            background: #E4498A;
-            color: white!important;
-            p {
-                color: white!important;
-            }
-            h4 {
-                color: white!important;
-            }
+            border: 1px solid #e4498a;
         }
     }
     .product-price {
@@ -127,13 +129,28 @@
         }
         button {
             width: 100%;
-            padding: 10px;
-            background: #e4498a;
-            border: none;
+            padding: 7px;
+            background: white;
             border-radius: 3px;
-            color: white;
+            color: black;
             font-size: 14px;
             font-weight: 600;
+            margin-top: 10px;
+            border: 1px solid;
+            img{
+                width: 30px;
+                margin-right: 10px;
+                margin-top: -5px;
+            }
+            &:hover{
+                background: #f3f3f3;
+            }
+        }
+        .google-pay{
+            margin-top: 20px;
+            .gpay-card-info-iframe{
+                width: 100%!important;
+            }
         }
         .inactive {
             cursor: default;

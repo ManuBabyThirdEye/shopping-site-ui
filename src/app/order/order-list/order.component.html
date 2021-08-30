@@ -15,7 +15,7 @@
         </div>
         <div *ngIf="orderList.length>0" class="pt-3">
             <div *ngFor="let order of orderList" class="order-box shadow p-3 m-md-3 rounded">
-                <div routerLink="/order-details" [queryParams]="{orderId:order.id,order:true}" class="header row col-md-12">
+                <div routerLink="/order-details" [queryParams]="{orderId:order.id,tableName:categoryService.ORDER_TABLE}" class="header row col-md-12">
                     <div class="col-md-2">
                         <img class="img-loading" src="{{order.cartProducts[0].product.images[0]}}">
                     </div>
@@ -55,7 +55,7 @@
         </div>
         <div *ngIf="returnList.length>0" class="pt-3">
             <div *ngFor="let order of returnList" class="order-box shadow p-3 m-md-3 rounded">
-                <div routerLink="/order-details" [queryParams]="{orderId:order.id,order:false}" class="header row col-md-12">
+                <div routerLink="/order-details" [queryParams]="{orderId:order.id,tableName:categoryService.RETURN_TABLE}" class="header row col-md-12">
                     <div class="col-md-2">
                         <img class="img-loading" src="{{order.cartProducts[0].product.images[0]}}">
                     </div>

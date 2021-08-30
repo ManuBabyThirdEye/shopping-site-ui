@@ -81,7 +81,21 @@
                 <p>{{orderDetsails.address.district}}, {{orderDetsails.address.state}} - {{orderDetsails.address.pinCode}}</p>
             </div>
 
-            <button *ngIf="!(cancelled || orderOrReturnStatusList[orderOrReturnStatusList.length-1].date)" (click)="cancelOrder()" class="place-order">CANCEL</button>
+            <h5 style="margin-top: 30px!important;">PAYMENT DETAILS</h5>
+            <div class="payment-mode">
+                <div  *ngIf="orderDetsails.paymentMode == 1">
+                    <img src="../../../assets/cash-on-delivery.png"> Cash on delivery
+                </div>
+            </div>
+
+            <div *ngIf="orderDetsails.paymentMode == 0" class="payment-details shadow">
+                <img src="../../../assets/gpay.svg"> <span> GPay </span>
+                <div class="card-number">**** **** **** {{orderDetsails.paymentDetails.paymentMethodData.info.cardDetails}}</div>
+                <div class="card-network">{{orderDetsails.paymentDetails.paymentMethodData.info.cardNetwork}}</div>
+            </div>
+
+
+            <button *ngIf="!cancelled && orderDetsails.currentOrderStatus=='PLACED'" (click)="cancelOrder()" class="place-order">CANCEL</button>
 
         </div>
     </div>

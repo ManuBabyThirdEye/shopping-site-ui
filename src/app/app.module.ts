@@ -38,6 +38,15 @@ import { SortPipe } from './pipe/sort.pipe';
 import { OfferEditorComponent } from './admin/offer-editor/offer-editor.component';
 import { ProductListEditComponent } from './admin/product-list-edit/product-list-edit.component';
 import { ProductAddEditComponent } from './admin/product-add-edit/product-add-edit.component';
+import { PincodeListComponent } from './admin/pincode-list/pincode-list.component';
+import { AddPincodeComponent } from './app-modal/add-pincode/add-pincode.component';
+import { AdminOrderListComponent } from './admin/admin-order-list/admin-order-list.component';
+import { PickDateTimeComponent } from './app-modal/pick-date-time/pick-date-time.component';
+import { ManageAdminComponent } from './admin/manage-admin/manage-admin.component';
+import { GooglePayButtonComponent, GooglePayButtonModule } from '@google-pay/button-angular';
+import { BillingComponent } from './admin/billing/billing.component';
+import { PrintComponent } from './app-modal/print/print.component';
+import { ProductDatailsComponent } from './app-modal/product-datails/product-datails.component';
 
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
   bgsColor: "#E4498A",
@@ -80,7 +89,15 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     SortPipe,
     OfferEditorComponent,
     ProductListEditComponent,
-    ProductAddEditComponent
+    ProductAddEditComponent,
+    PincodeListComponent,
+    AddPincodeComponent,
+    AdminOrderListComponent,
+    PickDateTimeComponent,
+    ManageAdminComponent,
+    BillingComponent,
+    PrintComponent,
+    ProductDatailsComponent
   ],
   imports: [
     BrowserModule,
@@ -96,9 +113,10 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
       positionClass: 'my-toast-top-center',
       preventDuplicates: true,
       easeTime : 300,
-      timeOut: 1000
+      timeOut: 2000
     }),
-    NgbModule
+    NgbModule,
+    GooglePayButtonModule
   ],
   exports: [
     FormsModule,

@@ -1,0 +1,44 @@
+<div class="main-div">
+    <div class="d-none d-sm-block list-page-header">
+        <div class="navigation-box">
+            <span routerLink="/admin">Admin</span>
+            <span class="active"><span></span> Manage Admin</span>
+        </div>
+    </div>
+    <div class="main-table rounded shadow">
+
+    <div class="heading rounded">
+        <div class="heading-text">
+            ADMINS
+        </div>
+        
+        <div class="add-pincode">
+            <button class="add-admin" *ngIf="!addAdmin" (click)="addAdmin=true">ADD NEW ADMIN</button>
+            <div *ngIf="addAdmin" class="add-admin-input">
+                <div  class="input-box">
+                    <input id="mobileNumber" type="text" required [(ngModel)]="mobileNumber">
+                    <label for="mobileNumber">Mobile Number*</label>
+                </div>
+                <button (click)="addNewAdmin()">ADD</button>
+            </div>
+            
+        </div>
+    </div>
+        <table>
+            <tr>
+                <th>Mobile Number</th>
+                <th>Name</th>
+                <th>Email ID</th>
+                <th>Actions</th>
+            </tr>
+            <tr *ngFor="let admin of adminList">
+                <td>{{admin.mobileNumber}}</td>
+                <td>{{admin.name}}</td>
+                <td>{{admin.email}}</td>
+                <td>
+                    <img (click)="deleteAdmin(admin)" src="../../../assets/delete _1.png">
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

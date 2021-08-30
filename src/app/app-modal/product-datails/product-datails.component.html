@@ -1,0 +1,35 @@
+<div class="address-main">
+    <div class="row col-md-12">
+        <div class="col-md-12">
+            <div class="address-box">
+                <form [formGroup]="productData" (ngSubmit)="onClickSubmit(productData.value)">
+                    <h5>PRODUCT DETAILS</h5>
+                    <div class="input-box">
+                        <input id="name" type="text" required formControlName="name">
+                        <label for="name">Name*</label>
+                    </div>
+                    <div class="input-box">
+                        <input id="details" type="text" formControlName="details">
+                        <label for="details">Description</label>
+                    </div>
+                    <h5 class="mt-4">PRICE DETAILS</h5>
+
+                    <div class="input-box">
+                        <input id="discountPrice" type="text" required formControlName="discountPrice">
+                        <label for="discountPrice">Discount Price*</label>
+                    </div>
+                    <div class="input-box">
+                        <input id="discount" type="text" required formControlName="discount">
+                        <label for="discount">Discount*</label>
+                    </div>
+            
+                    <div class="state row col-md-12 mt-3">
+                        <div class="col-md-5 col-4">{{size}}</div>
+                        <div class="col-md-5 col-4">{{count}}</div>
+                    </div>
+                    <button [ngClass]="this.productData.valid?'':'inactive'" type="submit" value="submit">ADD PRODUCT</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

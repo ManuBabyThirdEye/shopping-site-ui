@@ -12,8 +12,41 @@ export const environment = {
     messagingSenderId: "888931391161",
     appId: "1:888931391161:web:14f91092893ce2d551ed68",
     measurementId: "G-Z22E3HBDH6"
+  },
+  googlePayPaymentRequest : {
+    apiVersion: 2,
+    apiVersionMinor: 0,
+    allowedPaymentMethods: [
+      {
+        type: 'CARD',
+        parameters: {
+          allowedAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS'],
+          allowedCardNetworks: ['AMEX', 'VISA', 'MASTERCARD']
+        },
+        tokenizationSpecification: {
+          type: 'PAYMENT_GATEWAY',
+          parameters: {
+            gateway: 'example',
+            gatewayMerchantId: 'exampleGatewayMerchantId'
+          }
+        }
+      }
+    ],
+    merchantInfo: {
+      merchantId: '12345678901234567890',
+      merchantName: 'Demo Merchant'
+    },
+    transactionInfo: {
+      totalPriceStatus: 'FINAL',
+      totalPriceLabel: 'Total',
+      totalPrice: '100.00',
+      currencyCode: 'INR',
+      countryCode: 'IN'
+    },
+    callbackIntents : ['PAYMENT_AUTHORIZATION']
   }
 };
+
 
 /*
  * For easier debugging in development mode, you can import the following file

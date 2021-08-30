@@ -1,7 +1,14 @@
 <div class="main-outer">
+    
     <div *ngIf="showInfo" class="info">
         Double click to edit or add
         <img (click)="showInfo=false" src="../../../assets/cancel.png">
+    </div>
+    <div class="d-none d-sm-block list-page-header">
+        <div class="navigation-box">
+            <span routerLink="/admin">Admin</span>
+            <span class="active"><span></span> Home Page</span>
+        </div>
     </div>
     <div class="main-offer">
         <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">

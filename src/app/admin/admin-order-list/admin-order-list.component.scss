@@ -1,0 +1,221 @@
+.main-div{
+    padding: 100px 50px;
+    min-height: 100vh;
+    .selection {
+        margin-bottom: 5px;
+        span {
+            margin: 5px;
+            cursor: pointer;
+            padding: 5px;
+            &:hover {
+                font-weight: 625;
+                border-bottom: 2px solid #E4498A;
+            }
+        }
+        .selected {
+            font-weight: 625;
+            color: #E4498A;
+            border-bottom: 2px solid #E4498A;
+        }
+    }
+    .divider {
+        background: #dadade;
+        height: 1px;
+    }
+    .main-table{
+        margin-top: 20px;
+        .heading{
+            height: 50px;
+            align-items: center;
+            display: flex;
+            background: #e4498a;
+            color: white;
+            padding-left: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            .heading-text{
+                width: 20%;
+            }
+            .status-list{
+                display: flex;
+                width: 60%;
+                justify-content: center;
+                .status{
+                    margin-inline: 10px;
+                    border: 1px solid white;
+                    background: none;
+                    color: white;
+                    height: 30px;
+                    border-radius: 5px;
+                    font-size: 12px!important;
+                    padding-inline: 5px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    cursor: pointer;
+                    &:hover{
+                        background: white!important;
+                        color: #e4498a!important;
+                    }
+                }
+                .selected{
+                    background: white!important;
+                    color: #e4498a!important;
+                }
+            }
+            .add-pincode{
+                width: 50%;
+                text-align: right;
+                button{
+                    margin-right: 30px;
+                    border: 1px solid white;
+                    background: none;
+                    color: white;
+                    height: 35px;
+                    border-radius: 5px;
+                    font-size: 14px;
+                    &:hover{
+                        background: white;
+                        color: #e4498a;
+                    }
+                }
+            }
+        }
+        table{
+            width: 100%;
+            tr{
+                height: 40px;
+                th{
+                    font-weight: normal;
+                    text-align: center!important;
+                    font-weight: bold;
+                    background: antiquewhite;
+                }
+                td{
+                    text-align: center!important;
+                    font-size: 14px;
+                    .status{
+                        font-weight: bold;
+                        color: black;
+                    }
+                    .prod-img{
+                        margin: 5px!important;
+                        width: 50px!important;
+                        cursor: default!important;
+                    }
+                    .icon{
+                        width: 20px;
+                        margin-inline: 5px;
+                    }
+                    .order-id{
+                        cursor: pointer;
+                        &:hover{
+                            text-decoration: underline 1px;
+                        }
+                    }
+                    .action{
+                        width: 20px;
+                        margin-inline: 5px;
+                        cursor: pointer;
+                    }
+                    div{
+                        align-items: center;
+                        display: flex;
+                        justify-content: center;
+                    }
+                    .action:hover + .more-option{
+                        display:block;
+                    }
+                    .more-option{
+                        display:none;
+                        background: white;
+                        position: absolute;
+                        padding: 10px;
+                        &:hover{
+                            display:block;
+                        }
+                        .more-item{
+                            cursor: pointer;
+                            font-size: 12px;
+                            margin-block: 5px;
+                            &:hover{
+                                font-weight: bold;
+                            }
+                        }
+                    }
+                }
+            }
+            tr:nth-child(even) {
+                background: #f5f5f6;
+              }
+        }
+
+        .pagination{
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .active{
+                margin-inline: 10px;
+                border: none;
+                background: none;
+                color: black;
+                border-radius: 5px;
+                padding: 3px 10px;
+                border: 1px solid;
+                &:hover{
+                    background: #e4498a;
+                    border: 1px solid #e4498a;
+                    color: white;
+                }
+            }
+            .inactive{
+                margin-inline: 10px;
+                border: none;
+                background: none;
+                border-radius: 5px;
+                padding: 3px 10px;
+                border: 1px solid gray;
+                color: gray;
+            }
+        }
+
+    }
+}
+
+.empty-order {
+    padding: 100px 200px;
+    text-align: center;
+    h3 {
+        margin-top: 40px;
+        font-size: 22px;
+        font-weight: 600;
+    }
+    p {
+        font-size: 18px!important;
+        color: #404146;
+    }
+    img {
+        height: 160px;
+    }
+    button {
+        margin-top: 30px;
+        cursor: pointer;
+        border: 1px solid #dadade;
+        font-size: 15px;
+        font-weight: 700;
+        color: #e4498a;
+        padding: 10px 20px;
+        width: fit-content;
+        border-radius: 4px;
+        background: none;
+        &:hover {
+            border: 1px solid #E4498A;
+        }
+    }
+}
+
+.form-check-input:checked {
+    background-color: #e4498a!important;
+    border-color: #e4498a!important;
+}

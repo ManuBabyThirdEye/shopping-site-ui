@@ -144,20 +144,27 @@
                 border-radius: 10px 10px 0px 0px;
                 background: rgba($color: #000000, $alpha: 0.4);
                 text-align: center;
-                .circle {
-                    height: 40px;
-                    width: 40px;
-                    border-radius: 20px;
-                    background: #e4498a;
-                    text-align: center;
-                    border: 1px solid #e4498a;
-                    img {
-                        margin-top: 10px;
-                        height: 20px;
-                        width: 20px;
-                        filter: invert(1);
+                .action {
+                    justify-content: center;
+                    align-items: center;
+                    display: flex;
+                    display: flex;
+                    .circle {
+                        height: 40px;
+                        width: 40px;
+                        border-radius: 20px;
+                        background: #e4498a;
+                        text-align: center;
+                        border: 1px solid #e4498a;
+                        img {
+                            margin-top: 10px;
+                            height: 20px;
+                            width: 20px;
+                            filter: invert(1);
+                        }
                     }
                 }
+                
             }
         }
     }

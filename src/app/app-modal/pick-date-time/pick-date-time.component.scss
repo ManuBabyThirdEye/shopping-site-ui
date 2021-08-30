@@ -1,0 +1,44 @@
+.main-box{
+    text-align: center;
+    padding: 20px;
+    .today{
+        background: none;
+        border: 1px solid #e4498a;
+        font-size: 14px;
+        padding: 5px 20px;
+        color: #e4498a;
+        border-radius: 5px;
+        &:hover{
+            background: #e4498a;
+            color: white;
+        }
+    }
+    .or-box{
+        text-align: center;
+        .devider{
+            margin-block: 20px;
+            z-index: 0;
+            height: 1px;
+            background: gray;
+            .or{
+                width: fit-content;
+                background: white;
+                z-index: 10;
+                padding-inline: 10px;
+                top: -12px;
+                position: relative;
+            }
+        }
+        
+    }
+    .date-time-picker{
+        margin-block: 20px;
+        input{
+            margin-inline: 5px  ;
+            border: 1px solid gray;
+            border-radius: 4px;
+            padding: 5px 10px;
+            color: #696e79;
+        }
+    }
+}

@@ -5,7 +5,8 @@ import { ToastrService } from 'ngx-toastr';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { SelectSizeComponent } from 'src/app/app-modal/select-size/select-size.component';
 import { CategoryService } from 'src/app/services/category.service';
-import { MainCategory, Product, Size } from 'src/bean/category';
+import { ProductService } from 'src/app/services/product.service';
+import { Category, MainCategory, Product, Size, SubCategory } from 'src/bean/category';
 import { StringLiteralLike } from 'typescript';
 
 @Component({
@@ -32,9 +33,14 @@ export class ProductAddEditComponent implements OnInit {
   mainCategoryList:Array<MainCategory>;
   linkedCategoriesNameMap : Map<string,string>;
   selectedImages:Array<any>=[undefined,undefined,undefined,undefined];
+  selectedMainCat : MainCategory;
+  selectedCat : Category;
+  selectedSubCat : SubCategory;
+  addNewCategory : boolean = false;
 
   constructor(private route: ActivatedRoute,
     private categoryService : CategoryService,
+    private productService : ProductService,
     private ngxService: NgxUiLoaderService,
     private toastr: ToastrService,
     private modalService: NgbModal) { 
@@ -51,7 +57,7 @@ export class ProductAddEditComponent implements OnInit {
       });
       if(this.productId){
         this.ngxService.start();
-        this.categoryService.getProduct(this.productId).then(p=>{
+        this.productService.getProduct(this.productId).then(p=>{
           this.product = p;
           if(!this.product.details){
             this.product.details = "Double click to add details here";
@@ -59,7 +65,7 @@ export class ProductAddEditComponent implements OnInit {
           if(!this.product.name){
             this.product.name = "Double click to add name here";
           }
-          this.linkedCategoriesNameMap = this.getLinkedCategoriesName()
+          this.linkedCategoriesNameMap = this.getLinkedCategoriesName();
           this.ngxService.stop();
         })
       }else{
@@ -85,8 +91,6 @@ export class ProductAddEditComponent implements OnInit {
   }
   getLinkedCategoriesName(): Map<string,string> {
     let linkedItems = new Map();
-    console.log(this.product.category);
-    console.log(this.mainCategoryList)
     if(this.product.category && this.product.category.length>0){
       this.product.category.forEach(c=>{
         if(this.mainCategoryList && this.mainCategoryList.length>0){
@@ -98,13 +102,13 @@ export class ProductAddEditComponent implements OnInit {
             if(mc.categories && mc.categories.length>0){
               mc.categories.forEach(cc=>{
                 if(cc.id==c){
-                  linkedItems.set(c,mc.name+" --> "+cc.name);
+                  linkedItems.set(c,mc.name+" -- "+cc.name);
                   return;
                 }
                 if(cc.subCategories && cc.subCategories.length>0){
                   cc.subCategories.forEach(sc=>{
                     if(sc.id==c){
-                      linkedItems.set(c,mc.name+" --> "+cc.name+" --> "+sc.name);
+                      linkedItems.set(c,mc.name+" -- "+cc.name+" -- "+sc.name);
                       return;
                     }
                   });
@@ -143,7 +147,7 @@ export class ProductAddEditComponent implements OnInit {
     if(this.product.id=="new"){
         this.product.category.push(this.categoryId);
         this.ngxService.start();
-        this.categoryService.addNewProduct(this.product,this.selectedImages).then(()=>{
+        this.productService.addNewProduct(this.product,this.selectedImages).then(()=>{
           this.ngxService.stop();
           this.toastr.success("Product added successfuly")
         }).catch(e=>{
@@ -153,7 +157,7 @@ export class ProductAddEditComponent implements OnInit {
         })
     }else{
       this.ngxService.start();
-      this.categoryService.updateProductDetails(this.product,this.selectedImages,this.oldImages).then(()=>{
+      this.productService.updateProductDetails(this.product,this.selectedImages,this.oldImages).then(()=>{
         this.ngxService.stop();
         this.toastr.success("Product updated successfuly")
       }).catch(e=>{
@@ -209,8 +213,8 @@ export class ProductAddEditComponent implements OnInit {
     this.detailsEdit = false;
   }
   saveAmount(){
-    this.product.discountPrice = this.editedDiscountedAmount;
-    this.product.discount = this.editedDiscount;
+    this.product.discountPrice = parseInt(this.editedDiscountedAmount+"");
+    this.product.discount = parseInt(this.editedDiscount+"");
     this.amountEdit = false;
   }
   cancelAmount(){
@@ -245,5 +249,50 @@ export class ProductAddEditComponent implements OnInit {
         this.product.images[index] = event.target.result as string;
       }
     }
+  }
+
+  removeCategory(catId){
+    this.ngxService.start();
+    this.productService.unlinkProduct(this.product.id,catId).then(()=>{
+      this.linkedCategoriesNameMap.delete(catId);
+      this.ngxService.stop();
+    }).catch(e=>{
+      this.ngxService.stop();
+    })
+  }
+
+  addNewCategoryToProduct(){
+    let catId;
+    if(this.selectedSubCat){
+      catId = this.selectedSubCat.id;
+    }else if(this.selectedCat){
+      catId = this.selectedCat.id;
+    }
+    if(catId){
+      this.ngxService.start();
+      this.productService.linkProduct(this.product.id,catId).then(()=>{
+        this.product.category.push(catId);
+        this.linkedCategoriesNameMap = this.getLinkedCategoriesName();
+        this.selectedSubCat = undefined;
+        this.selectedCat = undefined;
+        this.ngxService.stop();
+      }).catch(e=>{
+        this.ngxService.stop();
+      })
+    }
+  }
+
+  selectMainCat(mainCat : MainCategory){
+    this.selectedMainCat = mainCat;
+    this.selectedCat = undefined;
+    this.selectedSubCat = undefined;
+  }
+  selectedCategory(cat : Category){
+    this.selectedCat=cat;
+    this.selectedSubCat = undefined;
+  }
+
+  selectedSubCategory(subCategory: SubCategory){
+    this.selectedSubCat = subCategory;
   }
 }
