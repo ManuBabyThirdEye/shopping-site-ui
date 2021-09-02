@@ -6,7 +6,7 @@
             bottom: -50px;
         }
         .carousel-indicators [data-bs-target] {
-            background-color: #e4498a!important;
+            background-color: var(--theme-color)!important;
             height: 6px;
             width: 6px;
             border-radius: 3px;
@@ -15,7 +15,7 @@
         }
         .carousel-control-next,
         .carousel-control-prev {
-            color: #e4498a!important;
+            color: var(--theme-color)!important;
             font-size: xxx-large;
         }
     }

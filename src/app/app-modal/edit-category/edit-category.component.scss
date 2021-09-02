@@ -5,9 +5,9 @@
             button {
                 width: fit-content;
                 margin-top: 0px;
-                border: 1px solid #e4498a;
+                border: 1px solid var(--theme-color);
                 background: white;
-                color: #e4498a;
+                color: var(--theme-color);
                 position: absolute;
                 right: 30px;
                 font-size: 12px;
@@ -92,7 +92,7 @@
     button {
         width: 100%;
         padding: 10px;
-        background: #e4498a;
+        background: var(--theme-color);
         border: none;
         border-radius: 3px;
         color: white;
@@ -143,7 +143,7 @@
     button {
         width: 100%;
         padding: 10px;
-        background: #e4498a;
+        background: var(--theme-color);
         border: none;
         border-radius: 3px;
         color: white;

@@ -6,7 +6,7 @@
             height: 50px;
             align-items: center;
             display: flex;
-            background: #e4498a;
+            background: var(--theme-color);
             color: white;
             padding-left: 20px;
             font-size: 18px;
@@ -27,7 +27,7 @@
                     font-size: 14px;
                     &:hover{
                         background: white;
-                        color: #e4498a;
+                        color: var(--theme-color);
                     }
                 }
                 .add-admin-input{
@@ -98,7 +98,7 @@
                         font-size: 14px;
                         &:hover{
                             background: white;
-                            color: #e4498a;
+                            color: var(--theme-color);
                         }
                     }
                 }
@@ -138,6 +138,6 @@
 }
 
 .form-check-input:checked {
-    background-color: #e4498a!important;
-    border-color: #e4498a!important;
+    background-color: var(--theme-color)!important;
+    border-color: var(--theme-color)!important;
 }

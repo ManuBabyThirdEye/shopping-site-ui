@@ -16,14 +16,14 @@
         <tr *ngFor="let cart of addedProducts">
             <td>{{cart.product.name}}</td>
             <td>{{cart.quantity}}</td>
-            <td>{{((cart.product.discountPrice*100)/105).toFixed(2)}}</td>
-            <td class="amount">{{(((cart.product.discountPrice*cart.quantity)*100)/105).toFixed(2)}}</td>
+            <td>{{(cart.product.discountPrice).toFixed(2)}}</td>
+            <td class="amount">{{(cart.product.discountPrice*cart.quantity).toFixed(2)}}</td>
         </tr>
-        <tr style="border-top: 1px solid;border-bottom:  1px solid;" class="sub-total">
+        <!--<tr style="border-top: 1px solid;border-bottom:  1px solid;" class="sub-total">
             <td>SubTotal</td>
             <td>{{totalQty}}</td>
             <td></td>
-            <td class="amount">{{totalPriceNoGst.toFixed(2)}}</td>
+            <td class="amount">{{totalPrice.toFixed(2)}}</td>
         </tr>
         <tr class="gst">
             <td></td>
@@ -34,9 +34,9 @@
             <td></td>
             <td colspan="2">SGST @ 2.50%</td>
             <td class="amount">{{sgst.toFixed(2)}}</td>
-        </tr>
+        </tr>-->
         <tr style="border-top: 1px solid;border-bottom: 1px solid;" class="total">
-            <td  class="total-txt" colspan="2">TOTAL</td>
+            <td  class="total-txt" colspan="2">TOTAL(incl GST)</td>
             <td style="font-weight: bold;" class="amount" colspan="2">Rs. {{(cgst+sgst+totalPriceNoGst).toFixed(2)}}</td>
         </tr>
     </table>

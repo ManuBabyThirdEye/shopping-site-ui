@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -8,16 +8,12 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class SelectSizeComponent implements OnInit {
 
-  @Input() maxCount : number = 0;
+  selectedSize : string;
+  sizeList : Array<string> = ['S','M','L','XL','XXL','XXXL'];
 
-  sizeList : Array<number> = [];
-  selectedSize : number;
   constructor(public activeModal: NgbActiveModal) { }
 
   ngOnInit(): void {
-    for(let i=1;i<=this.maxCount;i++){
-      this.sizeList.push(i);
-    }
   }
 
   selectSize(size){

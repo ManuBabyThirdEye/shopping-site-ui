@@ -29,7 +29,7 @@
 }
 
 .selected {
-    background: #E4498A;
+    background: var(--theme-color);
     color: white;
     p {
         color: white!important;
@@ -60,7 +60,7 @@
     right: 0px;
     text-align: center;
     color: white;
-    background: #E4498A;
+    background: var(--theme-color);
     font-weight: bold;
     padding: 12px;
     cursor: pointer;

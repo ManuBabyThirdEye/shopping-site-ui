@@ -27,7 +27,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AddAddressComponent } from './app-modal/add-address/add-address.component';
 import { OrderDetailsComponent } from './order/order-details/order-details.component';
-import { SelectSizeComponent } from './app-modal/select-size/select-size.component';
+import { SelectQuantityComponent } from './app-modal/select-quantity/select-quantity.component';
 import { ConfirmBoxComponent } from './app-modal/confirm-box/confirm-box.component';
 import { NoPrevilageComponent } from './admin/no-previlage/no-previlage.component';
 import { AdminHomeComponent } from './admin/admin-home/admin-home.component';
@@ -47,14 +47,15 @@ import { GooglePayButtonComponent, GooglePayButtonModule } from '@google-pay/but
 import { BillingComponent } from './admin/billing/billing.component';
 import { PrintComponent } from './app-modal/print/print.component';
 import { ProductDatailsComponent } from './app-modal/product-datails/product-datails.component';
+import { SelectSizeComponent } from './app-modal/select-size/select-size.component';
 
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
-  bgsColor: "#E4498A",
-  fgsColor: "#E4498A",
+  bgsColor: "var(--theme-color)",
+  fgsColor: "var(--theme-color)",
   bgsSize: 40,
   fgsSize: 100,
   blur: 5,
-  pbColor: "#E4498A",
+  pbColor: "var(--theme-color)",
   bgsType: SPINNER.threeStrings, // background spinner type
   fgsType: SPINNER.threeStrings, // foreground spinner type
   pbDirection: PB_DIRECTION.leftToRight, // progress bar direction
@@ -79,7 +80,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     UserDetailsComponent,
     AddAddressComponent,
     OrderDetailsComponent,
-    SelectSizeComponent,
+    SelectQuantityComponent,
     ConfirmBoxComponent,
     NoPrevilageComponent,
     AdminHomeComponent,
@@ -97,7 +98,8 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     ManageAdminComponent,
     BillingComponent,
     PrintComponent,
-    ProductDatailsComponent
+    ProductDatailsComponent,
+    SelectSizeComponent
   ],
   imports: [
     BrowserModule,

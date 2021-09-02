@@ -108,7 +108,7 @@
         .product-id-box{
             .progress-bar{
                 height: 2px;
-                background: #e4498a;
+                background: var(--theme-color);
                 margin-right: 10px;
                 border-radius: 5px 5px 0px 0px;
                 height: 4px;
@@ -138,13 +138,13 @@
             display: flex;
             .download{
                 margin-right: 5px;
-                border: 1px solid #e4498a;
+                border: 1px solid var(--theme-color);
                 background: none;
                 padding: 8px;
                 border-radius: 5px;
-                color: #e4498a;
+                color: var(--theme-color);
                 &:hover{
-                    background: #e4498a;
+                    background: var(--theme-color);
                     color: white;
                 }
             }
@@ -248,17 +248,17 @@
                     }
                 }
                 button {
-                    border: 1px solid #E4498A;
+                    border: 1px solid var(--theme-color);
                     font-size: 12px;
                     font-weight: 600;
-                    color: #e4498a;
+                    color: var(--theme-color);
                     padding: 8px 15px;
                     width: fit-content;
                     border-radius: 4px;
                     background: none;
                     &:hover {
                         color: white;
-                        background: #e4498a;
+                        background: var(--theme-color);
                     }
                 }
             }
@@ -282,10 +282,10 @@
                     }
                 }
                 h5 {
-                    color: #e4498a;
+                    color: var(--theme-color);
                     cursor: pointer;
                     i {
-                        color: #e4498a;
+                        color: var(--theme-color);
                     }
                 }
             }
@@ -334,7 +334,7 @@
                     p {
                         font-size: 14px!important;
                         span {
-                            color: #e4498a;
+                            color: var(--theme-color);
                             margin-left: 5px;
                         }
                     }
@@ -363,7 +363,7 @@
                 justify-content: space-between;
                 cursor: pointer;
                 &:hover {
-                    color: #e4498a;
+                    color: var(--theme-color);
                 }
                 div {
                     display: flex;
@@ -413,7 +413,7 @@
             button {
                 width: 100%;
                 padding: 10px;
-                background: #e4498a;
+                background: var(--theme-color);
                 border: none;
                 border-radius: 3px;
                 color: white;

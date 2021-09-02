@@ -76,8 +76,8 @@
                             <h5><a routerLink="/product-details" [queryParams]="{productId:cartItem.product.id}">{{cartItem.product.name}}</a></h5>
                             <p>{{cartItem.product.details}}</p>
                             <div class="selection">
-                                <span>Size: {{cartItem.size}}</span>
-                                <span (click)="selectSize(cartItem)">Qty: {{cartItem.quantity}} <i class="fa fa-angle-down" aria-hidden="true"></i></span>
+                                <span (click)="selectSize(cartItem)">Size: {{cartItem.size}}</span>
+                                <span (click)="selectQuantity(cartItem)">Qty: {{cartItem.quantity}} <i class="fa fa-angle-down" aria-hidden="true"></i></span>
                             </div>
                         </div>
                         <div class="price col-md-3 col-6">

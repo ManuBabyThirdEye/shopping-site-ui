@@ -8,13 +8,13 @@
             padding: 5px;
             &:hover {
                 font-weight: 625;
-                border-bottom: 2px solid #E4498A;
+                border-bottom: 2px solid var(--theme-color);
             }
         }
         .selected {
             font-weight: 625;
-            color: #E4498A;
-            border-bottom: 2px solid #E4498A;
+            color: var(--theme-color);
+            border-bottom: 2px solid var(--theme-color);
         }
     }
     .divider {
@@ -37,7 +37,7 @@
                 font-weight: bold;
             }
             .status {
-                color: #e4498a;
+                color: var(--theme-color);
             }
             .delivery-info {
                 .address {
@@ -84,13 +84,13 @@
         border: 1px solid #dadade;
         font-size: 15px;
         font-weight: 700;
-        color: #e4498a;
+        color: var(--theme-color);
         padding: 10px 20px;
         width: fit-content;
         border-radius: 4px;
         background: none;
         &:hover {
-            border: 1px solid #E4498A;
+            border: 1px solid var(--theme-color);
         }
     }
 }

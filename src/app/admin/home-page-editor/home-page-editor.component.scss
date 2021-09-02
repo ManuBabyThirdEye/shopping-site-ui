@@ -26,7 +26,7 @@
             bottom: -50px;
         }
         .carousel-indicators [data-bs-target] {
-            background-color: #e4498a!important;
+            background-color: var(--theme-color)!important;
             height: 6px;
             width: 6px;
             border-radius: 3px;
@@ -35,7 +35,7 @@
         }
         .carousel-control-next,
         .carousel-control-prev {
-            color: #e4498a!important;
+            color: var(--theme-color)!important;
             font-size: xxx-large;
         }
         &:hover {
@@ -127,7 +127,7 @@
         .save {
             width: fit-content;
             padding: 5px 15px;
-            background: #e4498a;
+            background: var(--theme-color);
             border: none;
             border-radius: 3px;
             color: white;
@@ -136,9 +136,9 @@
         .cancel {
             width: fit-content;
             margin-left: 10px;
-            border: 1px solid #e4498a;
+            border: 1px solid var(--theme-color);
             background: white;
-            color: #e4498a;
+            color: var(--theme-color);
             border-radius: 3px;
             font-size: 12px;
             padding: 5px;
@@ -170,13 +170,13 @@
         }
     }
     .add-new {
-        border: 1px dashed #e4498a;
+        border: 1px dashed var(--theme-color);
         border-radius: 5px;
         cursor: pointer;
         text-align: center;
         min-height: 275px;
         &:hover {
-            background: #e4498a;
+            background: var(--theme-color);
             .add-content {
                 .add-more {
                     color: white;
@@ -206,7 +206,7 @@
     button {
         width: fit-content;
         padding: 5px 15px;
-        background: #e4498a;
+        background: var(--theme-color);
         border: none;
         border-radius: 3px;
         color: white;
@@ -259,16 +259,16 @@
 .hide {
     width: fit-content;
     padding: 5px 15px;
-    border: 1px solid #e4498a;
+    border: 1px solid var(--theme-color);
     border-radius: 3px;
     color: white;
     background: white;
     font-size: 14px;
     margin-left: 5px;
     margin-right: 5px;
-    color: #e4498a;
+    color: var(--theme-color);
     &:hover {
-        background: #e4498a;
+        background: var(--theme-color);
         color: white;
     }
 }

@@ -72,7 +72,7 @@
         button {
             width: 100%;
             padding: 10px;
-            background: #e4498a;
+            background: var(--theme-color);
             border: none;
             border-radius: 3px;
             color: white;
@@ -122,7 +122,7 @@
         button {
             width: 100%;
             padding: 10px;
-            background: #e4498a;
+            background: var(--theme-color);
             border: none;
             border-radius: 3px;
             color: white;
@@ -133,6 +133,6 @@
 }
 
 .form-check-input:checked {
-    background-color: #e4498a!important;
-    border-color: #e4498a!important;
+    background-color: var(--theme-color)!important;
+    border-color: var(--theme-color)!important;
 }

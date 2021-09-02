@@ -15,6 +15,8 @@ import * as XLSX from 'xlsx';
 import { Address } from 'cluster';
 import { AnyARecord } from 'dns';
 import { DocumentReference } from '@angular/fire/firestore';
+import { SelectQuantityComponent } from 'src/app/app-modal/select-quantity/select-quantity.component';
+import { SelectSizeComponent } from 'src/app/app-modal/select-size/select-size.component';
 
 @Component({
   selector: 'app-billing',
@@ -42,7 +44,7 @@ export class BillingComponent implements OnInit {
 
   arrayBuffer:any;
   file:File;
-  progressBk:string="#e4498a";
+  progressBk:string="var(--theme-color)";
 
   ITEM_NO :string = "ITEM NO";
   ITEM_NAME : string ="ITEM NAME";
@@ -221,7 +223,7 @@ export class BillingComponent implements OnInit {
     if(count>0){
       let lastRecord = undefined;
       this.progress = 10;
-      this.progressBk="#e4498a";
+      this.progressBk="var(--theme-color)";
       let downloadbtn = document.getElementById("download");
       downloadbtn.innerHTML = this.progress+"%"
       for(let i=0;i<=count/this.PRODUCT_PAGINATION_LIMIT;i++){
@@ -460,6 +462,33 @@ export class BillingComponent implements OnInit {
       prod.availableSizeString = prod.availableSizes.map(s=>s.size).reduce((s1,s2)=>s1+","+s2);
       return prod;
     })
+  }
+
+  selectQuantity(cartItem : CartProduct){
+    const modalRef = this.modalService.open(SelectQuantityComponent);
+    modalRef.componentInstance.maxCount = 10;
+    console.log(cartItem);
+    modalRef.result.then(result=>{
+      if(result){
+        this.addedProducts.find(c=>c.cartId == cartItem.cartId).quantity = result;
+        this.updateTotalPrice();
+      }
+    }).catch(e=>{
+
+    });
+  }
+
+  selectSize(cartItem : CartProduct){
+    const modalRef = this.modalService.open(SelectSizeComponent);
+    console.log(cartItem);
+    modalRef.result.then(result=>{
+      if(result){
+        this.addedProducts.find(c=>c.cartId == cartItem.cartId).size = result;
+        this.updateTotalPrice();
+      }
+    }).catch(e=>{
+
+    });
   }
 
 }

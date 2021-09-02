@@ -164,7 +164,7 @@
                         font-weight: 200;
                     }
                     span {
-                        color: #e4498a;
+                        color: var(--theme-color);
                         margin-left: 5px;
                         font-size: 12px;
                         font-weight: 200;
@@ -234,7 +234,7 @@
                         font-weight: 200;
                     }
                     span {
-                        color: #e4498a;
+                        color: var(--theme-color);
                         margin-left: 5px;
                         font-size: 12px;
                         font-weight: 200;
@@ -294,7 +294,7 @@
         button {
             width: 100%;
             padding: 10px;
-            background: #e4498a;
+            background: var(--theme-color);
             border: none;
             border-radius: 3px;
             color: white;
@@ -325,13 +325,13 @@
             border: 1px solid #f5f5f6;
             font-size: 15px;
             font-weight: 700;
-            color: #e4498a;
+            color: var(--theme-color);
             padding: 10px 20px;
             width: fit-content;
             border-radius: 4px;
             background: none;
             &:hover {
-                border: 1px solid #E4498A;
+                border: 1px solid var(--theme-color);
             }
         }
     }
@@ -340,7 +340,7 @@
 .save {
     width: fit-content;
     padding: 5px 15px;
-    background: #e4498a;
+    background: var(--theme-color);
     border: none;
     border-radius: 3px;
     color: white;
@@ -352,9 +352,9 @@
 .cancel {
     width: fit-content;
     margin-left: 10px;
-    border: 1px solid #e4498a;
+    border: 1px solid var(--theme-color);
     background: white;
-    color: #e4498a;
+    color: var(--theme-color);
     border-radius: 3px;
     font-size: 12px;
     padding: 5px;

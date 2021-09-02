@@ -4,7 +4,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { ConfirmBoxComponent } from 'src/app/app-modal/confirm-box/confirm-box.component';
-import { SelectSizeComponent } from 'src/app/app-modal/select-size/select-size.component';
+import { SelectQuantityComponent } from 'src/app/app-modal/select-quantity/select-quantity.component';
 import { CategoryService } from 'src/app/services/category.service';
 import { LocalStoreObjectService } from 'src/app/services/local-store-object.service';
 import { ProductService } from 'src/app/services/product.service';
@@ -223,7 +223,7 @@ export class CartComponent implements OnInit {
   }
 
   selectSize(cartItem : CartProduct){
-    const modalRef = this.modalService.open(SelectSizeComponent);
+    const modalRef = this.modalService.open(SelectQuantityComponent);
     console.log(cartItem);
     modalRef.componentInstance.maxCount = cartItem.product.availableSizes.find(s=>s.size==cartItem.size).count;
     modalRef.result.then(result=>{

@@ -20,8 +20,9 @@ export class LocaldbService {
   }
 
   updateLocalProducts(products: Array<Product>) {
-    products.forEach(p=>{
-      if(this.getProductById(p.id)){
+    products.forEach(async p=>{
+      let product = await this.getProductById(p.id);
+      if(product){
         this.localDB.collection(this.PRODUCT_TABLE).doc({ id: p.id }).update(p);
       }else{
         this.localDB.collection(this.PRODUCT_TABLE).add(p);
@@ -34,7 +35,7 @@ export class LocaldbService {
   }
 
   getProductById(id: string) {
-    return  this.localDB.collection(this.PRODUCT_TABLE).doc({ id: id }).get();
+    return this.localDB.collection(this.PRODUCT_TABLE).doc({ id: id }).get();
   }
 
   addNewProduct(product: Product) {

@@ -19,13 +19,13 @@
         border: 1px solid #dadade;
         font-size: 15px;
         font-weight: 700;
-        color: #e4498a;
+        color: var(--theme-color);
         padding: 10px 20px;
         width: fit-content;
         border-radius: 4px;
         background: none;
         &:hover {
-            border: 1px solid #E4498A;
+            border: 1px solid var(--theme-color);
         }
     }
 }
@@ -77,17 +77,17 @@
                 }
             }
             button {
-                border: 1px solid #E4498A;
+                border: 1px solid var(--theme-color);
                 font-size: 12px;
                 font-weight: 600;
-                color: #e4498a;
+                color: var(--theme-color);
                 padding: 8px 15px;
                 width: fit-content;
                 border-radius: 4px;
                 background: none;
                 &:hover {
                     color: white;
-                    background: #e4498a;
+                    background: var(--theme-color);
                 }
             }
         }
@@ -111,10 +111,10 @@
                 }
             }
             h5 {
-                color: #e4498a;
+                color: var(--theme-color);
                 cursor: pointer;
                 i {
-                    color: #e4498a;
+                    color: var(--theme-color);
                 }
             }
         }
@@ -163,7 +163,7 @@
                 p {
                     font-size: 14px!important;
                     span {
-                        color: #e4498a;
+                        color: var(--theme-color);
                         margin-left: 5px;
                     }
                 }
@@ -192,7 +192,7 @@
             justify-content: space-between;
             cursor: pointer;
             &:hover {
-                color: #e4498a;
+                color: var(--theme-color);
             }
             div {
                 display: flex;
@@ -242,7 +242,7 @@
         button {
             width: 100%;
             padding: 10px;
-            background: #e4498a;
+            background: var(--theme-color);
             border: none;
             border-radius: 3px;
             color: white;

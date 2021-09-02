@@ -1,4 +1,5 @@
 import { Component, HostListener } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -10,6 +11,8 @@ export class AppComponent {
   showGoUp : boolean = false;
   constructor(){
     this.scrollTop();
+    document.documentElement.style.setProperty(`--theme-color`, environment.themeColor);
+
   }
 
   @HostListener('window:scroll', [])  

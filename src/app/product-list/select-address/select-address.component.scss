@@ -26,10 +26,10 @@
                 margin-bottom: 0px;
             }
             button {
-                border: 1px solid #E4498A;
+                border: 1px solid var(--theme-color);
                 font-size: 12px;
                 font-weight: 600;
-                color: #e4498a;
+                color: var(--theme-color);
                 padding: 8px 15px;
                 width: fit-content;
                 border-radius: 4px;
@@ -51,16 +51,16 @@
             }
             
             &:hover {
-                border: 1px solid #E4498A;
+                border: 1px solid var(--theme-color);
             }
             p {
                 margin-bottom: 5px;
             }
             button {
-                border: 1px solid #e4498a;
+                border: 1px solid var(--theme-color);
                 font-size: 12px;
                 font-weight: 600;
-                color: #e4498a;
+                color: var(--theme-color);
                 padding: 5px 15px;
                 width: -webkit-fit-content;
                 width: -moz-fit-content;
@@ -89,7 +89,7 @@
             }
         }
         .selected {
-            border: 1px solid #e4498a;
+            border: 1px solid var(--theme-color);
         }
     }
     .product-price {

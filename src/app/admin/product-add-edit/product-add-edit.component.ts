@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
-import { SelectSizeComponent } from 'src/app/app-modal/select-size/select-size.component';
+import { SelectQuantityComponent } from 'src/app/app-modal/select-quantity/select-quantity.component';
 import { CategoryService } from 'src/app/services/category.service';
 import { ProductService } from 'src/app/services/product.service';
 import { Category, MainCategory, Product, Size, SubCategory } from 'src/bean/category';
@@ -221,7 +221,7 @@ export class ProductAddEditComponent implements OnInit {
     this.amountEdit = false;
   }
   addMoreOnSize(size){
-    const modalRef = this.modalService.open(SelectSizeComponent);
+    const modalRef = this.modalService.open(SelectQuantityComponent);
     modalRef.componentInstance.maxCount = 100;
     modalRef.result.then(result=>{
       if(result){

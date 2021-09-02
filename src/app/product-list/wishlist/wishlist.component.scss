@@ -61,7 +61,7 @@
                         font-weight: 200;
                     }
                     span {
-                        color: #e4498a;
+                        color: var(--theme-color);
                         margin-left: 5px;
                         font-size: 12px;
                         font-weight: 200;
@@ -93,13 +93,13 @@
         border: 1px solid #f5f5f6;
         font-size: 15px;
         font-weight: 700;
-        color: #e4498a;
+        color: var(--theme-color);
         padding: 10px 20px;
         width: fit-content;
         border-radius: 4px;
         background: none;
         &:hover {
-            border: 1px solid #E4498A;
+            border: 1px solid var(--theme-color);
         }
     }
 }

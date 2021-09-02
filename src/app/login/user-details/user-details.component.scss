@@ -96,7 +96,7 @@
             cursor: default;
         }
         .active {
-            background: #e4498a;
+            background: var(--theme-color);
             cursor: pointer;
         }
     }
