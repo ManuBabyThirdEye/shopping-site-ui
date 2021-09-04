@@ -113,10 +113,16 @@ export class ProductService {
       await Promise.all(promiseList);
       if(!cancel){
         await batch.commit();
-        console.log(cart);
-        return this.firestore.collection(order?this.ORDER_TABLE:this.BILLING_TABLE).add(cart).then(ref=>{
-          return ref.id;
-        });
+        if(order){
+          return this.firestore.collection(this.ORDER_TABLE).add(cart).then(ref=>{
+            return ref.id;
+          });
+        }else{
+          return this.firestore.collection(this.BILLING_TABLE).doc(cart.id).set(cart).then(ref=>{
+            return cart.id;
+          });
+        }
+        
       }else{
         return Promise.reject(new Error());
       }

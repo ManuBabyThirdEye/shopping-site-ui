@@ -60,8 +60,8 @@
             <tr *ngFor="let order of orderList">
                 <td>
                     <div class="prod-img">
-                        <img *ngIf="order.cartProducts && order.cartProducts.length>0" class="img-loading prod-img" src="{{order.cartProducts[0].product.images[0]}}">
-                        <img *ngIf="!(order.cartProducts && order.cartProducts.length>0)" class="img-loading prod-img" src="../../../assets/logo.png">
+                        <img *ngIf="order.cartProducts && order.cartProducts.length>0 && order.cartProducts[0].product && order.cartProducts[0].product.images && order.cartProducts[0].product.images.length>0" class="img-loading prod-img" src="{{order.cartProducts[0].product.images[0]}}">
+                        <img *ngIf="!(order.cartProducts && order.cartProducts.length>0 && order.cartProducts[0].product && order.cartProducts[0].product.images && order.cartProducts[0].product.images.length>0)" class="prod-img" src="../../../assets/logo.png">
                     </div>
                 </td>
                 <td>

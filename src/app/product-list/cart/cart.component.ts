@@ -36,6 +36,7 @@ export class CartComponent implements OnInit {
       cartProducts : [],
       total : 0,
       totalMRP : 0,
+      inPersonDiscount : 0,
       convenienceFee : 0,
       currentOrderStatus : "",
       orderStatusList : [],

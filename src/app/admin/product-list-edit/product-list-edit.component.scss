@@ -1,5 +1,75 @@
 .product-edit {
     padding: 100px 20px;
+    .prod-id-search{
+        display: flex;
+        .input-box {
+            position: relative;
+            width: 95%;
+            text-align: end;
+            input {
+                display: inline-block;
+                margin-top: 5px;
+                font-size: 12px;
+                height: 20px;
+                line-height: 24px;
+                width: 200px;
+                color: #696e79;
+                -webkit-box-sizing: content-box;
+                box-sizing: content-box;
+                padding: 10px 10px 10px 10px;
+                margin: 0;
+                outline: 0;
+                border: 1px solid #dadada;
+                border-radius: 4px 4px 4px 4px;
+                margin-right: 20px;
+                &:focus {
+                    border: 1px solid black;
+                }
+                &:focus~label {
+                    top: -8px;
+                    transition-property: top;
+                    transition-duration: .1s;
+                    left: 9px;
+                    padding: 0 4px;
+                    background: white;
+                    color: black;
+                }
+                &:valid~label {
+                    top: -8px;
+                    transition-property: top;
+                    transition-duration: .1s;
+                    left: 9px;
+                    padding: 0 4px;
+                    background: white;
+                    color: black;
+                }
+            }
+            label {
+                font-size: 12px;
+                display: block;
+                position: absolute;
+                top: 11px;
+                left: 13px;
+                color: #94969f;
+                transition-property: top;
+                transition-duration: .1s;
+            }
+            span {
+                font-size: 14px;
+                color: red;
+            }
+        }
+        button {
+            height: 40px;
+            padding: 10px;
+            background: var(--theme-color);
+            border: none;
+            border-radius: 3px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+    }
     .sort-main {
         position: absolute;
         .sort-box {

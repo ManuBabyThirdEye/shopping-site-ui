@@ -41,7 +41,9 @@ export class BillingComponent implements OnInit {
 
   SIZE_MAPPER = new Map();
   progress :number = 0;
-
+  inPersonDiscount : number=0;
+  openInPersonDiscount : boolean = false;
+  isPopupOpen : boolean = false;
   arrayBuffer:any;
   file:File;
   progressBk:string="var(--theme-color)";
@@ -76,10 +78,14 @@ export class BillingComponent implements OnInit {
           confirmreturn.componentInstance.positiveText = "YES";
           confirmreturn.componentInstance.negativeText = "NO";
       
+          this.isPopupOpen = true;
           confirmreturn.result.then(result=>{
             if(result){
               this.downloadProduct();
             }
+            this.isPopupOpen = false;
+          }).catch(e=>{
+            this.isPopupOpen = false;
           });
         }
       })
@@ -90,6 +96,7 @@ export class BillingComponent implements OnInit {
 
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {  
+    if(!this.openInPersonDiscount && !this.isPopupOpen){
       if (event.keyCode === KEY_CODE.ENTER) {
         if(this.productDetail && this.productDetail.length>3){
           this.getProductDetails();
@@ -105,7 +112,9 @@ export class BillingComponent implements OnInit {
             this.productDetail = this.productDetail+event.key.toUpperCase();
           }
         }
-      }    
+      }  
+    }
+        
   }
 
   searchProduct(event){
@@ -140,11 +149,12 @@ export class BillingComponent implements OnInit {
           confirmreturn.componentInstance.positiveText = "OK";
           confirmreturn.componentInstance.negativeText = "ADD MANUALY";
       
+          this.isPopupOpen = true;
           confirmreturn.result.then(result=>{
             if(!result){
               const productBox = this.modalService.open(ProductDatailsComponent);
               productBox.componentInstance.size = productSize;
-          
+              this.isPopupOpen = true;
               productBox.result.then(result=>{
                 if(result){
                   let newProduct  = result as Product;
@@ -156,8 +166,15 @@ export class BillingComponent implements OnInit {
                   this.localdbService.addNewProduct(newProduct);
                   this.addProductToBilling(newProduct,productSize);
                 }
+                this.isPopupOpen = false;
+              }).catch(e=>{
+                this.isPopupOpen = false;
               });
+            }else{
+              this.isPopupOpen = false;
             }
+          }).catch(e=>{
+            this.isPopupOpen = false;
           });
         }
       }else{
@@ -178,6 +195,7 @@ export class BillingComponent implements OnInit {
           confirmreturn.componentInstance.positiveText = "YES";
           confirmreturn.componentInstance.negativeText = "CANCEL";
       
+          this.isPopupOpen = true;
           confirmreturn.result.then(result=>{
             if(result){
               if(!selectedSize){
@@ -186,7 +204,10 @@ export class BillingComponent implements OnInit {
               selectedSize.count = 1;
               this.addProductToBillingList(product,selectedSize);
               this.updateTotalPrice();
+              this.isPopupOpen = false;
             }
+          }).catch(e=>{
+            this.isPopupOpen = false;
           }); 
     }
     
@@ -207,13 +228,17 @@ export class BillingComponent implements OnInit {
         });
       }
     }
-    console.log(this.addedProducts)
   }
   updateTotalPrice() {
+    console.log(this.inPersonDiscount)
+    if(!this.inPersonDiscount){
+      this.inPersonDiscount = 0;
+    }
+    this.inPersonDiscount = parseInt(this.inPersonDiscount+"");
     this.total = 0;
     this.totalMRP = 0;
     this.addedProducts.forEach(prod=>{
-      this.total = this.total + prod.quantity*prod.product.discountPrice;
+      this.total = this.total + prod.quantity*prod.product.discountPrice-this.inPersonDiscount;
       this.totalMRP = this.totalMRP + (prod.product.discountPrice * 100 )/(100-prod.product.discount) * prod.quantity;
     });
   }
@@ -249,6 +274,8 @@ export class BillingComponent implements OnInit {
   }
 
   billing(){
+    var orderId = Math.floor( Date.now()/1000 );
+
     const confirmreturn = this.modalService.open(ConfirmBoxComponent);
     confirmreturn.componentInstance.image = "../../assets/shopping.png";
     confirmreturn.componentInstance.heading = "Billing";
@@ -256,18 +283,24 @@ export class BillingComponent implements OnInit {
     confirmreturn.componentInstance.positiveText = "YES";
     confirmreturn.componentInstance.negativeText = "CANCEL";
       
+    this.isPopupOpen = true;
     confirmreturn.result.then(result=>{
       if(result){
         const confirmreturn = this.modalService.open(PrintComponent);
-        confirmreturn.componentInstance.addedProducts = this.addedProducts;  
+        confirmreturn.componentInstance.billNumber = orderId;
+        confirmreturn.componentInstance.addedProducts = this.addedProducts;
+        this.isPopupOpen = true;
         confirmreturn.result.then(result=>{
           if(result){
                
           }
+          this.isPopupOpen = false;
+        }).catch(e=>{
+          this.isPopupOpen = false;
         });
-      }
       
-      let cart : Order = {
+      
+        let cart : Order = {
         cartProducts : this.addedProducts,
         totalMRP : this.totalMRP,
         total : this.total,
@@ -278,7 +311,8 @@ export class BillingComponent implements OnInit {
         orderStatusList : [],
         paymentMode : PaymentMode.SHOP_CASH,
         placedDate : new Date().toISOString(),
-        id :  new Date().getMilliseconds()+"",
+        id :  orderId+"",
+        inPersonDiscount : this.inPersonDiscount,
         address : {
           address : "SHOP",
           district : "TVM",
@@ -312,21 +346,28 @@ export class BillingComponent implements OnInit {
       this.productService.reduceProductCountAndPlaceOrder(cart,false).then(res=>{
         if(res){
           this.localdbService.updateBillingSuccess(cart.id);
+        }else{
+          console.log("failed remote upload, do this later...")
         }
       }).catch(e=>{
         console.log("failed remote upload, do this later...")
       });
       this.addedProducts = [];
+    }
+    this.isPopupOpen = false;
+    }).catch(e=>{
+      this.isPopupOpen = false;
     });
   }
 
   uploadBillingToRemote(){
     this.localdbService.getAllBillingFormLocal().then(billing=>{
+      billing = billing.filter(b=>!b["remoteSuccess"])
       if(billing && billing.length>0){
         this.progress=1;
         let uploadBtn = document.getElementById("upload");
         uploadBtn.innerHTML = this.progress+"%"
-        let inc = 100/billing.filter(b=>!b["remoteSuccess"]).length;
+        let inc = 100/billing.length;
         for(let bill of billing){
           if(!bill["remoteSuccess"]){
             this.productService.reduceProductCountAndPlaceOrder(bill,false).then(res=>{
@@ -348,6 +389,8 @@ export class BillingComponent implements OnInit {
             });
           }
         }
+      }else{
+        this.toastr.success("No bill to upload")
       }
     })
   }
@@ -467,27 +510,29 @@ export class BillingComponent implements OnInit {
   selectQuantity(cartItem : CartProduct){
     const modalRef = this.modalService.open(SelectQuantityComponent);
     modalRef.componentInstance.maxCount = 10;
-    console.log(cartItem);
+    this.isPopupOpen = true;
     modalRef.result.then(result=>{
       if(result){
         this.addedProducts.find(c=>c.cartId == cartItem.cartId).quantity = result;
         this.updateTotalPrice();
       }
+      this.isPopupOpen = false;
     }).catch(e=>{
-
+      this.isPopupOpen = false;
     });
   }
 
   selectSize(cartItem : CartProduct){
     const modalRef = this.modalService.open(SelectSizeComponent);
-    console.log(cartItem);
+    this.isPopupOpen = true;
     modalRef.result.then(result=>{
       if(result){
         this.addedProducts.find(c=>c.cartId == cartItem.cartId).size = result;
         this.updateTotalPrice();
       }
+      this.isPopupOpen = false;
     }).catch(e=>{
-
+      this.isPopupOpen = false;
     });
   }
 

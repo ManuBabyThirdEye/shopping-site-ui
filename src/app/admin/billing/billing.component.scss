@@ -150,12 +150,12 @@
             }
             .upload{
                 button{
-                    margin-left: 5px;
                     border: 1px solid #f5bc85;
                     background: none;
                     padding: 8px;
                     border-radius: 5px;
                     color: #f5bc85;
+                    width: 100%;
                     &:hover {
                         background: #f5bc85;
                         color: white;
@@ -169,10 +169,10 @@
                     min-height: 200px;
                     display: none;
                     position: absolute;
-                    padding: 30px 10px;
+                    padding: 30px 20px;
                     background: white;
                     input{
-                        margin: 10px;
+                        margin-block: 10px;
                     }
                     &:hover{
                         display: block;
@@ -391,6 +391,80 @@
                     span {
                         color: green;
                         font-size: 13px;
+                    }
+                }
+                .add-discount{
+                    text-align: end;
+                    font-size: 13px;
+                    font-style: italic;
+                    text-decoration: underline;
+                    color: #468b18;
+                    cursor: pointer;
+                }
+                .person-discount{
+                    text-align: end;
+                    input {
+                        display: inline-block;
+                        margin-top: 5px;
+                        font-size: 12px;
+                        height: 20px;
+                        line-height: 24px;
+                        width: 100px;
+                        color: #696e79;
+                        -webkit-box-sizing: content-box;
+                        box-sizing: content-box;
+                        padding: 10px 10px 10px 10px;
+                        margin: 0;
+                        outline: 0;
+                        border: 1px solid #dadada;
+                        border-radius: 4px 4px 4px 4px;
+                        margin-right: 20px;
+                        &:focus {
+                            border: 1px solid black;
+                        }
+                        &:focus~label {
+                            top: -8px;
+                            transition-property: top;
+                            transition-duration: .1s;
+                            left: 9px;
+                            padding: 0 4px;
+                            background: white;
+                            color: black;
+                        }
+                        &:valid~label {
+                            top: -8px;
+                            transition-property: top;
+                            transition-duration: .1s;
+                            left: 9px;
+                            padding: 0 4px;
+                            background: white;
+                            color: black;
+                        }
+                    }
+                    .save{
+                        padding: 10px;
+                        background: var(--theme-color);
+                        border: none;
+                        border-radius: 3px;
+                        color: white;
+                        font-size: 14px;
+                        font-weight: 600;
+                        margin-top: 10px;
+                        margin-right: 20px;
+                        width: fit-content;
+                        height: 40px;
+                    }
+                    .cancel{
+                        border: 1px solid var(--theme-color);
+                        font-size: 12px;
+                        font-weight: 600;
+                        color: var(--theme-color);
+                        padding: 8px 15px;
+                        width: fit-content;
+                        border-radius: 4px;
+                        background: none;
+                        margin-top: 0px;
+                        height: 40px;
                     }
                 }
                 .divider {

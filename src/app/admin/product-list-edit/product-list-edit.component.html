@@ -1,9 +1,15 @@
 <div class="product-edit">
-    <div class="d-none d-sm-block list-page-header">
+    <div class="d-none d-sm-block list-page-header row">
         <div class="navigation-box">
             <span routerLink="/admin">Admin</span>
             <span class="active"><span></span> Products</span>
         </div>
+    </div>
+    <div class="prod-id-search">
+        <div class="input-box">
+            <input placeholder="Product Id" [(ngModel)]="productId" id="pincode" type="text" required >
+        </div>
+        <button (click)="searchProductById()">SEARCH</button>
     </div>
     <div class="row col-md-12 sort-main">
         <div class="col-md-3 sort-box">
@@ -29,7 +35,8 @@
         <div class="row col-md-12">
             <div *ngFor="let pro of products" class="col-6 col-md-4 col-lg-3 col-xl-2">
                 <div (click)="pro.isWishList=!pro.isWishList" class="product-box">
-                    <img class="img-loading" src="{{pro.images[0]}}">
+                    <img *ngIf="pro.images && pro.images.length>0" class="img-loading" src="{{pro.images[0]}}">
+                    <img *ngIf="!(pro.images && pro.images.length>0)" src="../../../assets/logo.png">
                     <div class="product-details">
                         <p>Size: <span>{{pro.availableSizeString}}</span></p>
                         <h4>Rs. {{pro.discountPrice}} <s *ngIf="pro.discount>0">Rs. {{(pro.discountPrice * 100 )/(100-pro.discount)}} </s> <span *ngIf="pro.discount>0">({{pro.discount}}% OFF)</span></h4>

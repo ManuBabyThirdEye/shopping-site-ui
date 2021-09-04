@@ -102,7 +102,18 @@
                     </div>
                     <div class="price-details">
                         <p>Discount on MRP</p>
-                        <span>-&#8377; {{(totalMRP-total).toFixed(2)}}</span>
+                        <span>-&#8377; {{totalMRP-total-inPersonDiscount>=0?(totalMRP-total-inPersonDiscount).toFixed(2):0}}</span>
+                    </div>
+                    <div *ngIf="inPersonDiscount && inPersonDiscount instanceof number" class="price-details">
+                        <p>Personal Discount</p>
+                        <span>-&#8377; {{inPersonDiscount.toFixed(2)}}</span>
+                    </div>
+                    <div (click)="openInPersonDiscount=true" class="add-discount">
+                        Add more discount
+                    </div>
+                    <div *ngIf="openInPersonDiscount" class="person-discount">
+                        <input placeholder="Personal Discount" type="number" [(ngModel)]="inPersonDiscount">
+                        <button (click)="openInPersonDiscount=false;updateTotalPrice()" class="save">SAVE</button><button (click)="inPersonDiscount=0;openInPersonDiscount=false" class="cancel">CANCEL</button>
                     </div>
                     <div class="divider"></div>
                     <div class="total">

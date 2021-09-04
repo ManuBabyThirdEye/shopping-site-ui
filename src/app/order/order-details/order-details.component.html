@@ -18,12 +18,13 @@
         <div class="col-md-8 cart-product">
             <div class="hearder">
                 <h4>Ordered Products</h4>
-                <h4>Total : &#8377; {{orderDetsails.includeConvenienceFee?orderDetsails.total+orderDetsails.convenienceFee:orderDetsails.total}}</h4>
+                <h4>Total : &#8377; {{(orderDetsails.includeConvenienceFee?orderDetsails.total+orderDetsails.convenienceFee:orderDetsails.total).toFixed(2)}}</h4>
             </div>
             <div *ngFor="let cartItem of orderDetsails.cartProducts" class="product box">
                 <div class="row col-md-12">
                     <div class="col-md-3">
-                        <img class="img-loading" src="{{cartItem.product.images[0]}}">
+                        <img *ngIf="cartItem.product.images && cartItem.product.images.length" class="img-loading" src="{{cartItem.product.images[0]}}">
+                        <img *ngIf="!(cartItem.product.images && cartItem.product.images.length)" class="prod-img" src="../../../assets/logo.png">
                     </div>
                     <div class="prod-details col-md-6 col-6">
                         <h5><a routerLink="/product-details" [queryParams]="{productId:cartItem.product.id}">{{cartItem.product.name}}</a></h5>
@@ -37,8 +38,8 @@
                         <p *ngIf="cartItem.delivertDate==undefined"><i class="fa fa-times" aria-hidden="true"></i> Update your pincode</p>
                     </div>
                     <div class="price col-md-3 col-6">
-                        <h5>&#8377; {{cartItem.product.discountPrice}}</h5>
-                        <p><s>Rs. {{(cartItem.product.discountPrice * 100 )/(100-cartItem.product.discount)}}</s> <span>({{cartItem.product.discount}}% OFF)</span></p>
+                        <h5>&#8377; {{cartItem.product.discountPrice.toFixed(2)}}</h5>
+                        <p><s>Rs. {{((cartItem.product.discountPrice * 100 )/(100-cartItem.product.discount)).toFixed(2)}}</s> <span>({{cartItem.product.discount}}% OFF)</span></p>
                     </div>
                 </div>
                 <div *ngIf="orderOrReturnStatusList[orderOrReturnStatusList.length-1].orderStatus=='DELIVERY' && orderOrReturnStatusList[orderOrReturnStatusList.length-1].date" class="divider">
@@ -56,11 +57,15 @@
             <div class="price-main">
                 <div class="price-details">
                     <p>Total MRP</p>
-                    <p>&#8377; {{orderDetsails.totalMRP}}</p>
+                    <p>&#8377; {{orderDetsails.totalMRP.toFixed(2)}}</p>
                 </div>
                 <div class="price-details">
                     <p>Discount on MRP</p>
-                    <span>-&#8377; {{orderDetsails.totalMRP-orderDetsails.total}}</span>
+                    <span>-&#8377; {{(orderDetsails.totalMRP-orderDetsails.total-orderDetsails.inPersonDiscount).toFixed(2)}}</span>
+                </div>
+                <div *ngIf="orderDetsails.inPersonDiscount && orderDetsails.inPersonDiscount instanceof number" class="price-details">
+                    <p>Personal Discount</p>
+                    <span>-&#8377; {{orderDetsails.inPersonDiscount.toFixed(2)}}</span>
                 </div>
                 <div class="price-details">
                     <p>Convinience Fee</p>
@@ -70,7 +75,7 @@
                 <div class="divider"></div>
                 <div class="total">
                     <p>Total Amount</p>
-                    <span>&#8377; {{orderDetsails.includeConvenienceFee?orderDetsails.total+orderDetsails.convenienceFee:orderDetsails.total}}</span>
+                    <span>&#8377; {{(orderDetsails.includeConvenienceFee?orderDetsails.total+orderDetsails.convenienceFee:orderDetsails.total).toFixed(2)}}</span>
                 </div>
             </div>
             <h5 style="margin-top: 30px!important;">{{order?'DELIVERY':'PICK UP'}} ADDRESS</h5>

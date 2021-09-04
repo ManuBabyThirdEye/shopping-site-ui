@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { CartProduct } from 'src/bean/category';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
+import { CartProduct, KEY_CODE } from 'src/bean/category';
 
 @Component({
   selector: 'app-print',
@@ -9,6 +9,7 @@ import { CartProduct } from 'src/bean/category';
 export class PrintComponent implements OnInit {
 
   @Input() addedProducts : Array<CartProduct>;
+  @Input() billNumber : string;
 
   totalQty : number = 0;
   totalPrice : number = 0;
@@ -16,7 +17,6 @@ export class PrintComponent implements OnInit {
   cgst : number;
   sgst : number;
   date : Date;
-  billNumber : string="B4323423423"
   constructor() { 
     
   }
@@ -32,6 +32,13 @@ export class PrintComponent implements OnInit {
     });
     this.cgst = (this.totalPriceNoGst*2.5)/100;
     this.sgst = (this.totalPriceNoGst*2.5)/100;
+  }
+
+  @HostListener('window:keyup', ['$event'])
+  keyEvent(event: KeyboardEvent) {  
+    if (event.keyCode === KEY_CODE.ENTER) {
+      this.printBillNew();
+    }
   }
 
   printBillNew(){

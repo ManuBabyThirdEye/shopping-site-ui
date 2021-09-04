@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { KEY_CODE } from 'src/bean/category';
 
 @Component({
   selector: 'app-confirm-box',
@@ -30,6 +31,13 @@ export class ConfirmBoxComponent implements OnInit {
 
   close(){
     this.activeModal.dismiss();
+  }
+
+  @HostListener('window:keyup', ['$event'])
+  keyEvent(event: KeyboardEvent) {  
+    if (event.keyCode === KEY_CODE.ENTER) {
+      this.positiveResponce();
+    }
   }
 
 }

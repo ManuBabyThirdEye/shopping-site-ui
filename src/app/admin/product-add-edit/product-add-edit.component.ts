@@ -59,6 +59,9 @@ export class ProductAddEditComponent implements OnInit {
         this.ngxService.start();
         this.productService.getProduct(this.productId).then(p=>{
           this.product = p;
+          if(!this.product.images || this.product.images.length==0){
+            this.product.images = ["../../assets/logo.png","../../assets/logo.png","../../assets/logo.png","../../assets/logo.png"];
+          }
           if(!this.product.details){
             this.product.details = "Double click to add details here";
           }
@@ -143,6 +146,9 @@ export class ProductAddEditComponent implements OnInit {
       }
       if(this.product.details == 'Double click to add details here'){
         this.product.details = "";
+      }
+      if(!this.product.productDeliveryDelay){
+        this.product.productDeliveryDelay = 0;
       }
     if(this.product.id=="new"){
         this.product.category.push(this.categoryId);

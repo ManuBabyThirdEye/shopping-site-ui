@@ -18,6 +18,7 @@ export class ProductListEditComponent implements OnInit {
   selectedCat : Category;
   selectedSubCat : SubCategory;
   products : Array<Product> = [];
+  productId : string;
 
   constructor(private route: ActivatedRoute,
     private router : Router,
@@ -70,7 +71,7 @@ export class ProductListEditComponent implements OnInit {
   }
 
   editProduct(pro : Product){
-    this.router.navigate(['/admin/product-add-edit'],{queryParams : {productId : pro.id,categoryId:this.selectedSubCat?this.selectedSubCat.id:this.selectedCat.id}});
+    this.router.navigate(['/admin/product-add-edit'],{queryParams : {productId : pro.id,categoryId:this.selectedSubCat?this.selectedSubCat.id:this.selectedCat?this.selectedCat.id:""}});
   }
 
   deleteProduct(pro : Product){
@@ -79,6 +80,21 @@ export class ProductListEditComponent implements OnInit {
 
   hideProduct(pro : Product){
 
+  }
+
+  searchProductById(){
+    if(this.productId){
+      this.ngxService.start();
+      this.productService.getProductById(this.productId).then(p=>{
+        this.products = [];
+        if(p){
+          this.products.push(p);
+        }else{
+          this.toastr.error("No product available")
+        }
+        this.ngxService.stop();
+      })
+    }
   }
 
 }

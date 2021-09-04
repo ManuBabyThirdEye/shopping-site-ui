@@ -147,6 +147,7 @@ export interface Order{
     placedDate : string;
     paymentMode :PaymentMode;
     paymentDetails : PaymentDetails;
+    inPersonDiscount : number;
 }
 
 export interface PaymentDetails{

@@ -136,6 +136,7 @@ export class OrderDetailsComponent implements OnInit {
             convenienceFee : this.orderDetsails.convenienceFee,
             currentOrderStatus : "PLACED",
             id : "",
+            inPersonDiscount : 0,
             includeConvenienceFee : this.orderDetsails.includeConvenienceFee,
             mobileNumber : this.orderDetsails.mobileNumber,
             orderStatusList : [{
