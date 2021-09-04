@@ -50,7 +50,7 @@
                 <i class="fa fa-heart-o"></i>
                 <div r class="profile-text">Wishlist</div>
             </div>
-            <div *ngIf="user!=undefined && user.admin" routerLink="/admin/billing" class="col-md-4 profile-item">
+            <div *ngIf="(user!=undefined && user.admin) || isLocal  " routerLink="/admin/billing" class="col-md-4 profile-item">
                 <i class="fa fa-ticket"></i>
                 <div r class="profile-text">Billing</div>
             </div>

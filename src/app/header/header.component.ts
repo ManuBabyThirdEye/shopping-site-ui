@@ -2,6 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { environment } from 'src/environments/environment';
 import { Category, CategoryMap, MainCategory, User } from "../../bean/category";
 import { ConfirmBoxComponent } from '../app-modal/confirm-box/confirm-box.component';
 import { AuthService } from '../services/auth.service';
@@ -29,6 +30,7 @@ export class HeaderComponent implements OnInit {
   searchKey : string;
   categorySearchMap : Map<string,CategoryMap> = new Map();
   categoryKeySearchMap : Map<string,string> = new Map();
+  isLocal : boolean;
 
   searchList : Array<string> = [];
   constructor(private categoryService : CategoryService,
@@ -37,6 +39,7 @@ export class HeaderComponent implements OnInit {
     private _location: Location,
     private modalService: NgbModal,
     private localStorageObject: LocalStoreObjectService) { 
+      this.isLocal = !environment.production;
     this.categoryService.getAllCategoryList().then(cList=>{
       this.mainCategorList = cList.docs.map(c=>{
         let mainCate : MainCategory =  c.data() as MainCategory;
