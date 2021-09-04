@@ -1,5 +1,5 @@
 <div *ngIf="orderDetsails" class="order-main">
-    <div class="row col-md-12">
+    <div *ngIf="tableName!='billing'" class="row col-md-12">
         <div *ngFor="let OorR of orderOrReturnStatusList;let i=index" class="col-md-3 col-3">
             <div class="status row col-md-12 c-12">
                 <div class="status-text col-md-8 col-8">
@@ -34,7 +34,7 @@
                             <span>Qty: {{cartItem.quantity}}</span>
                         </div>
 
-                        <p *ngIf="cartItem.delivertDate!=undefined"><i class="fa fa-check" aria-hidden="true"></i> {{order?'Delivery':'Pick up'}} by <span>{{ cartItem.delivertDate | date: "fullDate" }}</span></p>
+                        <p *ngIf="cartItem.delivertDate!=undefined"><i class="fa fa-check" aria-hidden="true"></i> {{tableName=='order'?'Delivery by':tableName=='return'?'Pick up by':'Billing Date '}} <span>{{ cartItem.delivertDate | date: "fullDate" }}</span></p>
                         <p *ngIf="cartItem.delivertDate==undefined"><i class="fa fa-times" aria-hidden="true"></i> Update your pincode</p>
                     </div>
                     <div class="price col-md-3 col-6">
