@@ -31,6 +31,7 @@ export class HeaderComponent implements OnInit {
   categorySearchMap : Map<string,CategoryMap> = new Map();
   categoryKeySearchMap : Map<string,string> = new Map();
   isLocal : boolean;
+  icon : string;
 
   searchList : Array<string> = [];
   constructor(private categoryService : CategoryService,
@@ -40,6 +41,7 @@ export class HeaderComponent implements OnInit {
     private modalService: NgbModal,
     private localStorageObject: LocalStoreObjectService) { 
       this.isLocal = !environment.production;
+      this.icon = "../../"+environment.icon;
     this.categoryService.getAllCategoryList().then(cList=>{
       this.mainCategorList = cList.docs.map(c=>{
         let mainCate : MainCategory =  c.data() as MainCategory;

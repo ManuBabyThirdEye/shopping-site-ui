@@ -6,6 +6,8 @@ export const environment = {
   production: false,
   themeColor : "#e4498a",
   adminNumber : "8714443741",
+  icon : "assets/logo.png",
+  appName:"Test",
   firebaseConfig : {
     apiKey: "AIzaSyC8ZkhyjUy6n0uhY0rRjILTC4Ypj5b4TzY",
     authDomain: "rithum-15823.firebaseapp.com",

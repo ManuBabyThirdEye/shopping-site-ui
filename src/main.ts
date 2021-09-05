@@ -8,5 +8,11 @@ if (environment.production) {
   enableProdMode();
 }
 
+let newPageTitle = environment.appName; 
+document.title = newPageTitle; 
+
+const favicon = document.getElementById("favicon");
+favicon.setAttribute("href", environment.icon);  
+
 platformBrowserDynamic().bootstrapModule(AppModule)
   .catch(err => console.error(err));
