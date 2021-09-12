@@ -6,6 +6,7 @@ export const environment = {
   production: false,
   themeColor : "#e4498a",
   adminNumber : "8714443741",
+  gstNumber : "",
   icon : "assets/logo.png",
   appName:"Test",
   firebaseConfig : {

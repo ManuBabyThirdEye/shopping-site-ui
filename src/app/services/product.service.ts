@@ -263,6 +263,9 @@ export class ProductService {
             return s;
           });
           for (let size in AllSize) {
+            if(size == "FS"){
+              size = "FREE SIZE";
+            }
             let sizeNowIndex = product.availableSizes.findIndex(s=>s.size==size);
             let sizeDBIndex = currentSize.findIndex(s=>s.size==size);
             if(sizeNowIndex!=-1 && sizeDBIndex!=-1){

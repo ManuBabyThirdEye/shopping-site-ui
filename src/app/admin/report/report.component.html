@@ -1,0 +1,38 @@
+<div class="main-box">
+    <div class="d-none d-sm-block list-page-header">
+        <div class="navigation-box">
+            <span routerLink="/admin">Admin</span>
+            <span class="active"><span></span> Report</span>
+        </div>
+    </div>
+    <div class="revenue-box bg-white rounded shadow">
+        <highcharts-chart 
+        [Highcharts]="Highcharts"
+
+        [constructorType]="chartConstructor"
+        [options]="chartOptions"
+        [callbackFunction]="chartCallback"
+
+        [(update)]="updateFlag"
+        [oneToOne]="oneToOneFlag"
+        [runOutsideAngular]="runOutsideAngularFlag"
+
+        style="width: 100%; height: 400px; display: block;"
+        ></highcharts-chart>
+    </div>
+    <div class="revenue-box bg-white rounded shadow">
+        <highcharts-chart 
+        [Highcharts]="Highcharts"
+
+        [constructorType]="chartConstructor"
+        [options]="chartOptionsTransactionCount"
+        [callbackFunction]="chartCallback"
+
+        [(update)]="updateFlag"
+        [oneToOne]="oneToOneFlag"
+        [runOutsideAngular]="runOutsideAngularFlag"
+
+        style="width: 100%; height: 400px; display: block;"
+        ></highcharts-chart>
+    </div>
+</div>

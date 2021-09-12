@@ -153,22 +153,26 @@ export class ProductAddEditComponent implements OnInit {
     if(this.product.id=="new"){
         this.product.category.push(this.categoryId);
         this.ngxService.start();
+        this.product = this.removeUndefined(this.product);
         this.productService.addNewProduct(this.product,this.selectedImages).then(()=>{
           this.ngxService.stop();
           this.toastr.success("Product added successfuly")
         }).catch(e=>{
           this.ngxService.stop();
-          this.toastr.success("Failed to added product");
+          this.toastr.error("Failed to added product");
           console.log(e);
         })
     }else{
       this.ngxService.start();
+      console.log(this.product);
+      this.product = this.removeUndefined(this.product);
+      console.log(this.product);
       this.productService.updateProductDetails(this.product,this.selectedImages,this.oldImages).then(()=>{
         this.ngxService.stop();
         this.toastr.success("Product updated successfuly")
       }).catch(e=>{
         this.ngxService.stop();
-        this.toastr.success("Failed to updated product");
+        this.toastr.error("Failed to updated product");
         console.log(e);
       })
     }
@@ -300,5 +304,14 @@ export class ProductAddEditComponent implements OnInit {
 
   selectedSubCategory(subCategory: SubCategory){
     this.selectedSubCat = subCategory;
+  }
+
+  removeUndefined(obj:any){
+    Object.keys(obj).forEach(key => {
+      if (obj[key] === undefined) {
+        delete obj[key];
+      }
+    });
+    return obj;
   }
 }

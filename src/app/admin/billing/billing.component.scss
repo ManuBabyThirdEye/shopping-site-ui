@@ -422,24 +422,6 @@
                         &:focus {
                             border: 1px solid black;
                         }
-                        &:focus~label {
-                            top: -8px;
-                            transition-property: top;
-                            transition-duration: .1s;
-                            left: 9px;
-                            padding: 0 4px;
-                            background: white;
-                            color: black;
-                        }
-                        &:valid~label {
-                            top: -8px;
-                            transition-property: top;
-                            transition-duration: .1s;
-                            left: 9px;
-                            padding: 0 4px;
-                            background: white;
-                            color: black;
-                        }
                     }
                     .save{
                         padding: 10px;
@@ -498,34 +480,6 @@
             .inactive {
                 cursor: default;
                 background: #f7d0e1;
-            }
-        }
-    }
-    
-    @media only screen and (max-width:767px) {
-        .row>* {
-            padding: 0!important;
-        }
-        .empty-wish {
-            padding: 200px 10px;
-        }
-        .cart-main {
-            padding: 60px 10px;
-            .cart-product {
-                border-right: none;
-            }
-        }
-        .product {
-            .prod-details {
-                margin-top: 20px;
-            }
-            .price {
-                margin-top: 20px;
-            }
-        }
-        .product-price {
-            button {
-                margin-top: 25px;
             }
         }
     }

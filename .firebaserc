@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "rithum-15823"
-  }
+    "default": "rithum-15823",
+    "Vihaar": "vihaar-fa300"
+  },
+  "targets": {}
 }

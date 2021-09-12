@@ -17,6 +17,7 @@ import { AnyARecord } from 'dns';
 import { DocumentReference } from '@angular/fire/firestore';
 import { SelectQuantityComponent } from 'src/app/app-modal/select-quantity/select-quantity.component';
 import { SelectSizeComponent } from 'src/app/app-modal/select-size/select-size.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-billing',
@@ -53,7 +54,7 @@ export class BillingComponent implements OnInit {
   DESCRIPTION : string = "DESCRIPTION";
   DISCOUNT_AMOUNT : string = "DISCOUNT AMOUNT";
   DISCOUNT : string ="DISCOUNT";
-
+  icon : string;
   constructor(private categoryService : CategoryService,
     private productService : ProductService,
     private localdbService : LocaldbService,
@@ -62,12 +63,15 @@ export class BillingComponent implements OnInit {
     private modalService: NgbModal,
     private router: Router) { 
 
+      this.SIZE_MAPPER.set("00","FREE SIZE");
       this.SIZE_MAPPER.set("01","S");
       this.SIZE_MAPPER.set("02","M");
       this.SIZE_MAPPER.set("03","L");
       this.SIZE_MAPPER.set("04","XL");
       this.SIZE_MAPPER.set("05","XXL");
       this.SIZE_MAPPER.set("06","XXXL");
+
+      this.icon = "../../../"+environment.icon;
 
       this.localdbService.getAllProductFormLocal().then(products=>{
         if(products.length==0){
@@ -433,8 +437,10 @@ export class BillingComponent implements OnInit {
       newProd.id = await this.productService.addNewProduct(newProd,undefined)+"";
       console.log(newProd.id);
       this.localdbService.addNewProduct(newProd);
-      this.progress +=progressIntervel;
-      uploadBtn.innerHTML = this.progress.toFixed(0)+"%"
+      if(this.progress != 0){
+        this.progress +=progressIntervel;
+        uploadBtn.innerHTML = this.progress.toFixed(0)+"%"
+      }
       if(this.progress>=100){
         this.progress = 0;
         uploadBtn.innerHTML = "UPLOAD"
@@ -500,6 +506,12 @@ export class BillingComponent implements OnInit {
         prod.availableSizes.push({
           size : "XXXL",
           count : p["XXXL"]
+        })
+      }
+      if(p["FREE SIZE"] && p["FREE SIZE"]!=0){
+        prod.availableSizes.push({
+          size : "FREE SIZE",
+          count : p["FREE SIZE"]
         })
       }
       prod.availableSizeString = prod.availableSizes.map(s=>s.size).reduce((s1,s2)=>s1+","+s2);

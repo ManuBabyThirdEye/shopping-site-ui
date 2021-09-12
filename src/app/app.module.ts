@@ -48,6 +48,8 @@ import { BillingComponent } from './admin/billing/billing.component';
 import { PrintComponent } from './app-modal/print/print.component';
 import { ProductDatailsComponent } from './app-modal/product-datails/product-datails.component';
 import { SelectSizeComponent } from './app-modal/select-size/select-size.component';
+import { ReportComponent } from './admin/report/report.component';
+import { HighchartsChartModule } from 'highcharts-angular';
 
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
   bgsColor: "var(--theme-color)",
@@ -99,7 +101,8 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     BillingComponent,
     PrintComponent,
     ProductDatailsComponent,
-    SelectSizeComponent
+    SelectSizeComponent,
+    ReportComponent
   ],
   imports: [
     BrowserModule,
@@ -118,7 +121,8 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
       timeOut: 2000
     }),
     NgbModule,
-    GooglePayButtonModule
+    GooglePayButtonModule,
+    HighchartsChartModule
   ],
   exports: [
     FormsModule,

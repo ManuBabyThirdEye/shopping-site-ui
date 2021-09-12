@@ -1,5 +1,6 @@
 import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { CartProduct, KEY_CODE } from 'src/bean/category';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-print',
@@ -17,8 +18,11 @@ export class PrintComponent implements OnInit {
   cgst : number;
   sgst : number;
   date : Date;
+  phoneNumber : string;
+  gstNumber : string;
   constructor() { 
-    
+    this.phoneNumber = environment.adminNumber;
+    this.gstNumber = environment.gstNumber;
   }
 
   ngOnInit(): void {

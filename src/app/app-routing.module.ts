@@ -25,6 +25,7 @@ import { AdminOrderListComponent } from './admin/admin-order-list/admin-order-li
 import { ManageAdminComponent } from './admin/manage-admin/manage-admin.component';
 import { BillingComponent } from './admin/billing/billing.component';
 import { PrintComponent } from './app-modal/print/print.component';
+import { ReportComponent } from './admin/report/report.component';
 
 const routes: Routes = [
   { path: '', component:  HomeComponent },
@@ -48,6 +49,7 @@ const routes: Routes = [
   { path: 'admin/order-list', component:  AdminOrderListComponent, canActivate : [AdminGuardService]},
   { path: 'admin/manage-admin', component:  ManageAdminComponent, canActivate : [AdminGuardService]},
   { path: 'admin/billing', component:  BillingComponent, canActivate : [AdminGuardService]},
+  { path: 'admin/report', component:  ReportComponent, canActivate : [AdminGuardService]},
   { path: 'admin/billing/print', component:  PrintComponent, canActivate : [AdminGuardService]},
   { path: 'notauthorized', component:  NoPrevilageComponent }
 ];

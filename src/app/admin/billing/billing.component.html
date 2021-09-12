@@ -70,7 +70,7 @@
                     <div class="row col-md-12">
                         <div class="col-md-2">
                             <img *ngIf="cartItem.product.images && cartItem.product.images.length>0" class="img-loading" src="{{cartItem.product.images[0]}}">
-                            <img *ngIf="!(cartItem.product.images && cartItem.product.images.length>0)" src="../../../assets/logo.png">
+                            <img *ngIf="!(cartItem.product.images && cartItem.product.images.length>0)" src="{{icon}}">
                         </div>
                         <div class="prod-details col-md-6 col-6">
                             <h5><a routerLink="/product-details" [queryParams]="{productId:cartItem.product.id}">{{cartItem.product.name}}</a></h5>

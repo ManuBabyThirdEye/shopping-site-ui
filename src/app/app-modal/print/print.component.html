@@ -2,8 +2,8 @@
     <div class="shop-name">VIHAAR</div>
     <div class="shop-address">Vihaar Ladies collections, Thadam</div>
     <div class="shop-address">Palachira, TVM, Kerala PIN : 695143</div>
-    <div class="shop-address">PHONE : 04702691111</div>
-    <div class="shop-address">GSTIN : 69AAA304702691111</div>
+    <div *ngIf="phoneNumber && phoneNumber!=''" class="shop-address">PHONE : {{phoneNumber}}</div>
+    <div *ngIf="gstNumber && gstNumber!=''" class="shop-address">GSTIN : {{gstNumber}}</div>
 
     <table>
         <tr class="bill-no">

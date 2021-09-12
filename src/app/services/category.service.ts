@@ -191,6 +191,13 @@ export class CategoryService {
     return this.firestore.collection(order?this.ORDER_TABLE:this.RETURN_TABLE, ref => ref.where("mobileNumber","==",this.getUserMobileNumber())
     .orderBy("placedDate",'desc')).get().toPromise();
   }
+  getAllOrdersReturnBilling(tableName:string){
+    return this.firestore.collection(tableName).get().toPromise();
+  }
+
+  getAllOrdersReturnBillingByDate(tableName:string,date : string){
+    return this.firestore.collection(tableName,ref => ref.where("placedDate",">",date)).get().toPromise();
+  }
 
   getOrderDetails(tableName:string,orderId: string) : Promise<firebase.firestore.DocumentSnapshot<unknown>>{
     return this.firestore.collection(tableName).doc(orderId).get().toPromise();

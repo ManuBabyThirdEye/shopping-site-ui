@@ -73,23 +73,26 @@
             </div>
             <h4>ADD SIZE</h4>
             <div class="row col-md-12 size-box">
-                <div (dblclick)="addMoreOnSize('S')" class="size available">S
+                <div *ngIf="!getProdcutCountForSize('FREE SIZE')>0" (dblclick)="addMoreOnSize('S')" class="size available">S
                     <div>{{getProdcutCountForSize('S')}} Left</div>
                 </div>
-                <div (dblclick)="addMoreOnSize('M')" class="size available">M
+                <div *ngIf="!getProdcutCountForSize('FREE SIZE')>0" (dblclick)="addMoreOnSize('M')" class="size available">M
                     <div>{{getProdcutCountForSize('M')}} Left</div>
                 </div>
-                <div (dblclick)="addMoreOnSize('L')" class="size available">L
+                <div *ngIf="!getProdcutCountForSize('FREE SIZE')>0" (dblclick)="addMoreOnSize('L')" class="size available">L
                     <div>{{getProdcutCountForSize('L')}} Left</div>
                 </div>
-                <div (dblclick)="addMoreOnSize('XL')" class="size available">XL
+                <div *ngIf="!getProdcutCountForSize('FREE SIZE')>0" (dblclick)="addMoreOnSize('XL')" class="size available">XL
                     <div>{{getProdcutCountForSize('XL')}} Left</div>
                 </div>
-                <div (dblclick)="addMoreOnSize('XXL')" class="size available">XXL
+                <div *ngIf="!getProdcutCountForSize('FREE SIZE')>0" (dblclick)="addMoreOnSize('XXL')" class="size available">XXL
                     <div>{{getProdcutCountForSize('XXL')}} Left</div>
                 </div>
-                <div (dblclick)="addMoreOnSize('XXXL')" class="size available">XXXL
+                <div *ngIf="!getProdcutCountForSize('FREE SIZE')>0" (dblclick)="addMoreOnSize('XXXL')" class="size available">XXXL
                     <div>{{getProdcutCountForSize('XXXL')}} Left</div>
+                </div>
+                <div *ngIf="getProdcutCountForSize('FREE SIZE')>0" (dblclick)="addMoreOnSize('FREE SIZE')" class="size available">FS
+                    <div>{{getProdcutCountForSize('FREE SIZE')}} Left</div>
                 </div>
             </div>
             <p (dblclick)="delayEdit=true" *ngIf="!delayEdit">Prduct Delivery Delay : {{product.productDeliveryDelay}} days</p>

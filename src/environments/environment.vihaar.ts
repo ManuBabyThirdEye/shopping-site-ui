@@ -5,7 +5,8 @@
 export const environment = {
     production: false,
     themeColor : "#e4498a",
-    adminNumber : "8714443741",
+    adminNumber : "9895148030",
+    gstNumber : "",
     icon : "assets/vihaar.png",
     appName:"Vihaar",
     firebaseConfig : {

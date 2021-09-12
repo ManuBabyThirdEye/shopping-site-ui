@@ -180,7 +180,7 @@ export enum PaymentMode{
 }
 
 export enum AllSize{
-    S,M,L,XL,XXL,XXXL
+    S,M,L,XL,XXL,XXXL,FS
 }
 
 export interface GogolePaymentRequest{
@@ -235,4 +235,9 @@ export enum KEY_CODE {
     Z = 90,
     _ = 189,
     BACK = 8
+}
+
+export interface Revenue{
+    amount : number;
+    count : number;
 }
