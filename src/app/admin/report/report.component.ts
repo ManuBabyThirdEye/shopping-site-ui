@@ -69,7 +69,7 @@ export class ReportComponent implements OnInit {
             type: 'column'
           },
           title: {
-            text: 'Revenue'
+            text: 'REVENUE'
           },
           tooltip: {
             headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
@@ -116,7 +116,7 @@ export class ReportComponent implements OnInit {
             type: 'column'
           },
           title: {
-            text: 'Transaction Count'
+            text: 'ITEM COUNT'
           },
           tooltip: {
             headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
@@ -141,7 +141,7 @@ export class ReportComponent implements OnInit {
           },
           yAxis: {
             title: {
-                text: 'Transaction Count'
+                text: 'Item Count'
             }
           },
           legend: {

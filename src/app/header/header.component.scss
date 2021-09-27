@@ -19,8 +19,11 @@
         color: #282c3f;
         font-weight: bold;
         cursor: pointer;
+        display: flex;
         .menu-item {
             line-height: 76px;
+            margin-left: 15px;
+            margin-right: 15px;
             &:hover {
                 border-bottom: 4px solid var(--theme-color);
             }
@@ -34,8 +37,8 @@
                 height: 400px;
                 background: white;
                 z-index: 200;
-                left: 15%;
-                right: 15%;
+                left: 10%;
+                right: 10%;
             }
             //}
         }

@@ -27,7 +27,7 @@
             </div>
             <div class="sort-item" *ngFor="let subCat of selectedCat.subCategories" (click)="selectedSubCategory(subCat)">{{subCat.name}}</div>
         </div>
-        <div *ngIf="selectedMainCat && selectedCat" class="col-md-2">
+        <div class="col-md-2">
             <button (click)="addNewProducts()">ADD NEW PRODUCTS</button>
         </div>
     </div>

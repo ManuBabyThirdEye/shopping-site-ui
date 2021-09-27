@@ -91,9 +91,7 @@ export class ProductListComponent implements OnInit,AfterViewInit {
         p.docs.map(pro =>{
           let p = pro.data() as Product;
           p.id = pro.id;
-          if(p.availableSizeString){
-            this.productList.push(p);
-          }
+          this.productList.push(p);
         })
         if(this.local.getObject(LocalStoreObjectService.USER_KEY)){
           this.categoryService.getWishList().then(wishList=>{

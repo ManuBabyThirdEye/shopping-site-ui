@@ -23,6 +23,7 @@ export class CartComponent implements OnInit {
   showingMore : boolean = false;
   pinStatus: PinCode;
   pinCode : string;
+  showLess : boolean = true;
   constructor(private categoryService : CategoryService,
     private ngxService: NgxUiLoaderService,
     private toastr: ToastrService,

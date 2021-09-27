@@ -67,7 +67,7 @@ export class ProductListEditComponent implements OnInit {
     this.getProducts(subCat.id);
   }
   addNewProducts(){
-    this.router.navigate(['/admin/product-add-edit'],{queryParams : {categoryId:this.selectedSubCat?this.selectedSubCat.id:this.selectedCat.id}});
+    this.router.navigate(['/admin/product-add-edit'],{queryParams : {categoryId:this.selectedSubCat?this.selectedSubCat.id:this.selectedCat?this.selectedCat.id:undefined}});
   }
 
   editProduct(pro : Product){

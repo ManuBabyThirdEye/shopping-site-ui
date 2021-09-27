@@ -85,7 +85,8 @@ export class ProductAddEditComponent implements OnInit {
           rating : 0,
           isWishList : false,
           reviews : [],
-          category : []
+          category : [],
+          subProductList : []
         }
         this.ngxService.stop();
       }
@@ -151,10 +152,13 @@ export class ProductAddEditComponent implements OnInit {
         this.product.productDeliveryDelay = 0;
       }
     if(this.product.id=="new"){
+      if(this.categoryId){
         this.product.category.push(this.categoryId);
+      }
         this.ngxService.start();
         this.product = this.removeUndefined(this.product);
-        this.productService.addNewProduct(this.product,this.selectedImages).then(()=>{
+        this.productService.addNewProduct(this.product,this.selectedImages).then((id)=>{
+          this.product.id = id+"";
           this.ngxService.stop();
           this.toastr.success("Product added successfuly")
         }).catch(e=>{

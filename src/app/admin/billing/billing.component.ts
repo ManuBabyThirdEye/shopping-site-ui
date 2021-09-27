@@ -234,7 +234,6 @@ export class BillingComponent implements OnInit {
     }
   }
   updateTotalPrice() {
-    console.log(this.inPersonDiscount)
     if(!this.inPersonDiscount){
       this.inPersonDiscount = 0;
     }
@@ -242,9 +241,10 @@ export class BillingComponent implements OnInit {
     this.total = 0;
     this.totalMRP = 0;
     this.addedProducts.forEach(prod=>{
-      this.total = this.total + prod.quantity*prod.product.discountPrice-this.inPersonDiscount;
+      this.total = this.total + prod.quantity*prod.product.discountPrice;
       this.totalMRP = this.totalMRP + (prod.product.discountPrice * 100 )/(100-prod.product.discount) * prod.quantity;
     });
+    this.total -= this.inPersonDiscount;
   }
 
   async downloadProduct(){

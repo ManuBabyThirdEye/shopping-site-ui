@@ -1,16 +1,14 @@
 <div class="row col-md-12 header shadow d-none d-md-flex ">
-    <div class="logo col-md-2">
+    <div class="logo col-md-1">
         <a href="#"><img src="{{icon}}"></a>
     </div>
-    <div class="col-md-5 menu">
-        <div class="row col-md-12">
-            <div class="col-md-2 menu-item" *ngFor="let cat of mainCategorList">
+    <div class="col-md-6 menu">
+            <div class="menu-item" *ngFor="let cat of mainCategorList">
                 {{cat.name}}
                 <div class="dropdown-box shadow">
                     <app-category-list [categoryList]="cat"></app-category-list>
                 </div>
             </div>
-        </div>
     </div>
     <div class="col-md-3 search">
         <input (keyup)="searchCategory($event)" placeholder="Search for categories and more" class="col-md-12 search-bar" [(ngModel)]="searchKey">

@@ -62,6 +62,15 @@ export interface Product{
     productDeliveryDelay: number;
     availableSizeString : string;
     category: Array<string>;
+    subProductList : Array<SubProduct>
+}
+export interface SubProduct{
+    id : string;
+    colorCode : string;
+    discount : number;
+    discountPrice : number;
+    moreDetails : Map<string,string>;
+    quantity : number;
 }
 export interface WishItem{
     id : string;

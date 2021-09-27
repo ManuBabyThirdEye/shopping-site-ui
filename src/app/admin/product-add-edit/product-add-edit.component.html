@@ -49,11 +49,12 @@
                 <button class="save" (click)="saveName()">SAVE</button>
                 <button class="cancel" (click)="cancelName()">CANCEL</button>
             </div>
-            <p (dblclick)="detailsEdit=true;editedDetails=product.details" *ngIf="!detailsEdit">{{product.details}}</p>
+            <div [innerHTML]="product.details" (dblclick)="detailsEdit=true;editedDetails=product.details" *ngIf="!detailsEdit" id="rte-details"></div>
+            <!--<p (dblclick)="detailsEdit=true;editedDetails=product.details" *ngIf="!detailsEdit">{{product.details}}</p>-->
             <div class="heading-edit" *ngIf="detailsEdit">
                 <div class="input-box">
-                    <textarea id="details" rows="4" cols="50" type="text" required [(ngModel)]="editedDetails"></textarea>
-                    <label for="details">Details*</label>
+                    <angular-editor [placeholder]="'Enter text here...'" [(ngModel)]="editedDetails"></angular-editor>
+                    <!--<textarea id="details" rows="4" cols="50" type="text" required [(ngModel)]="editedDetails"></textarea>-->
                 </div>
                 <button class="save" (click)="saveDetails()">SAVE</button>
                 <button class="cancel" (click)="cancelDetails()">CANCEL</button>

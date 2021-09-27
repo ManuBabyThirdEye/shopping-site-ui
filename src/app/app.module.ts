@@ -50,6 +50,8 @@ import { ProductDatailsComponent } from './app-modal/product-datails/product-dat
 import { SelectSizeComponent } from './app-modal/select-size/select-size.component';
 import { ReportComponent } from './admin/report/report.component';
 import { HighchartsChartModule } from 'highcharts-angular';
+import { HttpClientModule } from '@angular/common/http';
+import { AngularEditorModule } from '@kolkov/angular-editor';
 
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
   bgsColor: "var(--theme-color)",
@@ -122,7 +124,9 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     }),
     NgbModule,
     GooglePayButtonModule,
-    HighchartsChartModule
+    HighchartsChartModule,
+    HttpClientModule, 
+    AngularEditorModule
   ],
   exports: [
     FormsModule,

@@ -284,3 +284,15 @@
         }
     }
 }
+.show-less{
+    max-height: 100px;
+    overflow: hidden;
+}
+.show-less-txt{
+    margin-bottom: 10px;
+    color: cornflowerblue;
+    cursor: pointer;
+}
+.invert{
+    transform: rotate(180deg);
+}

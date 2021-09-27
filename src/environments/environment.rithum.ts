@@ -5,18 +5,18 @@
 export const environment = {
     production: true,
     themeColor : "#e4498a",
-    adminNumber : "9895148030",
-    gstNumber : "32CIJPK9395P1ZB",
-    icon : "assets/vihaar.png",
-    appName:"Vihaar",
+    adminNumber : "8714443741",
+    gstNumber : "",
+    icon : "assets/logo.png",
+    appName:"Test",
     firebaseConfig : {
-        apiKey: "AIzaSyBirvFzb7z2wthNLVXMwyI9IQGEoWTwidU",
-        authDomain: "vihaar-fa300.firebaseapp.com",
-        projectId: "vihaar-fa300",
-        storageBucket: "vihaar-fa300.appspot.com",
-        messagingSenderId: "248477207223",
-        appId: "1:248477207223:web:75f34cee14223266d39b32",
-        measurementId: "G-TWSGWMCYNP"
+      apiKey: "AIzaSyC8ZkhyjUy6n0uhY0rRjILTC4Ypj5b4TzY",
+      authDomain: "rithum-15823.firebaseapp.com",
+      projectId: "rithum-15823",
+      storageBucket: "rithum-15823.appspot.com",
+      messagingSenderId: "888931391161",
+      appId: "1:888931391161:web:14f91092893ce2d551ed68",
+      measurementId: "G-Z22E3HBDH6"
     },
     googlePayPaymentRequest : {
       apiVersion: 2,

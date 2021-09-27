@@ -1,9 +1,5 @@
 <div class="main-outer">
-    
-    <div *ngIf="showInfo" class="info">
-        Double click to edit or add
-        <img (click)="showInfo=false" src="../../../assets/cancel.png">
-    </div>
+
     <div class="d-none d-sm-block list-page-header">
         <div class="navigation-box">
             <span routerLink="/admin">Admin</span>
@@ -24,11 +20,11 @@
                         <div class="edit-overlay">
                             <div>
                                 <button class="hide" (click)="editMainOffer(mainOffer)">EDIT</button>
-                                <button class="delete" (click)="deleteMainOffer(mainOffer)">DELETE</button>
-                                <button class="hide" (click)="hideOrUnhideMainOffer(mainOffer)">{{mainOffer.hide?'UNHIDE':'HIDE'}}</button>
+                                <button *ngIf="mainOffer.id!='new'" class="delete" (click)="deleteMainOffer(mainOffer)">DELETE</button>
+                                <button *ngIf="mainOffer.id!='new'" class="hide" (click)="hideOrUnhideMainOffer(mainOffer)">{{mainOffer.hide?'UNHIDE':'HIDE'}}</button>
                             </div>
                         </div>
-                        <img routerLink="/product-list" [queryParams]="{mainCategory :'Offer',category:mainOffer.id,categoryId:mainOffer.id}" class="img-loading" src="{{mainOffer.image}}" class="d-block w-100" alt="Main Offer 1">
+                        <img routerLink="/product-list" [queryParams]="{mainCategory :'Offer',category:mainOffer.id,categoryId:mainOffer.id}" class="img-loading carousel-image" src="{{mainOffer.image}}" class="d-block w-100" alt="Main Offer 1">
                     </div>
                 </div>
             </div>
@@ -73,11 +69,11 @@
                 <div (dblclick)="editSubOffer(homeItem)" *ngIf="!homeItem.id.startsWith('dummy_')" class="col-lg-2 col-md-3 col-sm-6 col-6 mt-3 add-new">
                     <div class="add-content">
                         <i class="fa fa-plus"></i>
-                        <div class="add-more">ADD MORE</div>
+                        <div class="add-more">ADD MORE SUB OFFER</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="add-offers"><button class="save" (click)="addMoreOffer()">ADD MORE</button></div>
+    <div class="add-offers"><button class="save" (click)="addMoreOffer()">ADD MORE SUB OFFER</button></div>
 </div>

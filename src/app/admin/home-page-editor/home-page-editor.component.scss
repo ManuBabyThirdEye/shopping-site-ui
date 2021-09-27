@@ -22,6 +22,7 @@
     }
     .main-offer {
         cursor: pointer;
+        height: 100vh;
         .carousel-indicators {
             bottom: -50px;
         }
@@ -37,6 +38,11 @@
         .carousel-control-prev {
             color: var(--theme-color)!important;
             font-size: xxx-large;
+        }
+        .carousel-item{
+            img{
+                height: 100vh;
+            }
         }
         &:hover {
             .edit-overlay {
@@ -203,6 +209,7 @@
 .add-offers {
     text-align: center;
     padding-bottom: 30px;
+    padding-top: 50px;
     button {
         width: fit-content;
         padding: 5px 15px;
@@ -271,4 +278,8 @@
         background: var(--theme-color);
         color: white;
     }
+}
+
+.carousel-image{
+    height: 100vh;
 }

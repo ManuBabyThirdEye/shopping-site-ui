@@ -42,7 +42,7 @@
                                 </span>
                             </div>
                             <div class="product-details">
-                                <p>Size: <span>{{product.availableSizeString}}</span></p>
+                                <p *ngIf="product.availableSizeString" >Size: <span>{{product.availableSizeString}}</span></p>
                                 <h4>Rs. {{product.discountPrice}} <s *ngIf="product.discount>0">Rs. {{(product.discountPrice * 100 )/(100-product.discount)}} </s> <span *ngIf="product.discount>0">({{product.discount}}% OFF)</span></h4>
                             </div>
                         </div>

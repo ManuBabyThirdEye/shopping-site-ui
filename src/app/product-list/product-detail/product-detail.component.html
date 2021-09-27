@@ -34,7 +34,7 @@
         </div>
         <div *ngIf="product!=undefined" class="col-md-6 prod-info">
             <h3>{{product.name}}</h3>
-            <p>{{product.details}}</p>
+            <div [innerHTML]="product.details"></div>
             <h3>Rs. {{product.discountPrice}} <s *ngIf="product.discount>0">Rs. {{(product.discountPrice * 100 )/(100-product.discount)}} </s> <span *ngIf="product.discount>0">({{product.discount}}% OFF)</span></h3>
             <h4 *ngIf="product.availableSizeString">SELECT SIZE</h4>
             <div *ngIf="product.availableSizeString" class="row col-md-12 size-box">
@@ -57,8 +57,19 @@
                     <div *ngIf="getProdcutCountForSize('XXXL')">{{getProdcutCountForSize('XXXL')}} Left</div>
                 </div>
             </div>
-            <div *ngIf="!product.availableSizeString" class="delivery-status">
-                <p>Sorry, No stoke wvailable, please check later</p>
+            <h4 *ngIf="product.subProductList">SELECT PRODUCT</h4>
+            <div *ngIf="product.subProductList" class="row col-md-12 product-box">
+                <div class="col-md-3">
+                    <div *ngFor="let subProduct of product.subProductList" class="sub-product-box">
+                        <p *ngFor="let moreDetails of subProduct.moreDetails | keyvalue">
+                            {{moreDetails.key}} : <span>{{moreDetails.value}}</span>
+                        </p>
+                        <h5>Rs. {{product.discountPrice}} <s *ngIf="product.discount>0">Rs. {{(product.discountPrice * 100 )/(100-product.discount)}} </s> <span *ngIf="product.discount>0">({{product.discount}}% OFF)</span></h5>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="noStock" class="delivery-status">
+                <p>Sorry, No stoke available, please check later</p>
             </div>
             <div class="row col-md-12 action">
                 <button *ngIf="!productAddedToCart && product.availableSizeString" class="col-md-6 col-12 add-to-bag" (click)="addToCart()"><i class="fa fa-shopping-basket" aria-hidden="true"></i> ADD TO CART</button>

@@ -4,9 +4,11 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { ConfirmBoxComponent } from 'src/app/app-modal/confirm-box/confirm-box.component';
+import { SelectQuantityComponent } from 'src/app/app-modal/select-quantity/select-quantity.component';
 import { CategoryService } from 'src/app/services/category.service';
 import { ProductService } from 'src/app/services/product.service';
 import { CartProduct, Order, OrderClasification, OrderStatus, PinCode } from 'src/bean/category';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-order-details',
@@ -23,6 +25,7 @@ export class OrderDetailsComponent implements OnInit {
   tableName : string;
   cancelled : boolean;
   orderClasification: OrderClasification;
+  icon : string;
 
   orderOrReturnStatusList : Array<OrderStatus> =[];
 
@@ -33,6 +36,7 @@ export class OrderDetailsComponent implements OnInit {
     private toastr: ToastrService,
     private router: Router,
     private modalService: NgbModal) { 
+      this.icon = "../../../"+environment.icon;
       window.scroll(0,0);
       this.route.queryParams.subscribe(params => {
         this.orderId = params.orderId;
@@ -121,50 +125,68 @@ export class OrderDetailsComponent implements OnInit {
 
     confirmreturn.result.then(result=>{
       if(result){
-        this.ngxService.start();
-    this.categoryService.getPincodeAvailable(this.orderDetsails.address.pinCode).then(doc=>{
-      if(doc.exists){
-        let deliveryStatus = doc.data() as PinCode;
-        if(deliveryStatus.pinCodeDeliveryDelay){
-          let totalDelay : number = cartItem.product.productDeliveryDelay + deliveryStatus.pinCodeDeliveryDelay;
-          let delivertDate = new Date();
-          delivertDate.setDate(delivertDate.getDate()+totalDelay);
-          cartItem.delivertDate = delivertDate.toISOString();
-          let returnOrder :Order = {
-            address : this.orderDetsails.address,
-            cartProducts : [cartItem],
-            convenienceFee : this.orderDetsails.convenienceFee,
-            currentOrderStatus : "PLACED",
-            id : "",
-            inPersonDiscount : 0,
-            includeConvenienceFee : this.orderDetsails.includeConvenienceFee,
-            mobileNumber : this.orderDetsails.mobileNumber,
-            orderStatusList : [{
-              orderStatus : "PLACED",
-              date : new Date().toISOString()
-            }],
-            total : cartItem.product.discountPrice,
-            totalMRP : cartItem.product.discountPrice,
-            placedDate : new Date().toISOString(),
-            paymentMode : this.orderDetsails.paymentMode,
-            paymentDetails : this.orderDetsails.paymentDetails
-          }
-          this.categoryService.placeReturn(returnOrder).then((doc)=>{
-            this.toastr.success("Your return initiated");
-            this.router.navigate(['/order-details'],{queryParams : {orderId:doc.id,order:false}}).then(()=>{
-              window.location.reload();
-            });
-            this.ngxService.stop();
+        if(cartItem.quantity>1){
+          const modalRef = this.modalService.open(SelectQuantityComponent);
+          modalRef.componentInstance.maxCount = cartItem.quantity;
+          modalRef.result.then(result=>{
+            if(result){
+              this.placeReturnOrder(cartItem,this.tableName != 'billing',result);
+            }
+          }).catch(e=>{
           });
+        }else{
+          this.placeReturnOrder(cartItem,this.tableName != 'billing',1);
         }
-      }
-    });
       }
     }).catch(e=>{
       
     });
 
   
+  }
+  async placeReturnOrder(cartItem : CartProduct, checkPinCode: boolean, quantity: number) {
+    this.ngxService.start();
+    let delivertDate = new Date();
+    if(checkPinCode){
+      let doc = await this.categoryService.getPincodeAvailable(this.orderDetsails.address.pinCode);
+      if(doc.exists){
+        let deliveryStatus = doc.data() as PinCode;
+        if(deliveryStatus.pinCodeDeliveryDelay){
+          let totalDelay : number = cartItem.product.productDeliveryDelay + deliveryStatus.pinCodeDeliveryDelay;
+          delivertDate.setDate(delivertDate.getDate()+totalDelay);
+        }
+      }
+    }
+    cartItem.delivertDate = delivertDate.toISOString();
+    cartItem.quantity = quantity;
+    let returnOrder :Order = {
+      address : this.orderDetsails.address,
+      cartProducts : [cartItem],
+      convenienceFee : this.orderDetsails.convenienceFee,
+      currentOrderStatus : checkPinCode?"PLACED":"RETURN",
+      id : "",
+      inPersonDiscount : 0,
+      includeConvenienceFee : this.orderDetsails.includeConvenienceFee,
+      mobileNumber : this.orderDetsails.mobileNumber,
+      orderStatusList : checkPinCode ? [{
+        orderStatus : "PLACED",
+        date : new Date().toISOString()
+      }]:[],
+      total : cartItem.product.discountPrice*quantity-this.orderDetsails.inPersonDiscount,
+      totalMRP : cartItem.product.discountPrice*quantity,
+      placedDate : new Date().toISOString(),
+      paymentMode : this.orderDetsails.paymentMode,
+      paymentDetails : this.orderDetsails.paymentDetails
+    }
+    console.log(returnOrder);
+    let document = await this.categoryService.placeReturn(returnOrder);
+    this.productService.updateProductReturnCount(cartItem);
+    this.toastr.success("Your return initiated");
+    this.router.navigate(['/order-details'],{queryParams : {orderId:document.id,tableName:'return'}}).then(()=>{
+      window.location.reload();
+      this.ngxService.stop();
+    });
+    this.ngxService.stop();
   }
 
 }

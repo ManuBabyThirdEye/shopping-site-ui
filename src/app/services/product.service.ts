@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentSnapshot } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { AllSize, Order, Product, Size } from 'src/bean/category';
+import { AllSize, CartProduct, Order, Product, Size, SubProduct } from 'src/bean/category';
 import firebase from "firebase/app";
 import { UtilService } from '../services/util.service';
 import { CategoryService } from './category.service';
@@ -16,6 +16,7 @@ export class ProductService {
 
   PRODUCT_TABLE : string = 'product';
   SIZE_TABLE : string = 'size';
+  SUB_PRODUCT_TABLE : string = 'sub-products';
   ORDER_TABLE : string = 'order';
   BILLING_TABLE : string = 'billing';
 
@@ -62,25 +63,30 @@ export class ProductService {
   }
   
 
-  getProduct(productId:string) : Promise<Product>{
-    return this.firestore.collection(this.PRODUCT_TABLE).doc(productId).get().toPromise().then(prod=>{
-      if(prod.exists){
-        let product = prod.data() as Product;
-        product.id = prod.id;
-        product.availableSizes = [];
-        return this.firestore.collection(this.PRODUCT_TABLE).doc(productId).collection(this.SIZE_TABLE).get().toPromise().then(sizes=>{
-          if(sizes.size>0){
-            sizes.docs.forEach(s=>{
-              product.availableSizes.push({
-                count : s.get("count"),
-                size : s.id
-              });
-            });
-          }
-          return product;
+  async getProduct(productId:string) : Promise<Product> {
+    let prodDoc =  await this.firestore.collection(this.PRODUCT_TABLE).doc(productId).get().toPromise();
+    if(prodDoc.exists){
+      let product = prodDoc.data() as Product;
+      product.id = prodDoc.id;
+      product.availableSizes = [];
+      let availableSizeDoc = await this.firestore.collection(this.PRODUCT_TABLE).doc(productId).collection(this.SIZE_TABLE).get().toPromise();
+      if(availableSizeDoc.size > 0){
+        availableSizeDoc.docs.forEach(s=>{
+          product.availableSizes.push({
+            count : s.get("count"),
+            size : s.id
+          });
         });
       }
-    });
+      let availableSubProductDoc = await this.firestore.collection(this.PRODUCT_TABLE).doc(productId).collection(this.SUB_PRODUCT_TABLE).get().toPromise();
+      product.subProductList = [];
+      if(availableSubProductDoc.size > 0){
+        availableSubProductDoc.docs.forEach(p=>{
+          product.subProductList.push(p.data() as SubProduct);
+        });
+      }
+      return product;
+    }
   }
 
   async reduceProductCountAndPlaceOrder(cart: Order,order:boolean) : Promise<string>{
@@ -130,7 +136,12 @@ export class ProductService {
 
   updateProductCountAfterCancel(order: Order) {
     order.cartProducts.forEach(prod=>{
-      this.firestore.collection(this.PRODUCT_TABLE).doc(prod.product.id)
+      this.updateProductReturnCount(prod);
+    })
+  }
+
+  updateProductReturnCount(prod : CartProduct){
+    this.firestore.collection(this.PRODUCT_TABLE).doc(prod.product.id)
       .collection(this.SIZE_TABLE).doc(prod.size).get().toPromise().then(doc=>{
         if(doc.exists){
           let count : number = doc.get('count');
@@ -145,8 +156,8 @@ export class ProductService {
           .update({availableSizeString:this.addSizeInString(prod.product.availableSizeString,prod.size)})
         }
       });
-    })
   }
+
   addSizeInString(availableSizeString: string, size: string) {
     let sizes = availableSizeString.split(",");
     if(sizes.indexOf(size)!=-1){

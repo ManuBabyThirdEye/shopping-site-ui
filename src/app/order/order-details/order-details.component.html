@@ -24,7 +24,7 @@
                 <div class="row col-md-12">
                     <div class="col-md-3">
                         <img *ngIf="cartItem.product.images && cartItem.product.images.length" class="img-loading" src="{{cartItem.product.images[0]}}">
-                        <img *ngIf="!(cartItem.product.images && cartItem.product.images.length)" class="prod-img" src="../../../assets/logo.png">
+                        <img *ngIf="!(cartItem.product.images && cartItem.product.images.length)" class="prod-img" src="{{icon}}">
                     </div>
                     <div class="prod-details col-md-6 col-6">
                         <h5><a routerLink="/product-details" [queryParams]="{productId:cartItem.product.id}">{{cartItem.product.name}}</a></h5>
@@ -45,7 +45,7 @@
                 <div *ngIf="orderOrReturnStatusList[orderOrReturnStatusList.length-1].orderStatus=='DELIVERY' && orderOrReturnStatusList[orderOrReturnStatusList.length-1].date" class="divider">
 
                 </div>
-                <div *ngIf="orderOrReturnStatusList[orderOrReturnStatusList.length-1].orderStatus=='DELIVERY' && orderOrReturnStatusList[orderOrReturnStatusList.length-1].date" class="prod-action row col-md-12">
+                <div *ngIf=" tableName =='billing'|| (orderOrReturnStatusList[orderOrReturnStatusList.length-1].orderStatus=='DELIVERY' && orderOrReturnStatusList[orderOrReturnStatusList.length-1].date)" class="prod-action row col-md-12">
                     <div (click)="returnOrder(cartItem)" class="col-md-4">
                         <h4>RETURN</h4>
                     </div>

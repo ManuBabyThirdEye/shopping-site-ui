@@ -5,6 +5,7 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { ConfirmBoxComponent } from 'src/app/app-modal/confirm-box/confirm-box.component';
 import { OfferService } from 'src/app/services/offer.service';
 import { HomeItems, HomeSubItem, MainOffer } from 'src/bean/offer';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-home-page-editor',
@@ -30,6 +31,18 @@ export class HomePageEditorComponent implements OnInit {
         mainOffer.id = mainOfferDoc.id;
         return mainOffer;
       });
+      let mianListLen = this.mainOfferList.length;
+      if(mianListLen<4){
+        for(let i=4;i>mianListLen;i--){
+          this.mainOfferList.push({
+            hide : true,
+            id : undefined,
+            image : "../../../"+environment.icon,
+            order : i
+          })
+        }
+        console.log(this.mainOfferList);
+      }
       this.ngxService.stop();
     });
   }

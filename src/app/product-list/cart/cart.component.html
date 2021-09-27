@@ -40,7 +40,8 @@
                     </div>
                     <div class="prod-details col-md-6 col-6">
                         <h5><a routerLink="/product-details" [queryParams]="{productId:cartItem.product.id}">{{cartItem.product.name}}</a></h5>
-                        <p>{{cartItem.product.details}}</p>
+                        <div [ngClass]="showLess?'show-less':''" [innerHTML]="cartItem.product.details"></div>
+                        <div class="show-less-txt" (click)="showLess=!showLess">{{showLess?'Show More':'Show Less'}} <i [ngClass]="showLess?'fa fa-angle-down':'fa fa-angle-down invert'"  class="fa fa-angle-down" aria-hidden="true"></i></div>
                         <div class="selection">
                             <span>Size: {{cartItem.size}}</span>
                             <span (click)="selectSize(cartItem)">Qty: {{cartItem.quantity}} <i class="fa fa-angle-down" aria-hidden="true"></i></span>

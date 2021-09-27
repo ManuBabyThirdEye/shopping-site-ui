@@ -28,6 +28,7 @@ export class ProductDetailComponent implements OnInit {
   selectedImage : string;
   productAddedToCart : boolean = false;
   user : User;
+  noStock : boolean = false;
 
   constructor(private route: ActivatedRoute,
     private categoryService : CategoryService,
@@ -60,6 +61,7 @@ export class ProductDetailComponent implements OnInit {
     this.productService.getProduct(this.productId).then(product=>{
       console.log(product);
       this.product = product;
+      this.noStock = this.chackStockAvailability(product);
       if(product){
         if(this.user && this.user.mobileNumber){
           this.categoryService.getWishList().then(wishList=>{
@@ -92,6 +94,11 @@ export class ProductDetailComponent implements OnInit {
       })
     }
     
+  }
+  chackStockAvailability(product: Product): boolean {
+    let sizeAvailable = product.availableSizes.filter(s=>s.count>0).length>0;
+    let subProductAvailable = product.subProductList.filter(p=>p.quantity>0).length>0;
+    return !sizeAvailable && !subProductAvailable;
   }
 
   getClassForSize(size:string){
