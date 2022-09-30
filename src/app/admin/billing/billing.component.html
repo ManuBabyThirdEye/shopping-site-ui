@@ -6,40 +6,21 @@
         </div>
     </div>
     <div class="row col-md-12 product-search">
-        <div class="col-md-3 code-scanner">
-            <div>
-                <div class='anim-box center'>
-                  <!-- empty first child used for corners -->
-                  <div></div>
-                  <div class='scanner'></div>
-                  <div class='anim-item anim-item-sm'></div>
-                  <div class='anim-item anim-item-lg'></div>
-                  <div class='anim-item anim-item-lg'></div>
-                  <div class='anim-item anim-item-sm'></div>
-                  <div class='anim-item anim-item-lg'></div>
-                  <div class='anim-item anim-item-sm'></div>
-                  <div class='anim-item anim-item-md'></div>
-                  <div class='anim-item anim-item-sm'></div>
-                  <div class='anim-item anim-item-md'></div>
-                  <div class='anim-item anim-item-lg'></div>
-                  <div class='anim-item anim-item-sm'></div>
-                  <div class='anim-item anim-item-sm'></div>
-                  <div class='anim-item anim-item-lg'></div>
-                  <div class='anim-item anim-item-sm'></div>
-                  <div class='anim-item anim-item-lg'></div>
-                  <div class='anim-item anim-item-sm'></div>
-                  <div class='anim-item anim-item-lg'></div>
-                  <div class='anim-item anim-item-sm'></div>
-                  <div class='anim-item anim-item-md'></div> 
-                </div>
-            </div>
-        </div>
+        <app-scanner-anim class="col-md-3">
+
+        </app-scanner-anim>
         <div class="col-md-5 product-id-box">
             <div *ngIf="progress!=0" [ngStyle]="{'width': progress+'%','background':progressBk}" class="progress-bar"></div>
             <input disabled placeholder="Enter Product Id" class="col-md-12 search-bar" [(ngModel)]="productDetail">
         </div>
         <div class="col-md-4 action">
-            <button id="download" (click)="downloadProduct()" class="download">DOWNLOAD</button>
+            <div class="download">
+                <button id="download" (click)="downloadProduct()" >DOWNLOAD</button>
+                <div class="shadow rounder download-dropdown">
+                    <button (click)="downloadGstReport()" id="download">DOWNLOAD GST REPORT</button>  
+                    <button (click)="downloafProductFromRemort()" id="download">DOWNLOAD PRODUCTS</button>  
+                </div>
+            </div>
             <div class="upload">
                 <button id="upload">UPLOAD</button>
                 <div class="shadow rounder upload-dropdown">
@@ -74,9 +55,16 @@
                         </div>
                         <div class="prod-details col-md-6 col-6">
                             <h5><a routerLink="/product-details" [queryParams]="{productId:cartItem.product.id}">{{cartItem.product.name}}</a></h5>
-                            <p>{{cartItem.product.details}}</p>
+                            <div *ngIf="!cartItem.subProduct && cartItem.product.details" [ngClass]="showLess?'show-less':''" [innerHTML]="cartItem.product.details"></div>
+                            <div *ngIf="!cartItem.subProduct && cartItem.product.details" class="show-less-txt" (click)="showLess=!showLess">{{showLess?'Show More':'Show Less'}} <i [ngClass]="showLess?'fa fa-angle-down':'fa fa-angle-down invert'"  class="fa fa-angle-down" aria-hidden="true"></i></div>
+                            <div *ngIf="cartItem.subProduct"  [style.border-top-color]="cartItem.subProduct.colorCode" class="'selected shadow sub-product-box mb-2 mt-2" >
+                                <p *ngFor="let moreDetails of cartItem.subProduct.moreDetails | keyvalue">
+                                    {{moreDetails.key}} : <span>{{moreDetails.value}}</span>
+                                </p>
+                                <h5>Rs. {{cartItem.subProduct.discountPrice}}</h5>
+                            </div>
                             <div class="selection">
-                                <span (click)="selectSize(cartItem)">Size: {{cartItem.size}}</span>
+                                <span *ngIf="cartItem.size" (click)="selectSize(cartItem)">Size: {{cartItem.size}}</span>
                                 <span (click)="selectQuantity(cartItem)">Qty: {{cartItem.quantity}} <i class="fa fa-angle-down" aria-hidden="true"></i></span>
                             </div>
                         </div>

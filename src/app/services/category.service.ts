@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentChangeAction, DocumentData, DocumentReference, DocumentSnapshot, QuerySnapshot } from '@angular/fire/firestore';
 
 import { Observable, of } from 'rxjs';
-import { Order, CartProduct, Product, Address, User, MainCategory, AllSize, Size, PinCode, OrderStatus } from 'src/bean/category';
+import { Order, CartProduct, Product, Address, User, MainCategory, AllSize, Size, PinCode, OrderStatus, SubProduct } from 'src/bean/category';
 import firebase from "firebase/app";
 import { ToastrService } from 'ngx-toastr';
 import { LocalStoreObjectService } from './local-store-object.service';
@@ -14,6 +14,9 @@ import { ProductService } from '../services/product.service'
   providedIn: 'root'
 })
 export class CategoryService {
+  
+  
+  
   
   CATEGORY_TABLE : string = 'category';
   FILTER_TABLE : string = 'filter-category';
@@ -35,6 +38,26 @@ export class CategoryService {
       
   }
 
+  getBillingDetailsInInterval(tableName : string,fromDate: string, toDate: string) : Promise<Array<Order>>{
+    return this.firestore.collection(tableName,ref => ref.where("hide","==",false).where("placedDate",">=",fromDate).where("placedDate","<=",toDate)).get().toPromise().then(docs=>{
+      return docs.docs.map(d=>{
+        let order = d.data() as Order;
+        order.id = d.id;
+        return order;
+      })
+    })
+  }
+
+  getReturnDetailsInInterval(tableName: string, fromDate: string, toDate: string): Promise<Order[]> {
+    return this.firestore.collection(tableName,ref => ref.where("hide","==",false).where("parentOrderDate",">=",fromDate).where("parentOrderDate","<=",toDate)).get().toPromise().then(docs=>{
+      return docs.docs.map(d=>{
+        let order = d.data() as Order;
+        order.id = d.id;
+        return order;
+      })
+    })
+  }
+
   getAllCategoryList() : Promise<QuerySnapshot<any>> {
     return this.firestore.collection(this.CATEGORY_TABLE, ref=>ref.orderBy("order")).get().toPromise();
   }
@@ -42,8 +65,6 @@ export class CategoryService {
   getFilter(categoryId: string) : Promise<firebase.firestore.DocumentSnapshot<unknown>> {
     return this.firestore.collection(this.FILTER_TABLE).doc(categoryId).get().toPromise();
   }
-
-  
 
   getAdmins() {
     return this.firestore.collection(this.USER_TABLE, ref => ref.where("admin","==",true)).get().toPromise();
@@ -75,18 +96,33 @@ export class CategoryService {
     })
   }
 
-  addToCart(product: Product, size: string, quantity : number) {
+  addToCart(product: Product, size: string,subProduct : SubProduct, quantity : number) {
     return this.firestore.collection(this.USER_TABLE).doc(this.getUserMobileNumber())
-    .collection(this.CART_TABLE, ref => ref.where("size","==",size).where("productId","==",product.id)).get()
+    .collection(this.CART_TABLE, ref => {
+      ref.where("productId","==",product.id);
+      if(size){
+        ref.where("size","==",size);
+      }
+      if(subProduct){
+        ref.where("subProduct.id","==",subProduct.id);
+      }
+      return ref
+    }).get()
     .toPromise().then(res => {
       if(res.size<=0){
-        return this.firestore.collection(this.USER_TABLE).doc(this.getUserMobileNumber())
-        .collection(this.CART_TABLE).add({
+        let cartItem = {
           productId : product.id,
-          size : size,
           quantity : quantity,
           productRef : this.productService.getProductRef(product.id)
-        }).then(r=>{
+        };
+        if(size){
+          cartItem["size"] = size;
+        }
+        if(subProduct){
+          cartItem["subProduct"] = subProduct;
+        }
+        return this.firestore.collection(this.USER_TABLE).doc(this.getUserMobileNumber())
+        .collection(this.CART_TABLE).add(cartItem).then(r=>{
           this.toastr.success("Product added to your cart, go to cart for checkout");
         })
       }else{
@@ -129,23 +165,23 @@ export class CategoryService {
     return this.firestore.collection(this.PINCODE_TABLE).doc(pinCode).get().toPromise();
   }
 
-  getProductListForCart() {
-    return this.firestore.collection(this.USER_TABLE).doc(this.getUserMobileNumber())
-    .collection(this.CART_TABLE).get().toPromise().then(carts => {
-      return carts.docs.map(cartDoc => {
-        let cartProduct = cartDoc.data() as CartProduct;
-        cartProduct.cartId = cartDoc.id;
-        return cartProduct.productRef.get().then(pro => {
-          cartProduct.product = pro.data() as Product;
-          cartProduct.product.id = pro.id;
-          cartProduct.product.availableSizes = [];
-          return this.productService.getAvailableSizeFromProductId(pro.id).then(sizes=>{
-            cartProduct.product.availableSizes = sizes;
-            return cartProduct;
-          })
-        });
-      })
-    })
+  async getProductListForCart() : Promise<CartProduct[]>{
+    let cartList = [];
+    let carts = await this.firestore.collection(this.USER_TABLE).doc(this.getUserMobileNumber())
+    .collection(this.CART_TABLE).get().toPromise();
+    carts.docs.forEach(cartProductDoc=>{})
+    for (let index = 0; index < carts.docs.length; index++) {
+      let cartProductDoc = carts.docs.pop();
+      let cartProduct = cartProductDoc.data() as CartProduct;
+      cartProduct.cartId = cartProductDoc.id;
+      let productDoc = await cartProduct.productRef.get();
+      cartProduct.product = productDoc.data() as Product;
+      cartProduct.product.id = productDoc.id;
+      cartProduct.product.availableSizes = await this.productService.getAvailableSizeFromProductId(cartProduct.product.id);
+      cartProduct.product.subProductList = await this.productService.getProductSubList(cartProduct.product.id);
+      cartList.push(cartProduct);
+    }
+    return cartList;
   }
 
   getAddressListFromUser() {
@@ -192,15 +228,46 @@ export class CategoryService {
     .orderBy("placedDate",'desc')).get().toPromise();
   }
   getAllOrdersReturnBilling(tableName:string){
-    return this.firestore.collection(tableName).get().toPromise();
+    return this.firestore.collection(tableName,ref=>ref.where('hide','==',false)).get().toPromise();
   }
 
-  getAllOrdersReturnBillingByDate(tableName:string,date : string){
-    return this.firestore.collection(tableName,ref => ref.where("placedDate",">",date)).get().toPromise();
+  getAllOrdersReturnBillingByDate(tableName:string,date : string,superAdmin:boolean) : Promise<Array<Order>>{
+    return this.firestore.collection(tableName,ref => {
+      if(!superAdmin){
+        ref.where("hide","==",false);
+      }
+      ref.where("placedDate",">=",date)
+      return ref;
+    }).get().toPromise().then(docs=>{
+      let orders = docs.docs.map(d=>{
+        let order = d.data() as Order;
+        order.id = d.id;
+        return order;
+      })
+      return orders.filter(o=>!o.hide)
+    })
   }
+
+  getAllReturnBillingByDate(tableName: string, date: string,superAdmin:boolean): Promise<Order[]> {
+    return this.firestore.collection(tableName,ref => {
+      if(!superAdmin){
+        ref.where("hide","==",false);
+      }
+      ref.where("parentOrderDate",">=",date);
+      return ref;
+    }).get().toPromise().then(docs=>{
+      let orders = docs.docs.map(d=>{
+        let order = d.data() as Order;
+        order.id = d.id;
+        return order;
+      })
+      return orders.filter(o=>!o.hide)
+    })
+  }
+  
 
   getOrderDetails(tableName:string,orderId: string) : Promise<firebase.firestore.DocumentSnapshot<unknown>>{
-    return this.firestore.collection(tableName).doc(orderId).get().toPromise();
+    return this.firestore.collection(tableName,ref=>ref.where('hide','==',false)).doc(orderId).get().toPromise();
   }
 
   cancelOrderOrRefund(tableName: string, id: string) :Promise<void> {
@@ -257,16 +324,28 @@ export class CategoryService {
     })
   }
 
-  getOrderByStatusCount(status : string){
-    return this.firestore.collection(this.ORDER_TABLE).get().toPromise().then(snap=>{
-      return snap.size;
-    })
+  getOrderByStatusCount(status : string,superAdmin : boolean){
+    if(superAdmin){
+      return this.firestore.collection(this.ORDER_TABLE).get().toPromise().then(snap=>{
+        return snap.size;
+      })
+    }else{
+      return this.firestore.collection(this.ORDER_TABLE,ref => ref.where('hide','==',false)).get().toPromise().then(snap=>{
+        return snap.size;
+      })
+    }
+    
   }
 
-  getAllOrders(tableName : string,status : string,lastDocument : DocumentSnapshot<any>,pageLimit:number,isNext : boolean,isReload : boolean) {
+  getAllOrders(tableName : string,status : string,lastDocument : DocumentSnapshot<any>,pageLimit:number,
+    isNext : boolean,isReload : boolean,superAdmin : boolean) {
     return this.firestore.collection(tableName ,ref => 
       {
+        
         let newRef = ref.orderBy("placedDate",'desc');
+        if(!superAdmin){
+          ref.where('hide','==',false);
+        }
         if(status){
           newRef = newRef.where("currentOrderStatus","==",status.toUpperCase());
         }
@@ -287,6 +366,18 @@ export class CategoryService {
       orderStatusList : firebase.firestore.FieldValue.arrayUnion(orderStatus),
       currentOrderStatus : orderStatus.orderStatus
     })
+  }
+
+  revertBilling(id: string, tableName: string,hide : boolean) {
+    return this.firestore.collection(tableName).doc(id).update({
+      hide : hide
+    })
+  }
+
+  deleteBilling(order: Order, tableName: string) {
+    return this.firestore.collection(tableName).doc(order.id).delete().then(()=>{
+      this.productService.updateProductCountAfterCancel(order);
+    });
   }
   
 }

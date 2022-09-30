@@ -37,13 +37,15 @@
                             <i *ngIf="mobileNumber && !product.isWishList" (click)="addToWhichList(product,true);$event.stopPropagation()" class="fa fa-heart-o unselected-heart"></i>
                             <i *ngIf="mobileNumber && product.isWishList" (click)="addToWhichList(product,false);$event.stopPropagation()" class="fa fa-heart selected-heart"></i>
                             <div class="image-rating">
-                                <img class="img-loading" src="{{product.images[0]}}">
+                                <img *ngIf="product.images && product.images.length>0" class="img-loading" src="{{product.images[0]}}">
+                                <img *ngIf="!product.images || product.images.length==0" class="img-loading" src="{{icon}}">
                                 <span class="rating" *ngIf="product.reviews && product.reviews.length>0">{{product.rating}}<i class="fa fa-star" aria-hidden="true"></i>({{product.reviews.length}})
                                 </span>
                             </div>
                             <div class="product-details">
-                                <p *ngIf="product.availableSizeString" >Size: <span>{{product.availableSizeString}}</span></p>
-                                <h4>Rs. {{product.discountPrice}} <s *ngIf="product.discount>0">Rs. {{(product.discountPrice * 100 )/(100-product.discount)}} </s> <span *ngIf="product.discount>0">({{product.discount}}% OFF)</span></h4>
+                                <p *ngIf="product.availableSizeString">Size: <span>{{product.availableSizeString}}</span></p>
+                                <p *ngIf="!product.availableSizeString"><span>{{product.name}}</span></p>
+                                <h4>Rs. {{product.discountPrice| number : '1.0-2'}} <s *ngIf="product.discount>0">Rs. {{(product.discountPrice * 100 )/(100-product.discount)| number : '1.0-2'}} </s> <span *ngIf="product.discount>0">({{product.discount}}% OFF)</span></h4>
                             </div>
                         </div>
                     </div>

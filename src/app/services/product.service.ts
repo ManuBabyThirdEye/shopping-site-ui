@@ -13,6 +13,7 @@ import { CategoryService } from './category.service';
 export class ProductService {
   
   
+  
 
   PRODUCT_TABLE : string = 'product';
   SIZE_TABLE : string = 'size';
@@ -27,6 +28,16 @@ export class ProductService {
     private utilService : UtilService,
     private categoryService : CategoryService) { }
 
+  getProductSubList(id: string): PromiseLike<SubProduct[]> {
+    return this.firestore.collection(this.PRODUCT_TABLE).doc(id)
+      .collection(this.SUB_PRODUCT_TABLE).get().toPromise().then(sizes=>{
+            return sizes.docs.map(sp=>{
+              let subProduct = sp.data() as SubProduct;
+              subProduct.id = sp.id;
+              return subProduct;
+            })
+    })
+  }
   getProductList(categoryId: string,sortField:string, sortOption) :Promise<firebase.firestore.QuerySnapshot<unknown>> {
     return this.firestore.collection(this.PRODUCT_TABLE, ref => ref.where('category','array-contains',categoryId)
     .orderBy(sortField,sortOption)).get().toPromise();
@@ -79,11 +90,15 @@ export class ProductService {
         });
       }
       let availableSubProductDoc = await this.firestore.collection(this.PRODUCT_TABLE).doc(productId).collection(this.SUB_PRODUCT_TABLE).get().toPromise();
+      
       product.subProductList = [];
       if(availableSubProductDoc.size > 0){
         availableSubProductDoc.docs.forEach(p=>{
-          product.subProductList.push(p.data() as SubProduct);
+          let sbPrd = p.data() as SubProduct;
+          sbPrd.id = p.id;
+          product.subProductList.push(sbPrd);
         });
+        product.subProductList = product.subProductList.sort((sp1,sp2)=>sp1.order-sp2.order);
       }
       return product;
     }
@@ -93,9 +108,10 @@ export class ProductService {
     var batch = this.firestore.firestore.batch();
     let promiseList : Array<Promise<any>> = [];
     let cancel : boolean = false;
+    let errorMessage = "";
     cart.cartProducts.forEach(prod=>{
       if(cancel){
-        return  Promise.reject(new Error());
+        return  Promise.reject(new Error(errorMessage));
       }
       promiseList.push(this.firestore.collection(this.PRODUCT_TABLE).doc(prod.product.id)
       .collection(this.SIZE_TABLE).doc(prod.size).get().toPromise().then(doc=>{
@@ -103,8 +119,9 @@ export class ProductService {
           let count : number = doc.get('count');
           if(count<prod.quantity){
             cancel = true;
+            errorMessage = "Product quntity is not available in cloud "+prod.product.name+"("+prod.product.id+")";
           }else{
-            if(count-prod.quantity==0){
+            if(count-prod.quantity<0){
               batch.delete(this.firestore.firestore.collection(this.PRODUCT_TABLE).doc(prod.product.id).collection(this.SIZE_TABLE).doc(prod.size));
               batch.update(this.firestore.firestore.collection(this.PRODUCT_TABLE).doc(prod.product.id),{availableSizeString:this.removeSizeFromString(prod.product.availableSizeString,prod.size)});
             }else{
@@ -130,7 +147,7 @@ export class ProductService {
         }
         
       }else{
-        return Promise.reject(new Error());
+        return Promise.reject(new Error(errorMessage));
       }
   }
 
@@ -293,16 +310,22 @@ export class ProductService {
       product.images.forEach((imgUrl,index)=>{
         if(!this.utilService.isUrl(imgUrl)){
           let file = selectedImages[index]
-          let timestamp = new Date().getMilliseconds();
-          let ref = this.fireStorage.ref("products/"+timestamp+file.name);
-          let task = ref.put(file);
-          fileUploadPromises.push(task.then(resp=>{
-            return ref.getDownloadURL().toPromise().then(url=>{
-              product.images[index] = url;
-              this.fireStorage.refFromURL(oldImages[index]).delete();
-              return url;
-            })
-          }));
+          if(file){
+            let timestamp = new Date().getMilliseconds();
+            let ref = this.fireStorage.ref("products/"+timestamp+file.name);
+            let task = ref.put(file);
+            fileUploadPromises.push(task.then(resp=>{
+              return ref.getDownloadURL().toPromise().then(url=>{
+                product.images[index] = url;
+                if(this.utilService.isUrl(oldImages[index])){
+                  console.log(oldImages);
+                  this.fireStorage.refFromURL(oldImages[index]).delete();
+                }
+                return url;
+              })
+            }));
+          }
+          
         }
       })
       return Promise.all(fileUploadPromises).then(()=>{

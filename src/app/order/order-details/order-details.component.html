@@ -28,9 +28,16 @@
                     </div>
                     <div class="prod-details col-md-6 col-6">
                         <h5><a routerLink="/product-details" [queryParams]="{productId:cartItem.product.id}">{{cartItem.product.name}}</a></h5>
-                        <p>{{cartItem.product.details}}</p>
+                        <div *ngIf="!cartItem.subProduct" [ngClass]="showLess?'show-less':''" [innerHTML]="cartItem.product.details"></div>
+                        <div *ngIf="!cartItem.subProduct" class="show-less-txt" (click)="showLess=!showLess">{{showLess?'Show More':'Show Less'}} <i [ngClass]="showLess?'fa fa-angle-down':'fa fa-angle-down invert'"  class="fa fa-angle-down" aria-hidden="true"></i></div>
+                        <div *ngIf="cartItem.subProduct"  [style.border-top-color]="cartItem.subProduct.colorCode" class="'selected shadow sub-product-box mb-2 mt-2" >
+                            <p *ngFor="let moreDetails of cartItem.subProduct.moreDetails | keyvalue">
+                                {{moreDetails.key}} : <span>{{moreDetails.value}}</span>
+                            </p>
+                            <h5>Rs. {{cartItem.subProduct.discountPrice}}</h5>
+                        </div>
                         <div class="selection">
-                            <span>Size: {{cartItem.size}}</span>
+                            <span *ngIf="cartItem.size">Size: {{cartItem.size}}</span>
                             <span>Qty: {{cartItem.quantity}}</span>
                         </div>
 
@@ -46,7 +53,7 @@
 
                 </div>
                 <div *ngIf=" tableName =='billing'|| (orderOrReturnStatusList[orderOrReturnStatusList.length-1].orderStatus=='DELIVERY' && orderOrReturnStatusList[orderOrReturnStatusList.length-1].date)" class="prod-action row col-md-12">
-                    <div (click)="returnOrder(cartItem)" class="col-md-4">
+                    <div (click)="returnOrder(orderDetsails.id,cartItem,orderDetsails.parentOrderDate)" class="col-md-4">
                         <h4>RETURN</h4>
                     </div>
                 </div>
@@ -101,7 +108,7 @@
 
 
             <button *ngIf="!cancelled && orderDetsails.currentOrderStatus=='PLACED'" (click)="cancelOrder()" class="place-order">CANCEL</button>
-
+            <button *ngIf="(user!=undefined && user.admin) || isLocal" (click)="printBill()" class="place-order">PRINT</button>
         </div>
     </div>
 </div>

@@ -259,7 +259,9 @@ export class ProductAddEditComponent implements OnInit {
       this.selectedImages[index] = event.target.files[0];
       reader.readAsDataURL(event.target.files[0]); // read file as data url
       reader.onload = (event) => { // called once readAsDataURL is completed
-        this.oldImages[index] = this.product.images[index];
+        if(this.product.images[index]){
+          this.oldImages[index] = this.product.images[index];
+        }
         this.product.images[index] = event.target.result as string;
       }
     }

@@ -129,6 +129,22 @@
                 width: 100%;
             }
             .prod-details {
+                .sub-product-box{
+                    border-top: 3px solid ;
+                    border-radius: 5px;
+                    padding: 5px;
+                    cursor: pointer;
+                    background: #fefaf6;
+                    width: fit-content;
+                    min-width: 150px;
+                    p{
+                        font-size: 13px!important;
+                        margin-bottom: 0px;
+                        span{
+                            font-weight: bold;
+                        }
+                    }
+                }
                 h5 {
                     a {
                         color: black;

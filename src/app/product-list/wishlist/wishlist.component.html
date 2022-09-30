@@ -7,8 +7,9 @@
                     <div (click)="removeFromWishList(wishItem.id)" class="cancel"><img src="../../../assets/cancel.png"></div>
                     <img class="img-loading" src="{{wishItem.image}}">
                     <div class="product-details">
-                        <p>Size: <span>{{wishItem.sizes}}</span></p>
-                        <h4>Rs. {{wishItem.discountPrice}} <s *ngIf="wishItem.discount>0">Rs. {{(wishItem.discountPrice * 100 )/(100-wishItem.discount)}} </s> <span *ngIf="wishItem.discount>0">({{wishItem.discount}}% OFF)</span></h4>
+                        <p *ngIf="wishItem.sizes">Size: <span>{{wishItem.sizes}}</span></p>
+                        <p *ngIf="!wishItem.sizes"><span>{{wishItem.name}}</span></p>
+                        <h4>Rs. {{wishItem.discountPrice| number : '1.0-2'}} <s *ngIf="wishItem.discount>0">Rs. {{(wishItem.discountPrice * 100 )/(100-wishItem.discount)| number : '1.0-2'}} </s> <span *ngIf="wishItem.discount>0">({{wishItem.discount}}% OFF)</span></h4>
                     </div>
                 </div>
             </div>

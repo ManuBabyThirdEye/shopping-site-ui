@@ -45,7 +45,7 @@ export class LocaldbService {
   addNewBilling(order: Order) {
     this.localDB.collection(this.BILLING_TABLE).doc(order.id).set(order);
   }
-  getAllBillingFormLocal() : Promise<Array<any>>{
+  getAllBillingFormLocal() : Promise<Array<Order>>{
     return this.localDB.collection(this.BILLING_TABLE).get();
   }
 
@@ -58,6 +58,7 @@ export class LocaldbService {
     let updatedProducts : Array<Product> = [];
     for(let cartProd of cart.cartProducts){
       let product : Product = await this.getProductById(cartProd.product.id);
+      console.log(product);
       let index = product.availableSizes.findIndex(s=>s.size==cartProd.size);
       if(index != -1){
         product.availableSizes[index].count = product.availableSizes[index].count - cartProd.quantity;

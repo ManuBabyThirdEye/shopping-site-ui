@@ -1,23 +1,23 @@
 // This file can be replaced during build by using the `fileReplacements` array.
-// `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
+// `ng build --organic` replaces `environment.ts` with `environment.organic.ts`.
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-    production: true,
+    production: false,
     local : false,
     themeColor : "#e4498a",
-    adminNumber : "8714443741",
+    adminNumber : "8714443740",
     gstNumber : "",
-    icon : "assets/logo.png",
-    appName:"Test",
+    icon : "assets/organic_icon.png",
+    appName:"Sesame Organic",
     firebaseConfig : {
-      apiKey: "AIzaSyC8ZkhyjUy6n0uhY0rRjILTC4Ypj5b4TzY",
-      authDomain: "rithum-15823.firebaseapp.com",
-      projectId: "rithum-15823",
-      storageBucket: "rithum-15823.appspot.com",
-      messagingSenderId: "888931391161",
-      appId: "1:888931391161:web:14f91092893ce2d551ed68",
-      measurementId: "G-Z22E3HBDH6"
+        apiKey: "AIzaSyBq0EVGGhCunErbJ901qbpEPO6eCqUL7sA",
+        authDomain: "organic-sesame.firebaseapp.com",
+        projectId: "organic-sesame",
+        storageBucket: "organic-sesame.appspot.com",
+        messagingSenderId: "218990948091",
+        appId: "1:218990948091:web:7cc695d43e6033022f8a5e",
+        measurementId: "G-TL55HKCXF8"
     },
     googlePayPaymentRequest : {
       apiVersion: 2,

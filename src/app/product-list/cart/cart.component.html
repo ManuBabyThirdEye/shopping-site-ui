@@ -40,19 +40,26 @@
                     </div>
                     <div class="prod-details col-md-6 col-6">
                         <h5><a routerLink="/product-details" [queryParams]="{productId:cartItem.product.id}">{{cartItem.product.name}}</a></h5>
-                        <div [ngClass]="showLess?'show-less':''" [innerHTML]="cartItem.product.details"></div>
-                        <div class="show-less-txt" (click)="showLess=!showLess">{{showLess?'Show More':'Show Less'}} <i [ngClass]="showLess?'fa fa-angle-down':'fa fa-angle-down invert'"  class="fa fa-angle-down" aria-hidden="true"></i></div>
+                        <div *ngIf="!cartItem.subProduct" [ngClass]="showLess?'show-less':''" [innerHTML]="cartItem.product.details"></div>
+                        <div *ngIf="!cartItem.subProduct" class="show-less-txt" (click)="showLess=!showLess">{{showLess?'Show More':'Show Less'}} <i [ngClass]="showLess?'fa fa-angle-down':'fa fa-angle-down invert'"  class="fa fa-angle-down" aria-hidden="true"></i></div>
+                        <div *ngIf="cartItem.subProduct"  [style.border-top-color]="cartItem.subProduct.colorCode" class="'selected shadow sub-product-box mb-2 mt-2" >
+                            <p *ngFor="let moreDetails of cartItem.subProduct.moreDetails | keyvalue">
+                                {{moreDetails.key}} : <span>{{moreDetails.value}}</span>
+                            </p>
+                            <h5>Rs. {{cartItem.subProduct.discountPrice| number : '1.0-2'}}</h5>
+                        </div>
                         <div class="selection">
-                            <span>Size: {{cartItem.size}}</span>
+                            <span *ngIf="cartItem.size">Size: {{cartItem.size}}</span>
                             <span (click)="selectSize(cartItem)">Qty: {{cartItem.quantity}} <i class="fa fa-angle-down" aria-hidden="true"></i></span>
                         </div>
+                        
 
                         <p *ngIf="cartItem.delivertDate!=undefined"><i class="fa fa-check" aria-hidden="true"></i> Delivery by <span>{{ cartItem.delivertDate | date: "fullDate" }}</span></p>
                         <p *ngIf="cartItem.delivertDate==undefined"><i class="fa fa-times" aria-hidden="true"></i> Update your pincode</p>
                     </div>
                     <div class="price col-md-3 col-6">
-                        <h5>&#8377; {{cartItem.product.discountPrice * cartItem.quantity}}</h5>
-                        <p *ngIf="cartItem.product.discount>0"><s>Rs. {{(cartItem.product.discountPrice * cartItem.quantity * 100 )/(100-cartItem.product.discount)}}</s> <span>({{cartItem.product.discount}}% OFF)</span></p>
+                        <h5>&#8377; {{(cartItem.product.discountPrice * cartItem.quantity)| number : '1.0-2'}}</h5>
+                        <p *ngIf="cartItem.product.discount>0"><s>Rs. {{((cartItem.product.discountPrice * cartItem.quantity * 100 )/(100-cartItem.product.discount))| number : '1.0-2'}}</s> <span>({{cartItem.product.discount}}% OFF)</span></p>
                     </div>
                 </div>
                 <div class="divider"></div>
@@ -77,11 +84,11 @@
             <div class="price-main">
                 <div class="price-details">
                     <p>Total MRP</p>
-                    <p>&#8377; {{cart.totalMRP}}</p>
+                    <p>&#8377; {{cart.totalMRP| number : '1.0-2'}}</p>
                 </div>
                 <div class="price-details">
                     <p>Discount on MRP</p>
-                    <span>-&#8377; {{cart.totalMRP-cart.total}}</span>
+                    <span>-&#8377; {{(cart.totalMRP-cart.total)| number : '1.0-2'}}</span>
                 </div>
                 <div *ngIf="pinStatus!=undefined" class="price-details">
                     <p>Convinience Fee</p>
@@ -91,7 +98,7 @@
                 <div class="divider"></div>
                 <div class="total">
                     <p>Total Amount</p>
-                    <span>&#8377; {{cart.includeConvenienceFee?cart.total+cart.convenienceFee:cart.total}}</span>
+                    <span>&#8377; {{(cart.includeConvenienceFee?cart.total+cart.convenienceFee:cart.total)| number : '1.0-2'}}</span>
                 </div>
             </div>
             <button [ngClass]="pinStatus==undefined || !pinStatus.available?'inactive':''" (click)="goToAddressSelection()" class="place-order"> PLACE ORDER</button>

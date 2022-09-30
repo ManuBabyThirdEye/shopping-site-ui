@@ -32,6 +32,9 @@ export class CartComponent implements OnInit {
     private modalService: NgbModal) { 
       window.scroll(0,0);
     this.cart = {
+      hide : false,
+      parentOrderId : "",
+      parentOrderDate : "",
       id:undefined,
       address : undefined,
       cartProducts : [],
@@ -62,43 +65,48 @@ export class CartComponent implements OnInit {
     ]
     this.ngxService.start();
     this.categoryService.getProductListForCart().then(cartList => {
-        cartList.forEach(cartPromise => {
-          cartPromise.then(cartItem => {
-            let currentAvailableSize = cartItem.product.availableSizes.find(s=>s.size==cartItem.size);
-            if(!currentAvailableSize ||currentAvailableSize.count<=0){
-              const confirmRemoveCart = this.modalService.open(ConfirmBoxComponent);
-              confirmRemoveCart.componentInstance.image = cartItem.product.images[0];
-              confirmRemoveCart.componentInstance.heading = "Missed It!";
-              confirmRemoveCart.componentInstance.details = "Sorry you missed this product, Selected size is not availabel now";
-              confirmRemoveCart.componentInstance.positiveText = "CANCEL";
-              confirmRemoveCart.componentInstance.negativeText = "MOVE TO WISHLIST";
+      cartList.forEach(cartItem=>{
+        console.log(cartItem)
+        let currentAvailableSize = cartItem.product.availableSizes ? cartItem.product.availableSizes.find(s=>s.size==cartItem.size):undefined;
+        let selectedProduct = cartItem.product.subProductList ? cartItem.product.subProductList.find(sp=>sp.id==cartItem.subProduct.id):undefined;
+        if(selectedProduct){
+          cartItem.product.discountPrice = selectedProduct.discountPrice;
+          cartItem.product.discount = selectedProduct.discount;
+        }
+        if( (cartItem.size && (!currentAvailableSize ||currentAvailableSize.count<=0)) ||
+            (cartItem.subProduct && (!selectedProduct || selectedProduct.quantity<=0))){
+          const confirmRemoveCart = this.modalService.open(ConfirmBoxComponent);
+          confirmRemoveCart.componentInstance.image = cartItem.product.images[0];
+          confirmRemoveCart.componentInstance.heading = "Missed It!";
+          confirmRemoveCart.componentInstance.details = "Sorry you missed this product, Selected size is not availabel now";
+          confirmRemoveCart.componentInstance.positiveText = "CANCEL";
+          confirmRemoveCart.componentInstance.negativeText = "MOVE TO WISHLIST";
 
-              confirmRemoveCart.result.then(result=>{
-                if(!result){
-                  this.moveToWishList(cartItem);
-                }else{
-                  this.categoryService.removeFromCart(cartItem.cartId);
-                }
-              }).catch(e=>{
-                
-              })
+          confirmRemoveCart.result.then(result=>{
+            if(!result){
+              this.moveToWishList(cartItem);
             }else{
-              let totalDelay : number = (cartItem.product.productDeliveryDelay?cartItem.product.productDeliveryDelay:0) + (this.pinStatus && this.pinStatus.pinCodeDeliveryDelay?this.pinStatus.pinCodeDeliveryDelay:0);
-              let today = new Date();
-              today.setDate(today.getDate()+totalDelay);
-              cartItem.delivertDate = today.toISOString();
-              this.cart.cartProducts.push(cartItem);
-              this.cart.total = this.cart.total + cartItem.product.discountPrice * cartItem.quantity;
-              this.cart.totalMRP = this.cart.totalMRP + (cartItem.product.discountPrice * 100 )/(100-cartItem.product.discount) * cartItem.quantity;
-              if(this.pinStatus && this.pinStatus.minOrderAmount>this.cart.total){
-                this.cart.includeConvenienceFee = true;
-              }else if(this.pinStatus){
-                this.cart.includeConvenienceFee = false;
-              }
+              this.categoryService.removeFromCart(cartItem.cartId);
             }
+          }).catch(e=>{
+            
           })
-        })
-        this.ngxService.stop();
+        }else {
+          let totalDelay : number = (cartItem.product.productDeliveryDelay?cartItem.product.productDeliveryDelay:0) + (this.pinStatus && this.pinStatus.pinCodeDeliveryDelay?this.pinStatus.pinCodeDeliveryDelay:0);
+          let today = new Date();
+          today.setDate(today.getDate()+totalDelay);
+          cartItem.delivertDate = today.toISOString();
+          this.cart.cartProducts.push(cartItem);
+          this.cart.total = this.cart.total + cartItem.product.discountPrice * cartItem.quantity;
+          this.cart.totalMRP = this.cart.totalMRP + (cartItem.product.discountPrice * 100 )/(100-cartItem.product.discount) * cartItem.quantity;
+          if(this.pinStatus && this.pinStatus.minOrderAmount>this.cart.total){
+            this.cart.includeConvenienceFee = true;
+          }else if(this.pinStatus){
+            this.cart.includeConvenienceFee = false;
+          }
+        }
+      })
+      this.ngxService.stop();
     });
   }
 
@@ -226,8 +234,11 @@ export class CartComponent implements OnInit {
 
   selectSize(cartItem : CartProduct){
     const modalRef = this.modalService.open(SelectQuantityComponent);
-    console.log(cartItem);
-    modalRef.componentInstance.maxCount = cartItem.product.availableSizes.find(s=>s.size==cartItem.size).count;
+    if(cartItem.product.availableSizes.find(s=>s.size==cartItem.size)){
+      modalRef.componentInstance.maxCount = cartItem.product.availableSizes.find(s=>s.size==cartItem.size).count;
+    } else {
+      modalRef.componentInstance.maxCount = cartItem.product.subProductList.find(s=>s.id==cartItem.subProduct.id).quantity;
+    }
     modalRef.result.then(result=>{
       if(result){
         this.cart.cartProducts.find(c=>c.cartId == cartItem.cartId).quantity = result;

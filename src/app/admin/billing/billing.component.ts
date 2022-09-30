@@ -6,7 +6,7 @@ import { CategoryService } from 'src/app/services/category.service';
 import { ProductService } from 'src/app/services/product.service';
 import { LocaldbService } from 'src/app/services/localdb.service';
 
-import { CartProduct, KEY_CODE, Order, PaymentMode, Product, Size } from 'src/bean/category';
+import { CartProduct, KEY_CODE, Order, PaymentMode, Product, Size, SubProduct } from 'src/bean/category';
 import { ConfirmBoxComponent } from 'src/app/app-modal/confirm-box/confirm-box.component';
 import { PrintComponent } from 'src/app/app-modal/print/print.component';
 import { Router } from '@angular/router';
@@ -18,6 +18,8 @@ import { DocumentReference } from '@angular/fire/firestore';
 import { SelectQuantityComponent } from 'src/app/app-modal/select-quantity/select-quantity.component';
 import { SelectSizeComponent } from 'src/app/app-modal/select-size/select-size.component';
 import { environment } from 'src/environments/environment';
+import { PickDateIntervalComponent } from 'src/app/app-modal/pick-date-interval/pick-date-interval.component';
+import { UtilService } from 'src/app/services/util.service';
 
 @Component({
   selector: 'app-billing',
@@ -49,19 +51,16 @@ export class BillingComponent implements OnInit {
   file:File;
   progressBk:string="var(--theme-color)";
 
-  ITEM_NO :string = "ITEM NO";
-  ITEM_NAME : string ="ITEM NAME";
-  DESCRIPTION : string = "DESCRIPTION";
-  DISCOUNT_AMOUNT : string = "DISCOUNT AMOUNT";
-  DISCOUNT : string ="DISCOUNT";
   icon : string;
+  showLess : boolean = true;
   constructor(private categoryService : CategoryService,
     private productService : ProductService,
     private localdbService : LocaldbService,
     private ngxService: NgxUiLoaderService,
     private toastr: ToastrService,
     private modalService: NgbModal,
-    private router: Router) { 
+    private router: Router,
+    private utilService : UtilService) { 
 
       this.SIZE_MAPPER.set("00","FREE SIZE");
       this.SIZE_MAPPER.set("01","S");
@@ -134,17 +133,24 @@ export class BillingComponent implements OnInit {
   async getProductDetails() {
       this.selectedProdList = [];
       let productId = parseInt(this.productDetail.substring(2,this.productDetail.length));
-      let productSize = this.SIZE_MAPPER.get(this.productDetail.substring(0,2));
+      let subproductIdNumber = parseInt(this.productDetail.substring(0,2));
+      let productSize;
+      let subproductId;
+      if(subproductIdNumber>=10){
+        subproductId = this.productDetail.substring(0,2);
+      }else{
+        productSize = this.SIZE_MAPPER.get(this.productDetail.substring(0,2));
+      }
       this.productDetail = "";
       let product : Product = await this.localdbService.getProductById(productId+"");
       if(!product){
         this.ngxService.start();
-        product = await this.productService.getProductById(productId+"");
+        product = await this.productService.getProduct(productId+"");
         this.ngxService.stop();
         if(product){
           this.localdbService.addNewProduct(product);
           this.selectedProdList.push(product);
-          this.addProductToBilling(product,productSize);
+          this.addProductToBilling(product,productSize,subproductId);
         }else{
           const confirmreturn = this.modalService.open(ConfirmBoxComponent);
           confirmreturn.componentInstance.image = "../../assets/shopping.png";
@@ -168,7 +174,7 @@ export class BillingComponent implements OnInit {
                   }];
                   newProduct.id= productId+"";
                   this.localdbService.addNewProduct(newProduct);
-                  this.addProductToBilling(newProduct,productSize);
+                  this.addProductToBilling(newProduct,productSize,subproductId);
                 }
                 this.isPopupOpen = false;
               }).catch(e=>{
@@ -183,40 +189,46 @@ export class BillingComponent implements OnInit {
         }
       }else{
         this.selectedProdList.push(product);
-        this.addProductToBilling(product,productSize);
+        this.addProductToBilling(product,productSize,subproductId);
       }
   }
-  addProductToBilling(product: Product, size : string) {
-    let selectedSize = product.availableSizes.find(s=>s.size==size);
-    if(selectedSize && selectedSize.count>0){
-      this.addProductToBillingList(product,selectedSize);
-      this.updateTotalPrice();
-    }else{
-      const confirmreturn = this.modalService.open(ConfirmBoxComponent);
-          confirmreturn.componentInstance.image = "../../assets/shopping.png";
-          confirmreturn.componentInstance.heading = "No Product Size";
-          confirmreturn.componentInstance.details = "Product size is not available, Do you want to countinue with 1 Quantity";
-          confirmreturn.componentInstance.positiveText = "YES";
-          confirmreturn.componentInstance.negativeText = "CANCEL";
-      
-          this.isPopupOpen = true;
-          confirmreturn.result.then(result=>{
-            if(result){
-              if(!selectedSize){
-                selectedSize = {size: size,count:1};
+  addProductToBilling(product: Product, size : string, subProductId : string) {
+      let selectedSize = product.availableSizes?product.availableSizes.find(s=>s.size==size):undefined;
+      let selectedSubProduct = product.subProductList?product.subProductList.find(s=>s.id==subProductId):undefined;
+      if((selectedSize && selectedSize.count>0) || (selectedSubProduct && selectedSubProduct.quantity>0)){
+        if(selectedSubProduct){
+          product.discountPrice = selectedSubProduct.discountPrice;
+          product.discount = selectedSubProduct.discount;
+        }
+        this.addProductToBillingList(product,selectedSize,selectedSubProduct);
+        this.updateTotalPrice();
+      }else{
+        const confirmreturn = this.modalService.open(ConfirmBoxComponent);
+            confirmreturn.componentInstance.image = "../../assets/shopping.png";
+            confirmreturn.componentInstance.heading = "No Product Size";
+            confirmreturn.componentInstance.details = "Product size is not available, Do you want to countinue with 1 Quantity";
+            confirmreturn.componentInstance.positiveText = "YES";
+            confirmreturn.componentInstance.negativeText = "CANCEL";
+        
+            this.isPopupOpen = true;
+            confirmreturn.result.then(result=>{
+              if(result){
+                if(!selectedSize){
+                  selectedSize = {size: size,count:1};
+                }
+                selectedSize.count = 1;
+                this.addProductToBillingList(product,selectedSize,selectedSubProduct);
+                this.updateTotalPrice();
+                this.isPopupOpen = false;
               }
-              selectedSize.count = 1;
-              this.addProductToBillingList(product,selectedSize);
-              this.updateTotalPrice();
+            }).catch(e=>{
               this.isPopupOpen = false;
-            }
-          }).catch(e=>{
-            this.isPopupOpen = false;
-          }); 
-    }
-    
+            }); 
+      }
   }
-  addProductToBillingList(product: Product, selectedSize: Size) {
+  addProductToBillingList(product: Product, selectedSize: Size, selectedSubProduct : SubProduct) {
+    console.log(selectedSize);
+    console.log(selectedSubProduct);
     if(selectedSize){
       let index = this.addedProducts.findIndex(p=>p.product.id==product.id && p.size == selectedSize.size);
       if(index != -1){
@@ -228,11 +240,27 @@ export class BillingComponent implements OnInit {
           product : product,
           quantity : 1,
           size : selectedSize.size,
-          productRef : {} as DocumentReference
+          productRef : {} as DocumentReference,
+          subProduct : undefined
+        });
+      }
+    }else if(selectedSubProduct){
+      let index = this.addedProducts.findIndex(p=>p.product.id==product.id && p.subProduct.id == selectedSubProduct.id);
+      if(index != -1){
+        this.addedProducts[index].quantity = this.addedProducts[index].quantity + 1;
+      }else{
+        this.addedProducts.push({
+          cartId : new Date().getMilliseconds()+"",
+          delivertDate : new Date().toISOString(),
+          product : product,
+          quantity : 1,
+          size : undefined,
+          productRef : {} as DocumentReference,
+          subProduct : selectedSubProduct
         });
       }
     }
-  }
+  }271061
   updateTotalPrice() {
     if(!this.inPersonDiscount){
       this.inPersonDiscount = 0;
@@ -247,7 +275,28 @@ export class BillingComponent implements OnInit {
     this.total -= this.inPersonDiscount;
   }
 
+
+  downloafProductFromRemort(){
+    const confirmreturn = this.modalService.open(ConfirmBoxComponent);
+    confirmreturn.componentInstance.image = "../../assets/shopping.png";
+    confirmreturn.componentInstance.heading = "Download Products";
+    confirmreturn.componentInstance.details = "Do you want to synch product with remote ?";
+    confirmreturn.componentInstance.positiveText = "YES";
+    confirmreturn.componentInstance.negativeText = "NO";
+      
+    this.isPopupOpen = true;
+    confirmreturn.result.then(result=>{
+      if(result){
+        this.downloadProduct();
+      }
+      this.isPopupOpen = false;
+    }).catch(e=>{
+      this.isPopupOpen = false;
+    });
+  }
+
   async downloadProduct(){
+    
     let count = await this.productService.getProductCount();
     if(count>0){
       let lastRecord = undefined;
@@ -278,6 +327,12 @@ export class BillingComponent implements OnInit {
   }
 
   billing(){
+
+    if(this.openInPersonDiscount){
+      this.toastr.error("Please save In person discount before billing");
+      return;
+    }
+
     var orderId = Math.floor( Date.now()/1000 );
 
     const confirmreturn = this.modalService.open(ConfirmBoxComponent);
@@ -305,6 +360,9 @@ export class BillingComponent implements OnInit {
       
       
         let cart : Order = {
+          hide : false,
+          parentOrderId : "",
+          parentOrderDate : "",
         cartProducts : this.addedProducts,
         totalMRP : this.totalMRP,
         total : this.total,
@@ -347,13 +405,15 @@ export class BillingComponent implements OnInit {
       }
 
       this.localdbService.reduceProductCountAndPlaceOrder({...cart,remoteSuccess:false});
-      this.productService.reduceProductCountAndPlaceOrder(cart,false).then(res=>{
+      this.productService.reduceProductCountAndPlaceOrder(this.utilService.removeUndefined(cart),false).then(res=>{
         if(res){
           this.localdbService.updateBillingSuccess(cart.id);
         }else{
           console.log("failed remote upload, do this later...")
         }
-      }).catch(e=>{
+      }).catch((e:Error)=>{
+        this.toastr.error(e.message);
+        console.log(e);
         console.log("failed remote upload, do this later...")
       });
       this.addedProducts = [];
@@ -374,6 +434,7 @@ export class BillingComponent implements OnInit {
         let inc = 100/billing.length;
         for(let bill of billing){
           if(!bill["remoteSuccess"]){
+            bill = this.utilService.removeUndefined(bill);
             this.productService.reduceProductCountAndPlaceOrder(bill,false).then(res=>{
               if(res){
                 this.localdbService.updateBillingSuccess(bill.id);
@@ -386,7 +447,8 @@ export class BillingComponent implements OnInit {
                 this.progress = 0;
                 uploadBtn.innerHTML = "UPLOAD"
               }
-            }).catch(e=>{
+            }).catch((e:Error)=>{
+              this.toastr.error(e.message);
               console.log("failed remote upload, do this later...")
               this.progress = 0;
               uploadBtn.innerHTML = "UPLOAD"
@@ -422,7 +484,7 @@ export class BillingComponent implements OnInit {
             var workbook = XLSX.read(bstr, {type:"binary"});
             var first_sheet_name = workbook.SheetNames[0];
             var worksheet = workbook.Sheets[first_sheet_name];
-            let newProducts : Array<Product> = this.createProductFromXcel(XLSX.utils.sheet_to_json(worksheet,{raw:true}));
+            let newProducts : Array<Product> = this.utilService.createProductFromXcel(XLSX.utils.sheet_to_json(worksheet,{raw:true}));
             this.uploadProductOneByOne(newProducts);
         }
         //fileReader.readAsArrayBuffer(this.file);
@@ -447,77 +509,7 @@ export class BillingComponent implements OnInit {
       }
     }
   }
-  createProductFromXcel(prodList: unknown[]): Product[] {
-    
-    return prodList.map(p=>{
-      let prod : Product = {} as Product;
-      if(p[this.ITEM_NAME]){
-        prod.name = p[this.ITEM_NAME];
-      }
-      if(p[this.DESCRIPTION]){
-        prod.details = p[this.DESCRIPTION];
-      }
-      if(p[this.DISCOUNT_AMOUNT]){
-        prod.discountPrice = parseInt(p[this.DISCOUNT_AMOUNT]);
-      }else{
-        prod.discountPrice = 0;
-      }
-      if(p[this.DISCOUNT]){
-        prod.discount = parseInt(p[this.DISCOUNT]);
-      }else{
-        prod.discount = 0;
-      }
-      if(p[this.ITEM_NO]){
-        prod["location"] = p[this.ITEM_NO];
-      }
-      prod.availableSizes=[];
-      prod.availableSizeString = "";
-      if(p["S"] && p["S"]!=0){
-        prod.availableSizes.push({
-          size : "S",
-          count : p["S"]
-        })
-      }
-      if(p["M"] && p["M"]!=0){
-        prod.availableSizes.push({
-          size : "M",
-          count : p["M"]
-        })
-      }
-      if(p["L"] && p["L"]!=0){
-        prod.availableSizes.push({
-          size : "L",
-          count : p["L"]
-        })
-      }
-      if(p["XL"] && p["XL"]!=0){
-        prod.availableSizes.push({
-          size : "XL",
-          count : p["XL"]
-        })
-      }
-      if(p["XXL"] && p["XXL"]!=0){
-        prod.availableSizes.push({
-          size : "XXL",
-          count : p["XXL"]
-        })
-      }
-      if(p["XXXL"] && p["XXXL"]!=0){
-        prod.availableSizes.push({
-          size : "XXXL",
-          count : p["XXXL"]
-        })
-      }
-      if(p["FREE SIZE"] && p["FREE SIZE"]!=0){
-        prod.availableSizes.push({
-          size : "FREE SIZE",
-          count : p["FREE SIZE"]
-        })
-      }
-      prod.availableSizeString = prod.availableSizes.map(s=>s.size).reduce((s1,s2)=>s1+","+s2);
-      return prod;
-    })
-  }
+  
 
   selectQuantity(cartItem : CartProduct){
     const modalRef = this.modalService.open(SelectQuantityComponent);
@@ -547,5 +539,57 @@ export class BillingComponent implements OnInit {
       this.isPopupOpen = false;
     });
   }
+
+  downloadGstReport(){
+    const confirmreturn = this.modalService.open(ConfirmBoxComponent);
+    confirmreturn.componentInstance.image = "../../assets/shopping.png";
+    confirmreturn.componentInstance.heading = "Download GST Repost";
+    confirmreturn.componentInstance.details = "Do you want to download GST report?";
+    confirmreturn.componentInstance.positiveText = "YES";
+    confirmreturn.componentInstance.negativeText = "NO";
+      
+    this.isPopupOpen = true;
+    confirmreturn.result.then(result=>{
+      if(result){
+        const datePicker = this.modalService.open(PickDateIntervalComponent);
+        datePicker.result.then(dateInterval=>{
+          let fromDateString = dateInterval.split(":")[0];
+          let toDateString = dateInterval.split(":")[1];
+          try{
+            let fromDate = new Date(fromDateString);
+            let toDate = new Date(toDateString);
+            toDate.setHours(24,59,59);
+            this.ngxService.start();
+            let billingListPromise : Promise<Array<Order>> = this.categoryService.getBillingDetailsInInterval("billing",fromDate.toISOString(),toDate.toISOString());
+            let returnListPromise : Promise<Array<Order>> = this.categoryService.getReturnDetailsInInterval("return",fromDate.toISOString(),toDate.toISOString());
+            Promise.all([billingListPromise,returnListPromise]).then(result=>{
+              let billingList = result[0];
+              let returnList = result[1];
+
+              if(billingList){
+                const fileName = 'gst_report_from_'+fromDateString+'_to_'+toDateString+'.xlsx';
+
+                const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.utilService.convertBillingToJson(billingList,returnList));
+                const wb: XLSX.WorkBook = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, 'GST REPORT');
+
+                XLSX.writeFile(wb, fileName);                
+              }
+              this.ngxService.stop();
+            }).catch(e=>{
+              this.ngxService.stop();
+            });
+          }catch(e){
+            console.log(e);
+          }
+        });
+      }
+      this.isPopupOpen = false;
+    }).catch(e=>{
+      this.isPopupOpen = false;
+    });
+  }
+
+ 
 
 }

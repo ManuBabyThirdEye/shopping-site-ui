@@ -71,6 +71,8 @@ export interface SubProduct{
     discountPrice : number;
     moreDetails : Map<string,string>;
     quantity : number;
+    selected : boolean;
+    order : number;
 }
 export interface WishItem{
     id : string;
@@ -132,6 +134,7 @@ export interface User{
     name : string;
     mobileNumber : string;
     admin : boolean;
+    superAdmin : boolean;
 }
 export interface CartProduct{
     quantity : number;
@@ -140,6 +143,7 @@ export interface CartProduct{
     product : Product;
     productRef : DocumentReference;
     delivertDate : string;
+    subProduct : SubProduct;
 }
 
 export interface Order{
@@ -157,6 +161,10 @@ export interface Order{
     paymentMode :PaymentMode;
     paymentDetails : PaymentDetails;
     inPersonDiscount : number;
+    hide : boolean;
+    parentOrderId : string;
+    parentOrderDate : string;
+
 }
 
 export interface PaymentDetails{

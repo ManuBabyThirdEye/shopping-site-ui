@@ -1,0 +1,26 @@
+.main-box{
+    text-align: center;
+    padding: 20px;
+    .date-time-picker{
+        margin-block: 20px;
+        input{
+            margin-inline: 5px  ;
+            border: 1px solid gray;
+            border-radius: 4px;
+            padding: 5px 10px;
+            color: #696e79;
+        }
+    }
+    .today{
+        background: none;
+        border: 1px solid var(--theme-color);
+        font-size: 14px;
+        padding: 5px 20px;
+        color: var(--theme-color);
+        border-radius: 5px;
+        &:hover{
+            background: var(--theme-color);
+            color: white;
+        }
+    }
+}

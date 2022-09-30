@@ -4,6 +4,7 @@ import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
 import { ToastrService } from 'ngx-toastr';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { Filter, Product, WishItem } from 'src/bean/category';
+import { environment } from 'src/environments/environment';
 import { KeyValue } from '../../bean/common';
 import { CategoryService } from '../services/category.service';
 import { LocalStoreObjectService } from '../services/local-store-object.service';
@@ -33,6 +34,8 @@ export class ProductListComponent implements OnInit,AfterViewInit {
   productList : Array<Product> = undefined;
   showSortListMobile : boolean = false;
   mobileNumber : string;
+  icon : string;
+
   private scrollContainer: any;
   constructor(
     private route: ActivatedRoute,
@@ -41,6 +44,7 @@ export class ProductListComponent implements OnInit,AfterViewInit {
     private ngxService: NgxUiLoaderService,
     private toastr: ToastrService,
     private local : LocalStoreObjectService) { 
+      this.icon = "../../"+environment.icon;
     this.route.queryParams.subscribe(params => {
       window.scroll(0,0);
       this.mainCategory = params.mainCategory;
@@ -55,9 +59,11 @@ export class ProductListComponent implements OnInit,AfterViewInit {
         if(f.get("active")){
           this.filterList= f.get("filters");
           setTimeout(()=>{ 
-            this.scrollContainer = this.productListBox.nativeElement;  
+            if(this.productListBox)
+              this.scrollContainer = this.productListBox?this.productListBox.nativeElement:undefined;  
             console.log(this.scrollContainer);
-            this.productListBox.nativeElement.style.maxHeight = this.filterBox.nativeElement.offsetHeight+"px"; }, 1000)
+            if(this.productListBox)
+              this.productListBox.nativeElement.style.maxHeight = this.filterBox.nativeElement.offsetHeight+"px"; }, 1000)
         }
       });
       this.updateProductList("discount",'desc');
@@ -109,7 +115,7 @@ export class ProductListComponent implements OnInit,AfterViewInit {
           })
         }
         setTimeout(()=>{ 
-          this.scrollContainer = this.scrollFrame.nativeElement;  
+          this.scrollContainer = this.scrollFrame?this.scrollFrame.nativeElement:undefined;  
         });
         this.ngxService.stop();
       })

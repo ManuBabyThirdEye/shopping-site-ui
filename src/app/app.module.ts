@@ -52,6 +52,8 @@ import { ReportComponent } from './admin/report/report.component';
 import { HighchartsChartModule } from 'highcharts-angular';
 import { HttpClientModule } from '@angular/common/http';
 import { AngularEditorModule } from '@kolkov/angular-editor';
+import { PickDateIntervalComponent } from './app-modal/pick-date-interval/pick-date-interval.component';
+import { ScannerAnimComponent } from './admin/billing/scanner-anim/scanner-anim.component';
 
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
   bgsColor: "var(--theme-color)",
@@ -104,7 +106,9 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     PrintComponent,
     ProductDatailsComponent,
     SelectSizeComponent,
-    ReportComponent
+    ReportComponent,
+    PickDateIntervalComponent,
+    ScannerAnimComponent
   ],
   imports: [
     BrowserModule,

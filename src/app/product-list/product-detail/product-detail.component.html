@@ -3,7 +3,7 @@
         <div class="col-md-6 prod-images">
             <div *ngIf="product!=undefined" class="row col-md-12  d-none d-sm-flex ">
                 <div *ngFor="let prdImage of product.images" class="col-md-6">
-                    <img class="img-loading" (click)="selectedImage=prdImage" src="{{prdImage}}">
+                    <img *ngIf="prdImage!='../../assets/logo.png'"class="img-loading" (click)="selectedImage=prdImage" src="{{prdImage}}">
                 </div>
             </div>
             <div class="d-block d-sm-none">
@@ -35,7 +35,7 @@
         <div *ngIf="product!=undefined" class="col-md-6 prod-info">
             <h3>{{product.name}}</h3>
             <div [innerHTML]="product.details"></div>
-            <h3>Rs. {{product.discountPrice}} <s *ngIf="product.discount>0">Rs. {{(product.discountPrice * 100 )/(100-product.discount)}} </s> <span *ngIf="product.discount>0">({{product.discount}}% OFF)</span></h3>
+            <h3>Rs. {{product.discountPrice| number : '1.0-2'}} <s *ngIf="product.discount>0">Rs. {{(product.discountPrice * 100 )/(100-product.discount)| number : '1.0-2'}} </s> <span *ngIf="product.discount>0">({{product.discount}}% OFF)</span></h3>
             <h4 *ngIf="product.availableSizeString">SELECT SIZE</h4>
             <div *ngIf="product.availableSizeString" class="row col-md-12 size-box">
                 <div [ngClass]="getClassForSize('S')" (click)="selectSize('S')" class="size">S
@@ -59,22 +59,22 @@
             </div>
             <h4 *ngIf="product.subProductList">SELECT PRODUCT</h4>
             <div *ngIf="product.subProductList" class="row col-md-12 product-box">
-                <div class="col-md-3">
-                    <div *ngFor="let subProduct of product.subProductList" class="sub-product-box">
+                <div class="col-md-3" *ngFor="let subProduct of product.subProductList">
+                    <div [style.border-top-color]="subProduct.colorCode" [ngClass]="subProduct.selected?'selected shadow sub-product-box' : 'sub-product-box'" (click)="selectSubproduct(subProduct)" >
                         <p *ngFor="let moreDetails of subProduct.moreDetails | keyvalue">
                             {{moreDetails.key}} : <span>{{moreDetails.value}}</span>
                         </p>
-                        <h5>Rs. {{product.discountPrice}} <s *ngIf="product.discount>0">Rs. {{(product.discountPrice * 100 )/(100-product.discount)}} </s> <span *ngIf="product.discount>0">({{product.discount}}% OFF)</span></h5>
+                        <h5>Rs. {{subProduct.discountPrice}}</h5>
                     </div>
-                </div>
+                </div>                    
             </div>
             <div *ngIf="noStock" class="delivery-status">
                 <p>Sorry, No stoke available, please check later</p>
             </div>
             <div class="row col-md-12 action">
-                <button *ngIf="!productAddedToCart && product.availableSizeString" class="col-md-6 col-12 add-to-bag" (click)="addToCart()"><i class="fa fa-shopping-basket" aria-hidden="true"></i> ADD TO CART</button>
-                <button *ngIf="productAddedToCart && product.availableSizeString" class="col-md-6 col-12 add-to-bag" routerLink="/cart">GO TO CART <i class="fa fa-arrow-right" aria-hidden="true"></i></button>
-                <button *ngIf="!product.availableSizeString" class="col-md-6 col-12 add-to-bag" (click)="informUs()">INFORM US<i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+                <button *ngIf="!productAddedToCart && !noStock" class="col-md-6 col-12 add-to-bag" (click)="addToCart()"><i class="fa fa-shopping-basket" aria-hidden="true"></i> ADD TO CART</button>
+                <button *ngIf="productAddedToCart && !noStock" class="col-md-6 col-12 add-to-bag" routerLink="/cart">GO TO CART <i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                <button *ngIf="noStock" class="col-md-6 col-12 add-to-bag" (click)="informUs()">INFORM US<i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
                 <button [ngClass]="product.isWishList?'addedTowish':''" class="col-md-4 col-12 add-to-wishlist" (click)="addToWishList()"><i class="fa fa-heart" aria-hidden="true"></i> {{product.isWishList?'WISHLISTED':'WISHLIST'}}</button>
             </div>
             <div class="divider"></div>
@@ -115,7 +115,7 @@
                         <img class="img-loading" src="{{product.images[0]}}">
                         <div class="product-details">
                             <p>Size: <span>{{product.availableSizeString}}</span></p>
-                            <h4>Rs. {{product.discountPrice}} <s>Rs. {{(product.discountPrice * 100 )/(100-product.discount)}} </s> <span>({{product.discount}}% OFF)</span></h4>
+                            <h4>Rs. {{product.discountPrice| number : '1.0-2'}} <s>Rs. {{(product.discountPrice * 100 )/(100-product.discount)| number : '1.0-2'}} </s> <span>({{product.discount}}% OFF)</span></h4>
                         </div>
                     </div>
                 </div>

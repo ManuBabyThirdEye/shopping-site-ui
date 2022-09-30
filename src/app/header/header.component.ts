@@ -40,7 +40,7 @@ export class HeaderComponent implements OnInit {
     private _location: Location,
     private modalService: NgbModal,
     private localStorageObject: LocalStoreObjectService) { 
-      this.isLocal = !environment.production;
+      this.isLocal = environment.local;
       this.icon = "../../"+environment.icon;
     this.categoryService.getAllCategoryList().then(cList=>{
       this.mainCategorList = cList.docs.map(c=>{

@@ -4,10 +4,12 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { ConfirmBoxComponent } from 'src/app/app-modal/confirm-box/confirm-box.component';
+import { PrintComponent } from 'src/app/app-modal/print/print.component';
 import { SelectQuantityComponent } from 'src/app/app-modal/select-quantity/select-quantity.component';
 import { CategoryService } from 'src/app/services/category.service';
+import { LocalStoreObjectService } from 'src/app/services/local-store-object.service';
 import { ProductService } from 'src/app/services/product.service';
-import { CartProduct, Order, OrderClasification, OrderStatus, PinCode } from 'src/bean/category';
+import { CartProduct, Order, OrderClasification, OrderStatus, PinCode, User } from 'src/bean/category';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -26,7 +28,8 @@ export class OrderDetailsComponent implements OnInit {
   cancelled : boolean;
   orderClasification: OrderClasification;
   icon : string;
-
+  showLess : boolean = true;
+  user : User;
   orderOrReturnStatusList : Array<OrderStatus> =[];
 
   constructor(private categoryService : CategoryService,
@@ -35,13 +38,15 @@ export class OrderDetailsComponent implements OnInit {
     private ngxService: NgxUiLoaderService,
     private toastr: ToastrService,
     private router: Router,
-    private modalService: NgbModal) { 
+    private modalService: NgbModal,
+    private localStorageObject: LocalStoreObjectService) { 
       this.icon = "../../../"+environment.icon;
       window.scroll(0,0);
       this.route.queryParams.subscribe(params => {
         this.orderId = params.orderId;
         this.tableName = params.tableName;
       });
+      this.user =  this.localStorageObject.getObject(LocalStoreObjectService.USER_KEY);
     }
 
   ngOnInit(): void {
@@ -114,7 +119,7 @@ export class OrderDetailsComponent implements OnInit {
     });
   }
 
-  returnOrder(cartItem : CartProduct){
+  returnOrder(id : string , cartItem : CartProduct,parentOrderDate:string){
 
     const confirmreturn = this.modalService.open(ConfirmBoxComponent);
     confirmreturn.componentInstance.image = "../../assets/shopping.png";
@@ -130,12 +135,12 @@ export class OrderDetailsComponent implements OnInit {
           modalRef.componentInstance.maxCount = cartItem.quantity;
           modalRef.result.then(result=>{
             if(result){
-              this.placeReturnOrder(cartItem,this.tableName != 'billing',result);
+              this.placeReturnOrder(id,cartItem,this.tableName != 'billing',result,parentOrderDate);
             }
           }).catch(e=>{
           });
         }else{
-          this.placeReturnOrder(cartItem,this.tableName != 'billing',1);
+          this.placeReturnOrder(id,cartItem,this.tableName != 'billing',1,parentOrderDate);
         }
       }
     }).catch(e=>{
@@ -144,7 +149,7 @@ export class OrderDetailsComponent implements OnInit {
 
   
   }
-  async placeReturnOrder(cartItem : CartProduct, checkPinCode: boolean, quantity: number) {
+  async placeReturnOrder(id : string, cartItem : CartProduct, checkPinCode: boolean, quantity: number,parentOrderDate:string) {
     this.ngxService.start();
     let delivertDate = new Date();
     if(checkPinCode){
@@ -160,6 +165,8 @@ export class OrderDetailsComponent implements OnInit {
     cartItem.delivertDate = delivertDate.toISOString();
     cartItem.quantity = quantity;
     let returnOrder :Order = {
+      hide:false,
+      parentOrderDate : parentOrderDate,
       address : this.orderDetsails.address,
       cartProducts : [cartItem],
       convenienceFee : this.orderDetsails.convenienceFee,
@@ -176,9 +183,9 @@ export class OrderDetailsComponent implements OnInit {
       totalMRP : cartItem.product.discountPrice*quantity,
       placedDate : new Date().toISOString(),
       paymentMode : this.orderDetsails.paymentMode,
-      paymentDetails : this.orderDetsails.paymentDetails
+      paymentDetails : this.orderDetsails.paymentDetails,
+      parentOrderId : id
     }
-    console.log(returnOrder);
     let document = await this.categoryService.placeReturn(returnOrder);
     this.productService.updateProductReturnCount(cartItem);
     this.toastr.success("Your return initiated");
@@ -187,6 +194,17 @@ export class OrderDetailsComponent implements OnInit {
       this.ngxService.stop();
     });
     this.ngxService.stop();
+  }
+  printBill(){
+    const confirmreturn = this.modalService.open(PrintComponent);
+    confirmreturn.componentInstance.billNumber = this.orderDetsails.id;
+    confirmreturn.componentInstance.addedProducts = this.orderDetsails.cartProducts;
+    confirmreturn.result.then(result=>{
+      if(result){
+           
+      }
+    }).catch(e=>{
+    });
   }
 
 }

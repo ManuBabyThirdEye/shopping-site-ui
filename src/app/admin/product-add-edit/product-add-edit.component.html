@@ -59,7 +59,7 @@
                 <button class="save" (click)="saveDetails()">SAVE</button>
                 <button class="cancel" (click)="cancelDetails()">CANCEL</button>
             </div>
-            <h3 (dblclick)="amountEdit=true;editedDiscountedAmount=product.discountPrice;editedDiscount=product.discount" *ngIf="!amountEdit">Rs. {{product.discountPrice}} <s>Rs. {{(product.discountPrice * 100 )/(100-product.discount)}} </s> <span>({{product.discount}}% OFF)</span></h3>
+            <h3 (dblclick)="amountEdit=true;editedDiscountedAmount=product.discountPrice;editedDiscount=product.discount" *ngIf="!amountEdit">Rs. {{product.discountPrice| number : '1.0-2'}} <s>Rs. {{(product.discountPrice * 100 )/(100-product.discount)| number : '1.0-2'}} </s> <span>({{product.discount}}% OFF)</span></h3>
             <div class="heading-edit" *ngIf="amountEdit">
                 <div class="input-box">
                     <input id="amount" type="number" required [(ngModel)]="editedDiscountedAmount">

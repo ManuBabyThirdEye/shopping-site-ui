@@ -48,8 +48,8 @@
                     <img *ngIf="!pincode.returnAvailable" src="../../../assets/remove.png">
                 </td>
                 <td>{{pincode.pinCodeDeliveryDelay}}</td>
-                <td>Rs. {{pincode.convenienceFee}}</td>
-                <td>Rs. {{pincode.minOrderAmount}}</td>
+                <td>Rs. {{pincode.convenienceFee| number : '1.0-2'}}</td>
+                <td>Rs. {{pincode.minOrderAmount| number : '1.0-2'}}</td>
                 <td>
                     <img (click)="editPincode(pincode)" src="../../../assets/edit_1.png">
                     <img (click)="deletePincode(pincode)" src="../../../assets/delete _1.png">

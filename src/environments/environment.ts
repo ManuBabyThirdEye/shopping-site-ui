@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+  local : false,
   themeColor : "#e4498a",
   adminNumber : "8714443741",
   gstNumber : "",

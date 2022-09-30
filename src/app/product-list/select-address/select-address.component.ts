@@ -36,7 +36,7 @@ export class SelectAddressComponent implements OnInit {
       this.cart = localStoreObjectService.getObject("order");
       this.pinStatus = this.localStoreObjectService.getObject("pincode");
       this.gogolePaymentRequest = environment.googlePayPaymentRequest;
-      this.env = environment.production?'PRODUCTION':'TEST';
+      this.env = environment.production?'TEST':'TEST';
       this.gogolePaymentRequest.transactionInfo.totalPrice = this.cart.total+"";
     }
 
@@ -79,7 +79,7 @@ export class SelectAddressComponent implements OnInit {
         this.toastr.success("Your order placed");
         this.localStoreObjectService.removeObject("order");
         this.categoryService.evictCartList();
-        this.router.navigate(['/order-details'],{queryParams : {orderId:resp,order:true}});
+        this.router.navigate(['/order-details'],{queryParams : {orderId:resp,tableName:'order'}});
         this.ngxService.stop();
       }).catch(e=>{
         console.log(e);
@@ -200,12 +200,10 @@ export class SelectAddressComponent implements OnInit {
 
   onLoadPaymentData(event : Event){
     const eventDetails = event as CustomEvent<google.payments.api.PaymentData>
-    console.log(eventDetails);
   }
 
   onPaymentAuthorized : google.payments.api.PaymentAuthorizedHandler = (paymentData)=>{
     if(this.selectedAddress){
-      console.log(paymentData);
       this.updateCartDetails();
       this.cart.paymentMode = PaymentMode.GOOGLE_PAY;
       this.cart.paymentDetails = paymentData as PaymentDetails; 
@@ -215,7 +213,7 @@ export class SelectAddressComponent implements OnInit {
         this.toastr.success("Your order placed");
         this.localStoreObjectService.removeObject("order");
         this.categoryService.evictCartList();
-        this.router.navigate(['/order-details'],{queryParams : {orderId:resp,order:true}});
+        this.router.navigate(['/order-details'],{queryParams : {orderId:resp,tableName:'order'}});
         this.ngxService.stop();
       }).catch(e=>{
         console.log(e);

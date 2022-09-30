@@ -3,8 +3,10 @@ import firebase from 'firebase';
 import * as Highcharts from 'highcharts';
 import { CategoryService } from 'src/app/services/category.service';
 import { UtilService } from 'src/app/services/util.service';
-import { Order, Revenue } from 'src/bean/category';
+import { Order, Revenue, User } from 'src/bean/category';
 import HC_drilldown from 'highcharts/modules/drilldown';
+import { LocalStoreObjectService } from 'src/app/services/local-store-object.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 
 @Component({
@@ -46,23 +48,43 @@ export class ReportComponent implements OnInit {
     }]
   }; 
 
-  constructor(private categoryService : CategoryService,private utilService : UtilService) { 
-    HC_drilldown(Highcharts);
+  user : User;
+
+  constructor(private categoryService : CategoryService,
+    private utilService : UtilService,
+    private authService : AuthService,
+    private localStorageObject : LocalStoreObjectService) { 
+      this.user = this.localStorageObject.getObject(LocalStoreObjectService.USER_KEY);
+      if(!this.user){
+        this.authService.signedIn.subscribe(user => {
+          if(user!= null){
+            this.authService.getUserFromFirestore(user.phoneNumber).then(u => {
+              this.user = u.data() as User;
+              this.user.mobileNumber = u.id;
+              this.localStorageObject.setObject(LocalStoreObjectService.USER_KEY,this.user);
+            })
+          }else{
+            this.user = undefined;
+          }
+        })
+      }
+      HC_drilldown(Highcharts);
   }
 
   ngOnInit(): void {
+
     let sixMonthOld = new Date();
     sixMonthOld.setMonth(sixMonthOld.getMonth()-6);
     sixMonthOld.setDate(1);
-    this.categoryService.getAllOrdersReturnBillingByDate("billing",sixMonthOld.toISOString()).then(billingList=>{
+
+    let  billingListPromise : Promise<Array<Order>> = this.categoryService.getAllOrdersReturnBillingByDate("billing",sixMonthOld.toISOString(),this.user.superAdmin);
+    let  returnListPromise : Promise<Array<Order>> = this.categoryService.getAllReturnBillingByDate("return",sixMonthOld.toISOString(),this.user.superAdmin);
+    Promise.all([billingListPromise,returnListPromise]).then(result=>{
+      let billingList = result[0];
+      let returnList = result[1];
       if(billingList){
-        let orderList = billingList.docs.map(o=>{
-          let order = o.data() as Order;
-          order.id = o.id;
-          return order;
-        })
-        let getMonthData = this.getDataByMonth(orderList);
-        let drilldownData = this.getDataByDayDrilldown(orderList);
+        let getMonthData = this.getDataByMonth(billingList,returnList);
+        let drilldownData = this.getDataByDayDrilldown(billingList,returnList);
 
         this.chartOptions = {
           chart: {
@@ -160,10 +182,11 @@ export class ReportComponent implements OnInit {
         console.log(this.chartOptions);
       }
     })
+    
   }
-  getDataByDayDrilldown(orderList: Order[]) {
+  getDataByDayDrilldown(billingList: Order[],returnList : Order[]) {
     let map : Map<string,Map<string,Revenue>>= new Map();
-    orderList.forEach(b=>{
+    billingList.forEach(b=>{
       let date = new Date(b.placedDate);
       let month = this.utilService.getMonthName(date.getMonth())+"-"+date.getFullYear();
       if(!map.get(month)){
@@ -178,11 +201,26 @@ export class ReportComponent implements OnInit {
         })
       }
       let curDayRevenue = curMonthRevenue.get(day);
-      curDayRevenue.amount += b.total;
+      let returnItems = returnList.filter(r=>r.parentOrderId==b.id);
+      let billTotal = b.total;
+      if(returnItems && returnItems.length>0){
+        returnItems.forEach(r=>{
+          billTotal = billTotal-r.total;
+        });
+        billTotal = billTotal<0?0:billTotal;
+      }
+      curDayRevenue.amount += (billTotal<0?0:billTotal);
       if(b.cartProducts && b.cartProducts.length >0){
         b.cartProducts.forEach(p=>{
           curDayRevenue.count +=p.quantity;
-        })
+        });
+        if(returnItems && returnItems.length>0){
+          returnItems.forEach(r=>{
+            r.cartProducts.forEach(r=>{
+              curDayRevenue.count -=r.quantity;
+            })
+          });
+        }
       }
       curMonthRevenue.set(day,curDayRevenue);
       map.set(month,curMonthRevenue);
@@ -220,9 +258,9 @@ export class ReportComponent implements OnInit {
       dataCount : dataCount
     };
   }
-  getDataByMonth(orderList: Order[]) {
+  getDataByMonth(billingList: Order[],returnList : Order[]) {
     let map : Map<string,Revenue>= new Map();
-    orderList.forEach(b=>{
+    billingList.forEach(b=>{
       let date = new Date(b.placedDate);
       let month = this.utilService.getMonthName(date.getMonth())+"-"+date.getFullYear();
       if(!map.get(month)){
@@ -232,11 +270,26 @@ export class ReportComponent implements OnInit {
         })
       }
       let curRevenue = map.get(month);
-      curRevenue.amount += b.total;
+      let returnItems = returnList.filter(r=>r.parentOrderId==b.id);
+      let billTotal = b.total;
+      if(returnItems && returnItems.length>0){
+        returnItems.forEach(r=>{
+          billTotal = billTotal-r.total;
+        });
+        billTotal = billTotal<0?0:billTotal;
+      }
+      curRevenue.amount += (billTotal<0?0:billTotal);
       if(b.cartProducts && b.cartProducts.length >0){
         b.cartProducts.forEach(p=>{
           curRevenue.count +=p.quantity;
         })
+        if(returnItems && returnItems.length>0){
+          returnItems.forEach(r=>{
+            r.cartProducts.forEach(r=>{
+              curRevenue.count -=r.quantity;
+            })
+          });
+        }
       }
       map.set(month,curRevenue);
     })

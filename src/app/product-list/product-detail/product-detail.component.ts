@@ -5,7 +5,7 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { CategoryService } from 'src/app/services/category.service';
 import { LocalStoreObjectService } from 'src/app/services/local-store-object.service';
 import { ProductService } from 'src/app/services/product.service';
-import { PinCode, Product, User, WishItem } from 'src/bean/category';
+import { PinCode, Product, SubProduct, User, WishItem } from 'src/bean/category';
 
 @Component({
   selector: 'app-product-detail',
@@ -62,7 +62,7 @@ export class ProductDetailComponent implements OnInit {
       console.log(product);
       this.product = product;
       this.noStock = this.chackStockAvailability(product);
-      if(product){
+      if(this.product){
         if(this.user && this.user.mobileNumber){
           this.categoryService.getWishList().then(wishList=>{
             let wishproducts = wishList.docs.map(doc => {
@@ -72,6 +72,14 @@ export class ProductDetailComponent implements OnInit {
             });
             if(wishproducts.find(w=>w.id==this.product.id)){
               this.product.isWishList = true;
+            }
+          })
+        }
+        if(this.product.subProductList && this.product.subProductList.length>0){
+          this.product.subProductList.forEach(sp=>{
+            if(sp.selected){
+              this.product.discountPrice = sp.discountPrice;
+              this.product.discount = sp.discount;
             }
           })
         }
@@ -171,11 +179,12 @@ export class ProductDetailComponent implements OnInit {
   }
 
   addToCart(){
-    if(!this.user && this.user.mobileNumber){
+    if(!this.user || !this.user.mobileNumber){
       this.router.navigate(['/login']);
-    }else if(this.selectedSize){
+    }else if(this.selectedSize || this.product.subProductList.filter(sp=>sp.selected).length>0){
+      let selectedSubProduct = this.product.subProductList.find(sp=>sp.selected);
       this.ngxService.start();
-      this.categoryService.addToCart(this.product, this.selectedSize,1).then(()=>{
+      this.categoryService.addToCart(this.product, this.selectedSize,selectedSubProduct,1).then(()=>{
         this.categoryService.removeFromWishList(this.product.id).then(()=>{
           this.product.isWishList = false;
           this.productAddedToCart = true;
@@ -189,6 +198,24 @@ export class ProductDetailComponent implements OnInit {
 
   informUs(){
 
+  }
+
+  selectSubproduct(subProduct : SubProduct){
+    if(this.product.subProductList && this.product.subProductList.length>0){
+      this.product.subProductList = this.product.subProductList.map(sp=>{
+        if(sp.id==subProduct.id){
+          sp.selected = true;
+        }else{
+          sp.selected = false;
+        }
+        if(sp.selected){
+          this.product.discountPrice = subProduct.discountPrice;
+          this.product.discount = subProduct.discount;
+        }
+        return sp;
+      })
+    }
+    
   }
 
 }

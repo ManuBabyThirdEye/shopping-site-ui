@@ -34,7 +34,7 @@ export class OfferService {
   }
 
   getHomePageItemOffers(homePageitemId : string){
-    return this.firestore.collection(this.HOME_PAGE_TABLE).doc(homePageitemId).collection(this.OFFER_TABLE).get().toPromise().then(offRes=>{
+    return this.firestore.collection(this.HOME_PAGE_TABLE).doc(homePageitemId).collection(this.OFFER_TABLE,ref=>ref.orderBy("order")).get().toPromise().then(offRes=>{
       return offRes.docs.map(offerDoc=>{
         let offer = offerDoc.data() as HomeSubItem;
         offer.id = offerDoc.id;
